@@ -393,36 +393,129 @@
         const addChapterForm = document.getElementById('add-chapter-form');
         const navItems = document.querySelectorAll('.nav-item');
 
-        // Simulateur SDK pour test en local
+        // Variable globale pour stocker les données
+        let globalData = [];
+        let saveTimeout = null; // Timeout pour debounce de la sauvegarde
+        
+        // Fonction pour sauvegarder automatiquement dans data.json (avec debounce)
+        function scheduleAutoSave(data) {
+            if (!isDeveloperMode()) {
+                return;
+            }
+            
+            // Annuler la sauvegarde précédente si elle n'a pas encore été exécutée
+            if (saveTimeout) {
+                clearTimeout(saveTimeout);
+            }
+            
+            // Programmer la sauvegarde après 500ms d'inactivité
+            saveTimeout = setTimeout(async () => {
+                await saveDataToFileAuto(data);
+            }, 500);
+        }
+        
+        // Fonction pour sauvegarder automatiquement dans data.json via PHP (SANS POPUP!)
+        async function saveDataToFileAuto(data) {
+            if (!isDeveloperMode()) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('save-data.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    console.log('✅ data.json sauvegardé automatiquement');
+                } else {
+                    console.error('Erreur lors de la sauvegarde:', result.message);
+                }
+            } catch (error) {
+                console.error('Erreur lors de la sauvegarde automatique:', error);
+            }
+        }
+        
+        // Simulateur SDK pour test en local et production
         function createLocalSDK() {
-            let localData = JSON.parse(localStorage.getItem('manhwaData') || '[]');
+            let localData = [];
             let dataHandler = null;
 
             return {
                 init: async (handler) => {
                     dataHandler = handler;
+                    
+                    // TOUJOURS recharger depuis data.json au démarrage (même après rafraîchissement)
+                    try {
+                        // Ajouter un timestamp pour éviter le cache
+                        const response = await fetch('./data.json?t=' + Date.now());
+                        if (response.ok) {
+                            const loadedData = await response.json();
+                            if (Array.isArray(loadedData)) {
+                                localData = loadedData;
+                                console.log('✅ Données chargées depuis data.json:', localData.length, 'éléments');
+                            } else {
+                                console.log('⚠️ data.json n\'est pas un tableau, utilisation d\'un tableau vide');
+                                localData = [];
+                            }
+                        } else {
+                            console.log('⚠️ Fichier data.json non trouvé, utilisation d\'un tableau vide');
+                            localData = [];
+                        }
+                    } catch (error) {
+                        console.error('⚠️ Erreur lors du chargement de data.json:', error);
+                        localData = [];
+                    }
+                    
+                    // Toujours mettre à jour globalData avec les données chargées
+                    globalData = [...localData];
+                    
+                    // Notifier le handler avec les données chargées
                     setTimeout(() => {
                         if (dataHandler) {
                             dataHandler.onDataChanged(localData);
                         }
                     }, 100);
+                    
                     return { isOk: true };
                 },
                 create: async (data) => {
+                    if (!isDeveloperMode()) {
+                        return { isOk: false, error: 'Mode développeur requis' };
+                    }
+                    
                     data.__backendId = 'local_' + Date.now() + '_' + Math.random();
                     localData.push(data);
-                    localStorage.setItem('manhwaData', JSON.stringify(localData));
+                    // Créer une nouvelle copie pour éviter les références
+                    globalData = JSON.parse(JSON.stringify(localData));
+                    
+                    // Sauvegarder automatiquement (avec debounce)
+                    scheduleAutoSave(globalData);
                     
                     if (dataHandler) {
                         setTimeout(() => dataHandler.onDataChanged(localData), 100);
                     }
+                    
                     return { isOk: true };
                 },
                 update: async (record) => {
+                    if (!isDeveloperMode()) {
+                        return { isOk: false, error: 'Mode développeur requis' };
+                    }
+                    
                     const index = localData.findIndex(item => item.__backendId === record.__backendId);
                     if (index !== -1) {
                         localData[index] = record;
-                        localStorage.setItem('manhwaData', JSON.stringify(localData));
+                        // Créer une nouvelle copie pour éviter les références
+                        globalData = JSON.parse(JSON.stringify(localData));
+                        
+                        // Sauvegarder automatiquement (avec debounce)
+                        scheduleAutoSave(globalData);
+                        
                         if (dataHandler) {
                             setTimeout(() => dataHandler.onDataChanged(localData), 100);
                         }
@@ -430,11 +523,21 @@
                     return { isOk: true };
                 },
                 delete: async (record) => {
+                    if (!isDeveloperMode()) {
+                        return { isOk: false, error: 'Mode développeur requis' };
+                    }
+                    
                     localData = localData.filter(item => item.__backendId !== record.__backendId);
-                    localStorage.setItem('manhwaData', JSON.stringify(localData));
+                    // Créer une nouvelle copie pour éviter les références
+                    globalData = JSON.parse(JSON.stringify(localData));
+                    
+                    // Sauvegarder automatiquement (avec debounce)
+                    scheduleAutoSave(globalData);
+                    
                     if (dataHandler) {
                         setTimeout(() => dataHandler.onDataChanged(localData), 100);
                     }
+                    
                     return { isOk: true };
                 }
             };
@@ -464,10 +567,9 @@
             
             // Détection automatique: local ou Canva
             if (!window.dataSdk) {
-                console.log('🔧 Mode LOCAL détecté - Utilisation de localStorage');
+                console.log('🔧 Mode LOCAL détecté - Utilisation de data.json');
                 isLocalMode = true;
                 window.dataSdk = createLocalSDK();
-                showNotification('Mode test local activé 🔧', 'info');
             } else {
                 console.log('☁️ Mode CANVA détecté - Utilisation du Data SDK');
                 isLocalMode = false;
