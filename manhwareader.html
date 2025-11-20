@@ -1,0 +1,1572 @@
+<!doctype html>
+<html lang="fr">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ManhwaReader Pro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            box-sizing: border-box;
+        }
+        
+        .dark-mode {
+            background-color: #1a1a1a !important;
+            color: #e2e8f0 !important;
+        }
+        
+        .dark-mode .card {
+            background-color: #2d2d2d !important;
+            border-color: #404040 !important;
+            color: #e2e8f0 !important;
+        }
+        
+        .dark-mode .input-field {
+            background-color: #2d2d2d !important;
+            border-color: #404040 !important;
+            color: #e2e8f0 !important;
+        }
+        
+        .dark-mode .nav-item:hover {
+            background-color: #404040 !important;
+        }
+        
+        .dark-mode .chapter-item {
+            background-color: #2d2d2d !important;
+            color: #e2e8f0 !important;
+        }
+        
+        .dark-mode .chapter-item:hover {
+            background-color: #404040 !important;
+        }
+        
+        .dark-mode .badge {
+            background-color: #404040 !important;
+            color: #a5b4fc !important;
+        }
+        
+        .dark-mode button:not(.bg-indigo-600) {
+            background-color: #2d2d2d !important;
+            color: #e2e8f0 !important;
+        }
+        
+        .dark-mode h1, .dark-mode h2, .dark-mode h3, .dark-mode h4 {
+            color: #e2e8f0 !important;
+        }
+        
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .manhwa-cover {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+        
+        .chapter-item {
+            transition: all 0.2s ease;
+        }
+        
+        .chapter-item:hover {
+            background-color: rgba(99, 102, 241, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .reading-page img {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            display: block;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .loading-spinner {
+            border: 3px solid rgba(99, 102, 241, 0.1);
+            border-top: 3px solid #6366f1;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background-color: #6366f1;
+            transition: width 0.3s ease;
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="bg-gray-50 min-h-screen"><!-- Navigation -->
+  <nav id="navbar" class="bg-white shadow-md sticky top-0 z-50">
+   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+     <div class="flex items-center"><button id="menu-btn" class="mr-4 p-2 rounded-lg hover:bg-gray-100">
+       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+       </svg></button>
+      <h1 class="text-2xl font-bold text-indigo-600">ManhwaReader</h1>
+     </div>
+     <div class="flex items-center space-x-4"><button id="settings-btn" class="p-2 rounded-lg hover:bg-gray-100">
+       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+       </svg></button>
+     </div>
+    </div>
+   </div>
+  </nav><!-- Sidebar -->
+  <aside id="sidebar" class="fixed top-16 left-0 h-full w-64 bg-white shadow-lg transform -translate-x-full transition-transform duration-300 z-40">
+   <div class="p-4">
+    <h2 class="text-lg font-semibold mb-4">Navigation</h2>
+    <ul class="space-y-2">
+     <li><button class="nav-item w-full text-left px-4 py-3 rounded-lg hover:bg-gray-100 flex items-center" data-page="home">
+       <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+       </svg> Accueil </button></li>
+     <li><button class="nav-item w-full text-left px-4 py-3 rounded-lg hover:bg-gray-100 flex items-center" data-page="library">
+       <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path>
+       </svg> Ma Bibliothèque </button></li>
+     <li><button class="nav-item w-full text-left px-4 py-3 rounded-lg hover:bg-gray-100 flex items-center" data-page="recent">
+       <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+       </svg> Récents </button></li>
+     <li><button class="nav-item w-full text-left px-4 py-3 rounded-lg hover:bg-gray-100 flex items-center" data-page="favorites">
+       <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+       </svg> Favoris </button></li>
+    </ul>
+   </div>
+  </aside><!-- Main Content -->
+  <main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><!-- Home Page -->
+   <div id="home-page" class="page-content fade-in">
+    <h2 class="text-3xl font-bold mb-8">Continuer la lecture</h2>
+    <div id="continue-reading" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-12"><!-- Les manhwas en cours seront ajoutés ici -->
+    </div>
+    <h2 class="text-3xl font-bold mb-8">Derniers chapitres ajoutés</h2>
+    <div id="latest-chapters" class="space-y-4"><!-- Les derniers chapitres seront ajoutés ici -->
+    </div>
+   </div><!-- Library Page -->
+   <div id="library-page" class="page-content hidden fade-in">
+    <h2 class="text-3xl font-bold mb-8">Ma Bibliothèque</h2>
+    <div id="library-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"><!-- Les manhwas seront ajoutés ici -->
+    </div>
+   </div><!-- Recent Page -->
+   <div id="recent-page" class="page-content hidden fade-in">
+    <h2 class="text-3xl font-bold mb-8">Chapitres récemment lus</h2>
+    <div id="recent-list" class="space-y-4"><!-- L'historique de lecture sera ajouté ici -->
+    </div>
+   </div><!-- Manhwa Detail Page -->
+   <div id="manhwa-detail-page" class="page-content hidden fade-in"><button id="back-to-library" class="mb-6 flex items-center text-indigo-600 hover:text-indigo-800">
+     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+     </svg> Retour </button>
+    <div id="manhwa-detail-content"><!-- Le détail du manhwa sera ajouté ici -->
+    </div>
+   </div><!-- Reader Page -->
+   <div id="reader-page" class="page-content hidden">
+    <div class="mb-4 flex justify-between items-center"><button id="back-to-detail" class="flex items-center text-indigo-600 hover:text-indigo-800">
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+      </svg> Retour </button>
+     <div class="flex items-center space-x-4"><button id="prev-chapter" class="bg-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300">
+       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+       </svg></button> <span id="chapter-info" class="font-semibold"></span> <button id="next-chapter" class="bg-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300">
+       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+       </svg></button>
+     </div>
+    </div>
+    <div class="bg-black rounded-lg overflow-hidden">
+     <div id="reading-progress" class="progress-bar"></div>
+     <div id="reader-content" class="reading-page py-4"><!-- Les pages du chapitre seront ajoutées ici -->
+     </div>
+    </div>
+   </div>
+  </main><!-- Modal: Ajouter un Manhwa -->
+  <div id="add-manhwa-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+   <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90%] overflow-y-auto">
+    <div class="p-6 border-b">
+     <div class="flex justify-between items-center">
+      <h2 class="text-2xl font-bold">Ajouter un Manhwa</h2><button id="close-manhwa-modal" class="text-gray-400 hover:text-gray-600">
+       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+       </svg></button>
+     </div>
+    </div>
+    <form id="add-manhwa-form" class="p-6">
+     <div class="mb-4"><label for="manhwa-title" class="block text-sm font-medium mb-2">Titre du Manhwa</label> <input type="text" id="manhwa-title" class="input-field w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600" placeholder="Ex: Solo Leveling" required>
+     </div>
+     <div class="mb-4"><label for="manhwa-cover-url" class="block text-sm font-medium mb-2">URL de l'image de couverture</label> <input type="text" id="manhwa-cover-url" class="input-field w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600" placeholder="https://exemple.com/cover.jpg" required>
+      <p class="text-xs text-gray-500 mt-1">💡 Colle le lien direct de ton image (Imgur, Google Drive, etc.)</p>
+      <div id="image-preview" class="mt-2 hidden"><img id="preview-img" class="w-32 h-40 object-cover rounded-lg shadow-md" alt="Aperçu">
+      </div>
+     </div>
+     <div class="mb-6"><label for="manhwa-description" class="block text-sm font-medium mb-2">Description</label> <textarea id="manhwa-description" rows="3" class="input-field w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600" placeholder="Description du manhwa..." required></textarea>
+     </div>
+     <div class="flex justify-end space-x-3"><button type="button" id="cancel-manhwa" class="px-4 py-2 border rounded-lg hover:bg-gray-100">Annuler</button> <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700"> <span id="manhwa-submit-text">Ajouter</span> <span id="manhwa-loading" class="hidden"> <span class="inline-block loading-spinner w-5 h-5"></span> </span> </button>
+     </div>
+    </form>
+   </div>
+  </div><!-- Modal: Ajouter un Chapitre -->
+  <div id="add-chapter-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+   <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90%] overflow-y-auto">
+    <div class="p-6 border-b">
+     <div class="flex justify-between items-center">
+      <h2 class="text-2xl font-bold">Ajouter un Chapitre</h2><button id="close-chapter-modal" class="text-gray-400 hover:text-gray-600">
+       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+       </svg></button>
+     </div>
+    </div>
+    <form id="add-chapter-form" class="p-6">
+     <div class="mb-4"><label for="chapter-number" class="block text-sm font-medium mb-2">Numéro du Chapitre</label> <input type="number" id="chapter-number" class="input-field w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600" placeholder="1" required>
+     </div>
+     <div class="mb-4"><label for="chapter-title" class="block text-sm font-medium mb-2">Titre du Chapitre</label> <input type="text" id="chapter-title" class="input-field w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600" placeholder="Ex: Le Réveil" required>
+     </div>
+     <div class="mb-4"><label for="chapter-description" class="block text-sm font-medium mb-2">Description (optionnel)</label> <textarea id="chapter-description" rows="2" class="input-field w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600" placeholder="Courte description du chapitre..."></textarea>
+     </div>
+     <div class="mb-6"><label for="mhtml-path" class="block text-sm font-medium mb-2">📄 Chemin du fichier MHTML</label> <input type="text" id="mhtml-path" class="input-field w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600" placeholder="chapitres/qqq/6.mhtml" required>
+      <p class="text-xs text-gray-500 mt-1">💡 Colle juste: chapitres/ton-dossier/fichier.mhtml</p>
+      <div id="mhtml-status" class="hidden mt-4">
+       <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div class="flex items-center">
+         <div class="loading-spinner w-5 h-5 mr-3"></div>
+         <p class="text-blue-700 font-medium">Chargement et extraction des images...</p>
+        </div>
+       </div>
+      </div>
+      <div id="mhtml-preview" class="hidden mt-4">
+       <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-3">
+        <p class="text-green-700 font-bold">✅ <span id="mhtml-count">0</span> images extraites!</p>
+       </div>
+       <div id="mhtml-preview-grid" class="grid grid-cols-4 gap-2"><!-- Aperçus des images MHTML -->
+       </div>
+      </div>
+     </div>
+     <div class="flex justify-end space-x-3"><button type="button" id="cancel-chapter" class="px-4 py-2 border rounded-lg hover:bg-gray-100">Annuler</button> <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700"> <span id="chapter-submit-text">Ajouter Chapitre</span> <span id="chapter-loading" class="hidden"> <span class="inline-block loading-spinner w-5 h-5"></span> </span> </button>
+     </div>
+    </form>
+   </div>
+  </div><!-- Settings Panel -->
+  <div id="settings-panel" class="fixed top-16 right-0 h-full w-80 bg-white shadow-lg transform translate-x-full transition-transform duration-300 z-40">
+   <div class="p-6">
+    <div class="flex justify-between items-center mb-6">
+     <h2 class="text-xl font-bold">Paramètres</h2><button id="close-settings" class="p-1 hover:bg-gray-100 rounded">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg></button>
+    </div><!-- Mode sombre -->
+    <div class="mb-6">
+     <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+      <div class="flex items-center">
+       <svg id="theme-icon" class="w-5 h-5 mr-3 text-indigo-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+       </svg>
+       <div>
+        <h3 class="font-semibold">Mode sombre</h3>
+        <p class="text-xs text-gray-500">Thème de l'interface</p>
+       </div>
+      </div><button id="theme-toggle" class="relative inline-flex items-center h-6 rounded-full w-11 bg-gray-300 transition-colors"> <span id="toggle-circle" class="inline-block w-4 h-4 transform translate-x-1 bg-white rounded-full transition-transform"></span> </button>
+     </div>
+    </div><!-- Ajouter manhwa -->
+    <div class="mb-6"><button id="add-manhwa-settings" class="w-full flex items-center justify-between p-4 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors">
+      <div class="flex items-center">
+       <svg class="w-5 h-5 mr-3 text-indigo-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+       </svg>
+       <div class="text-left">
+        <h3 class="font-semibold text-indigo-900">Ajouter un Manhwa</h3>
+        <p class="text-xs text-indigo-600">Nouveau manhwa à lire</p>
+       </div>
+      </div>
+      <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+      </svg></button>
+    </div><!-- Statistiques -->
+    <div class="mt-8 p-4 bg-gray-50 rounded-lg">
+     <h3 class="font-semibold mb-3 text-sm text-gray-500 uppercase">Statistiques</h3>
+     <div class="space-y-2">
+      <div class="flex justify-between"><span class="text-sm">Manhwas</span> <span id="stats-manhwas" class="font-bold text-indigo-600">0</span>
+      </div>
+      <div class="flex justify-between"><span class="text-sm">Chapitres</span> <span id="stats-chapters" class="font-bold text-indigo-600">0</span>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div><!-- Loading Overlay -->
+  <div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+   <div class="bg-white rounded-lg p-8 flex flex-col items-center">
+    <div class="loading-spinner mb-4"></div>
+    <p class="text-gray-700 font-medium">Chargement...</p>
+   </div>
+  </div>
+  <script>
+        // Configuration et état global
+        let currentManhwaId = null;
+        let currentChapterNumber = null;
+        let allManhwas = [];
+        let allChapters = [];
+        let isDarkMode = false;
+        let isLocalMode = false;
+
+        // Éléments DOM
+        const menuBtn = document.getElementById('menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const settingsBtn = document.getElementById('settings-btn');
+        const settingsPanel = document.getElementById('settings-panel');
+        const closeSettings = document.getElementById('close-settings');
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const toggleCircle = document.getElementById('toggle-circle');
+        const addManhwaSettings = document.getElementById('add-manhwa-settings');
+        const addManhwaModal = document.getElementById('add-manhwa-modal');
+        const closeManhwaModal = document.getElementById('close-manhwa-modal');
+        const addManhwaForm = document.getElementById('add-manhwa-form');
+        const addChapterModal = document.getElementById('add-chapter-modal');
+        const closeChapterModal = document.getElementById('close-chapter-modal');
+        const addChapterForm = document.getElementById('add-chapter-form');
+        const navItems = document.querySelectorAll('.nav-item');
+
+        // Simulateur SDK pour test en local
+        function createLocalSDK() {
+            let localData = JSON.parse(localStorage.getItem('manhwaData') || '[]');
+            let dataHandler = null;
+
+            return {
+                init: async (handler) => {
+                    dataHandler = handler;
+                    setTimeout(() => {
+                        if (dataHandler) {
+                            dataHandler.onDataChanged(localData);
+                        }
+                    }, 100);
+                    return { isOk: true };
+                },
+                create: async (data) => {
+                    data.__backendId = 'local_' + Date.now() + '_' + Math.random();
+                    localData.push(data);
+                    localStorage.setItem('manhwaData', JSON.stringify(localData));
+                    
+                    if (dataHandler) {
+                        setTimeout(() => dataHandler.onDataChanged(localData), 100);
+                    }
+                    return { isOk: true };
+                },
+                update: async (record) => {
+                    const index = localData.findIndex(item => item.__backendId === record.__backendId);
+                    if (index !== -1) {
+                        localData[index] = record;
+                        localStorage.setItem('manhwaData', JSON.stringify(localData));
+                        if (dataHandler) {
+                            setTimeout(() => dataHandler.onDataChanged(localData), 100);
+                        }
+                    }
+                    return { isOk: true };
+                },
+                delete: async (record) => {
+                    localData = localData.filter(item => item.__backendId !== record.__backendId);
+                    localStorage.setItem('manhwaData', JSON.stringify(localData));
+                    if (dataHandler) {
+                        setTimeout(() => dataHandler.onDataChanged(localData), 100);
+                    }
+                    return { isOk: true };
+                }
+            };
+        }
+
+        // Initialisation du Data SDK
+        const dataHandler = {
+            onDataChanged(data) {
+                const manhwas = data.filter(item => item.manhwa_id && !item.chapter_number);
+                const chapters = data.filter(item => item.chapter_number);
+                
+                allManhwas = manhwas;
+                allChapters = chapters;
+                
+                updateAllPages();
+            }
+        };
+
+        async function initializeApp() {
+            // Détection automatique: local ou Canva
+            if (!window.dataSdk) {
+                console.log('🔧 Mode LOCAL détecté - Utilisation de localStorage');
+                isLocalMode = true;
+                window.dataSdk = createLocalSDK();
+                showNotification('Mode test local activé 🔧', 'info');
+            } else {
+                console.log('☁️ Mode CANVA détecté - Utilisation du Data SDK');
+                isLocalMode = false;
+            }
+
+            const result = await window.dataSdk.init(dataHandler);
+            if (!result.isOk) {
+                showNotification('Erreur lors de l\'initialisation', 'error');
+                console.error('Erreur SDK:', result.error);
+            }
+        }
+
+        // Gestion du thème
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark-mode');
+            document.getElementById('navbar').classList.toggle('dark-mode');
+            document.getElementById('sidebar').classList.toggle('dark-mode');
+            settingsPanel.classList.toggle('dark-mode');
+            
+            // Mettre à jour tous les éléments avec la classe card
+            document.querySelectorAll('.card').forEach(card => {
+                card.classList.toggle('dark-mode');
+            });
+            
+            // Mettre à jour tous les modals
+            document.querySelectorAll('#add-manhwa-modal > div, #add-chapter-modal > div').forEach(modal => {
+                modal.classList.toggle('dark-mode');
+            });
+            
+            // Mettre à jour le toggle switch
+            if (isDarkMode) {
+                themeToggle.classList.remove('bg-gray-300');
+                themeToggle.classList.add('bg-indigo-600');
+                toggleCircle.classList.remove('translate-x-1');
+                toggleCircle.classList.add('translate-x-6');
+                themeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>';
+            } else {
+                themeToggle.classList.remove('bg-indigo-600');
+                themeToggle.classList.add('bg-gray-300');
+                toggleCircle.classList.remove('translate-x-6');
+                toggleCircle.classList.add('translate-x-1');
+                themeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>';
+            }
+            
+            localStorage.setItem('darkMode', isDarkMode);
+        }
+
+        themeToggle.addEventListener('click', toggleTheme);
+
+        // Charger le thème sauvegardé au démarrage
+        function loadSavedTheme() {
+            const savedTheme = localStorage.getItem('darkMode');
+            if (savedTheme === 'true') {
+                isDarkMode = false; // On met false pour que toggleTheme() le passe à true
+                toggleTheme();
+            }
+        }
+
+        // Appeler loadSavedTheme() au démarrage
+        loadSavedTheme();
+
+        // Gestion du menu sidebar
+        menuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+            settingsPanel.classList.add('translate-x-full');
+        });
+
+        // Gestion du panneau paramètres
+        settingsBtn.addEventListener('click', () => {
+            settingsPanel.classList.toggle('translate-x-full');
+            sidebar.classList.add('-translate-x-full');
+        });
+
+        closeSettings.addEventListener('click', () => {
+            settingsPanel.classList.add('translate-x-full');
+        });
+
+        // Bouton ajouter manhwa depuis paramètres
+        addManhwaSettings.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            addManhwaModal.classList.remove('hidden');
+            settingsPanel.classList.add('translate-x-full');
+        });
+
+        // Fermer sidebar et settings en cliquant en dehors
+        document.addEventListener('click', (e) => {
+            if (!sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
+                sidebar.classList.add('-translate-x-full');
+            }
+            if (!settingsPanel.contains(e.target) && !settingsBtn.contains(e.target)) {
+                settingsPanel.classList.add('translate-x-full');
+            }
+        });
+
+        // Navigation entre les pages
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const page = item.getAttribute('data-page');
+                showPage(page);
+                sidebar.classList.add('-translate-x-full');
+            });
+        });
+
+        function showPage(pageName) {
+            document.querySelectorAll('.page-content').forEach(page => {
+                page.classList.add('hidden');
+            });
+            
+            const pageElement = document.getElementById(`${pageName}-page`);
+            if (pageElement) {
+                pageElement.classList.remove('hidden');
+            }
+        }
+
+        // Modal Manhwa - Gestion des images
+        const coverUrl = document.getElementById('manhwa-cover-url');
+        const imagePreview = document.getElementById('image-preview');
+        const previewImg = document.getElementById('preview-img');
+
+        // Prévisualisation de l'image URL
+        coverUrl.addEventListener('input', (e) => {
+            const url = e.target.value.trim();
+            if (url) {
+                previewImg.src = url;
+                imagePreview.classList.remove('hidden');
+                previewImg.onerror = () => {
+                    imagePreview.classList.add('hidden');
+                };
+            } else {
+                imagePreview.classList.add('hidden');
+            }
+        });
+
+        closeManhwaModal.addEventListener('click', () => {
+            addManhwaModal.classList.add('hidden');
+            addManhwaForm.reset();
+            imagePreview.classList.add('hidden');
+        });
+
+        document.getElementById('cancel-manhwa').addEventListener('click', () => {
+            addManhwaModal.classList.add('hidden');
+            addManhwaForm.reset();
+            imagePreview.classList.add('hidden');
+        });
+
+        addManhwaForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const submitText = document.getElementById('manhwa-submit-text');
+            const loading = document.getElementById('manhwa-loading');
+            
+            submitText.classList.add('hidden');
+            loading.classList.remove('hidden');
+            submitBtn.disabled = true;
+
+            const title = document.getElementById('manhwa-title').value.trim();
+            const coverImageUrl = document.getElementById('manhwa-cover-url').value.trim();
+            const description = document.getElementById('manhwa-description').value.trim();
+
+            const manhwaId = 'manhwa_' + Date.now();
+
+            const result = await window.dataSdk.create({
+                manhwa_id: manhwaId,
+                manhwa_title: title,
+                manhwa_cover: coverImageUrl,
+                manhwa_description: description,
+                date_added: new Date().toISOString()
+            });
+
+            if (result.isOk) {
+                showNotification('Manhwa ajouté avec succès!', 'success');
+                addManhwaModal.classList.add('hidden');
+                addManhwaForm.reset();
+                imagePreview.classList.add('hidden');
+            } else {
+                showNotification('Erreur lors de l\'ajout du manhwa', 'error');
+                console.error('Erreur:', result.error);
+            }
+
+            submitText.classList.remove('hidden');
+            loading.classList.add('hidden');
+            submitBtn.disabled = false;
+        });
+
+        // Modal Chapitre
+        closeChapterModal.addEventListener('click', () => {
+            addChapterModal.classList.add('hidden');
+            addChapterForm.reset();
+            document.getElementById('mhtml-preview').classList.add('hidden');
+            document.getElementById('mhtml-status').classList.add('hidden');
+        });
+
+        document.getElementById('cancel-chapter').addEventListener('click', () => {
+            addChapterModal.classList.add('hidden');
+            addChapterForm.reset();
+            document.getElementById('mhtml-preview').classList.add('hidden');
+            document.getElementById('mhtml-status').classList.add('hidden');
+        });
+
+        // Vérifier rapidement que le fichier MHTML existe quand l'utilisateur entre le chemin
+        const mhtmlPathInput = document.getElementById('mhtml-path');
+        let checkTimeout = null;
+        mhtmlPathInput.addEventListener('input', async (e) => {
+            const path = e.target.value.trim();
+            const statusDiv = document.getElementById('mhtml-status');
+            const previewDiv = document.getElementById('mhtml-preview');
+            
+            if (!path || !path.endsWith('.mhtml')) {
+                statusDiv.classList.add('hidden');
+                previewDiv.classList.add('hidden');
+                return;
+            }
+            
+            // Attendre 1 seconde après que l'utilisateur arrête de taper
+            clearTimeout(checkTimeout);
+            statusDiv.classList.remove('hidden');
+            statusDiv.innerHTML = `
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div class="flex items-center">
+                        <div class="loading-spinner w-5 h-5 mr-3"></div>
+                        <p class="text-blue-700 font-medium">Vérification du fichier...</p>
+                    </div>
+                </div>
+            `;
+            previewDiv.classList.add('hidden');
+            
+            checkTimeout = setTimeout(async () => {
+                try {
+                    // Nettoyer le chemin
+                    let cleanPath = path.replace(/\\/g, '/');
+                if (cleanPath.includes('Site/')) {
+                    cleanPath = cleanPath.split('Site/')[1];
+                }
+                if (cleanPath.includes('chapitres/') && !cleanPath.startsWith('chapitres/')) {
+                    cleanPath = cleanPath.substring(cleanPath.indexOf('chapitres/'));
+                }
+                    if (!cleanPath.startsWith('./') && !cleanPath.startsWith('/') && !cleanPath.startsWith('http')) {
+                        cleanPath = './' + cleanPath;
+                    }
+                    
+                    const response = await fetch(cleanPath, { method: 'HEAD' });
+                    if (response.ok) {
+                        statusDiv.innerHTML = `
+                            <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                                <p class="text-green-700 font-bold">✅ Fichier MHTML trouvé et valide!</p>
+                                <p class="text-green-600 text-sm mt-1">Le fichier sera chargé lors de l'ouverture du chapitre</p>
+                            </div>
+                        `;
+                    } else {
+                        throw new Error(`Fichier non trouvé (Status: ${response.status})`);
+                    }
+                } catch (error) {
+                    statusDiv.innerHTML = `
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                            <p class="text-red-700 font-bold">❌ Fichier non trouvé</p>
+                            <p class="text-red-600 text-sm mt-1">${error.message}</p>
+                        </div>
+                    `;
+                }
+            }, 1000);
+        });
+
+
+
+
+        addChapterForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!currentManhwaId) {
+                showNotification('Erreur: Aucun manhwa sélectionné', 'error');
+                return;
+            }
+
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const submitText = document.getElementById('chapter-submit-text');
+            const loading = document.getElementById('chapter-loading');
+            
+            submitText.classList.add('hidden');
+            loading.classList.remove('hidden');
+            submitBtn.disabled = true;
+
+            const chapterNumber = parseInt(document.getElementById('chapter-number').value);
+            const chapterTitle = document.getElementById('chapter-title').value.trim();
+            const chapterDescription = document.getElementById('chapter-description').value.trim();
+
+            // Vérifier si le chapitre existe déjà
+            const existingChapter = allChapters.find(ch => 
+                ch.manhwa_id === currentManhwaId && ch.chapter_number === chapterNumber
+            );
+
+            if (existingChapter) {
+                showNotification(`Le chapitre ${chapterNumber} existe déjà`, 'error');
+                submitText.classList.remove('hidden');
+                loading.classList.add('hidden');
+                submitBtn.disabled = false;
+                return;
+            }
+
+            // Récupérer le chemin MHTML entré par l'utilisateur
+            let mhtmlPath = document.getElementById('mhtml-path').value.trim();
+            if (!mhtmlPath) {
+                showNotification('Veuillez entrer le chemin du fichier MHTML', 'error');
+                submitText.classList.remove('hidden');
+                loading.classList.add('hidden');
+                submitBtn.disabled = false;
+                return;
+            }
+
+            // Nettoyer le chemin pour le stockage
+            mhtmlPath = mhtmlPath.replace(/\\/g, '/');
+            if (mhtmlPath.includes('Site/')) {
+                mhtmlPath = mhtmlPath.split('Site/')[1];
+            }
+            if (mhtmlPath.includes('chapitres/') && !mhtmlPath.startsWith('chapitres/')) {
+                mhtmlPath = mhtmlPath.substring(mhtmlPath.indexOf('chapitres/'));
+            }
+            if (!mhtmlPath.startsWith('./') && !mhtmlPath.startsWith('/') && !mhtmlPath.startsWith('http')) {
+                mhtmlPath = './' + mhtmlPath;
+            }
+
+            // Vérifier rapidement que le fichier existe (sans extraire les images)
+            try {
+                const testPath = mhtmlPath.startsWith('./') ? mhtmlPath : './' + mhtmlPath;
+                const response = await fetch(testPath, { method: 'HEAD' });
+                if (!response.ok) {
+                    throw new Error(`Fichier non trouvé: ${testPath}`);
+                }
+            } catch (error) {
+                showNotification(`Fichier MHTML non trouvé: ${mhtmlPath}`, 'error');
+                submitText.classList.remove('hidden');
+                loading.classList.add('hidden');
+                submitBtn.disabled = false;
+                return;
+            }
+            
+            // Stocker seulement le chemin du fichier MHTML (pas les images)
+            const result = await window.dataSdk.create({
+                manhwa_id: currentManhwaId,
+                chapter_number: chapterNumber,
+                chapter_title: chapterTitle,
+                chapter_description: chapterDescription,
+                chapter_pages: mhtmlPath, // Stocker le chemin au lieu des images
+                date_added: new Date().toISOString()
+            });
+
+            if (result.isOk) {
+                showNotification('Chapitre ajouté avec succès! 🎉', 'success');
+                addChapterModal.classList.add('hidden');
+                addChapterForm.reset();
+                document.getElementById('mhtml-preview').classList.add('hidden');
+                document.getElementById('mhtml-status').classList.add('hidden');
+            } else {
+                showNotification('Erreur lors de l\'ajout du chapitre', 'error');
+            }
+
+            submitText.classList.remove('hidden');
+            loading.classList.add('hidden');
+            submitBtn.disabled = false;
+        });
+
+        // Mise à jour de toutes les pages
+        function updateAllPages() {
+            updateHomePage();
+            updateLibraryPage();
+            updateRecentPage();
+            updateStatistics();
+        }
+
+        // Mise à jour des statistiques
+        function updateStatistics() {
+            document.getElementById('stats-manhwas').textContent = allManhwas.length;
+            document.getElementById('stats-chapters').textContent = allChapters.length;
+        }
+
+        // Page d'accueil
+        function updateHomePage() {
+            const continueReadingContainer = document.getElementById('continue-reading');
+            const latestChaptersContainer = document.getElementById('latest-chapters');
+
+            continueReadingContainer.innerHTML = '';
+            latestChaptersContainer.innerHTML = '';
+
+            if (allManhwas.length === 0) {
+                continueReadingContainer.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <svg class="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                        <h3 class="text-xl font-semibold text-gray-600 mb-2">Aucun manhwa dans votre bibliothèque</h3>
+                        <p class="text-gray-500 mb-4">Commencez par ajouter votre premier manhwa!</p>
+                        <button onclick="openAddManhwaModal()" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700">
+                            Ajouter un Manhwa
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            // Afficher les manhwas avec progression
+            allManhwas.forEach(manhwa => {
+                const chapters = allChapters.filter(ch => ch.manhwa_id === manhwa.manhwa_id);
+                const totalChapters = chapters.length;
+                const lastChapter = chapters.sort((a, b) => b.chapter_number - a.chapter_number)[0];
+
+                const card = document.createElement('div');
+                card.className = 'card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer';
+                card.onclick = () => showManhwaDetail(manhwa.manhwa_id);
+                card.innerHTML = `
+                    <img src="${manhwa.manhwa_cover}" alt="${manhwa.manhwa_title}" class="manhwa-cover">
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-2">${manhwa.manhwa_title}</h3>
+                        ${lastChapter ? `
+                            <p class="text-sm text-gray-600 mb-2">Dernier chapitre: ${lastChapter.chapter_number}</p>
+                            <span class="badge bg-indigo-100 text-indigo-600">${totalChapters} chapitres</span>
+                        ` : `
+                            <p class="text-sm text-gray-500">Aucun chapitre disponible</p>
+                        `}
+                    </div>
+                `;
+                continueReadingContainer.appendChild(card);
+            });
+
+            // Afficher les derniers chapitres
+            const sortedChapters = [...allChapters].sort((a, b) => 
+                new Date(b.date_added) - new Date(a.date_added)
+            ).slice(0, 10);
+
+            sortedChapters.forEach(chapter => {
+                const manhwa = allManhwas.find(m => m.manhwa_id === chapter.manhwa_id);
+                if (!manhwa) return;
+
+                const chapterItem = document.createElement('div');
+                chapterItem.className = 'chapter-item bg-white rounded-lg shadow-md p-4 flex items-center cursor-pointer';
+                chapterItem.onclick = () => readChapter(chapter.manhwa_id, chapter.chapter_number);
+                chapterItem.innerHTML = `
+                    <img src="${manhwa.manhwa_cover}" alt="${manhwa.manhwa_title}" class="w-16 h-20 object-cover rounded mr-4">
+                    <div class="flex-grow">
+                        <h4 class="font-semibold">${manhwa.manhwa_title}</h4>
+                        <p class="text-sm text-gray-600">Chapitre ${chapter.chapter_number}: ${chapter.chapter_title}</p>
+                        <p class="text-xs text-gray-500 mt-1">${formatDate(chapter.date_added)}</p>
+                    </div>
+                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                `;
+                latestChaptersContainer.appendChild(chapterItem);
+            });
+        }
+
+        // Fonction pour ouvrir le modal d'ajout de manhwa
+        function openAddManhwaModal() {
+            addManhwaModal.classList.remove('hidden');
+        }
+
+        // Page bibliothèque
+        function updateLibraryPage() {
+            const libraryGrid = document.getElementById('library-grid');
+            libraryGrid.innerHTML = '';
+
+            if (allManhwas.length === 0) {
+                libraryGrid.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <p class="text-gray-500">Votre bibliothèque est vide</p>
+                    </div>
+                `;
+                return;
+            }
+
+            allManhwas.forEach(manhwa => {
+                const chapters = allChapters.filter(ch => ch.manhwa_id === manhwa.manhwa_id);
+                const card = document.createElement('div');
+                card.className = 'card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer';
+                card.onclick = () => showManhwaDetail(manhwa.manhwa_id);
+                card.innerHTML = `
+                    <img src="${manhwa.manhwa_cover}" alt="${manhwa.manhwa_title}" class="manhwa-cover">
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-2">${manhwa.manhwa_title}</h3>
+                        <p class="text-sm text-gray-600 mb-2 line-clamp-2">${manhwa.manhwa_description}</p>
+                        <span class="badge bg-indigo-100 text-indigo-600">${chapters.length} chapitres</span>
+                    </div>
+                `;
+                libraryGrid.appendChild(card);
+            });
+        }
+
+        // Page récents
+        function updateRecentPage() {
+            const recentList = document.getElementById('recent-list');
+            recentList.innerHTML = '';
+
+            const recentChapters = [...allChapters]
+                .sort((a, b) => new Date(b.date_added) - new Date(a.date_added))
+                .slice(0, 20);
+
+            if (recentChapters.length === 0) {
+                recentList.innerHTML = `
+                    <div class="text-center py-12">
+                        <p class="text-gray-500">Aucun historique de lecture</p>
+                    </div>
+                `;
+                return;
+            }
+
+            recentChapters.forEach(chapter => {
+                const manhwa = allManhwas.find(m => m.manhwa_id === chapter.manhwa_id);
+                if (!manhwa) return;
+
+                const item = document.createElement('div');
+                item.className = 'bg-white rounded-lg shadow-md p-4 flex items-center cursor-pointer hover:bg-gray-50';
+                item.onclick = () => readChapter(chapter.manhwa_id, chapter.chapter_number);
+                item.innerHTML = `
+                    <img src="${manhwa.manhwa_cover}" alt="${manhwa.manhwa_title}" class="w-16 h-20 object-cover rounded mr-4">
+                    <div class="flex-grow">
+                        <h4 class="font-semibold">${manhwa.manhwa_title}</h4>
+                        <p class="text-sm text-gray-600">Chapitre ${chapter.chapter_number}: ${chapter.chapter_title}</p>
+                        <p class="text-xs text-gray-500 mt-1">${formatDate(chapter.date_added)}</p>
+                    </div>
+                `;
+                recentList.appendChild(item);
+            });
+        }
+
+        // Afficher le détail d'un manhwa
+        function showManhwaDetail(manhwaId) {
+            currentManhwaId = manhwaId;
+            const manhwa = allManhwas.find(m => m.manhwa_id === manhwaId);
+            if (!manhwa) return;
+
+            const chapters = allChapters
+                .filter(ch => ch.manhwa_id === manhwaId)
+                .sort((a, b) => a.chapter_number - b.chapter_number);
+
+            const detailContent = document.getElementById('manhwa-detail-content');
+            detailContent.innerHTML = `
+                <div class="grid md:grid-cols-3 gap-8 mb-8">
+                    <div>
+                        <img src="${manhwa.manhwa_cover}" alt="${manhwa.manhwa_title}" class="w-full rounded-lg shadow-lg">
+                    </div>
+                    <div class="md:col-span-2">
+                        <h1 class="text-4xl font-bold mb-4">${manhwa.manhwa_title}</h1>
+                        <p class="text-gray-600 mb-6">${manhwa.manhwa_description}</p>
+                        <div class="flex items-center space-x-4 mb-6">
+                            <span class="badge bg-indigo-100 text-indigo-600">${chapters.length} chapitres</span>
+                            <span class="badge bg-green-100 text-green-600">En cours</span>
+                        </div>
+                        <div class="flex space-x-3">
+                            <button onclick="openAddChapterModal()" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 flex items-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                </svg>
+                                Ajouter un Chapitre
+                            </button>
+                            <button onclick="deleteManhwa('${manhwa.__backendId}')" class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 flex items-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                                Supprimer ce Manhwa
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl font-bold mb-4">Liste des Chapitres</h2>
+                <div class="space-y-3">
+                    ${chapters.length === 0 ? `
+                        <div class="bg-gray-100 rounded-lg p-8 text-center">
+                            <p class="text-gray-500">Aucun chapitre disponible. Ajoutez-en un!</p>
+                        </div>
+                    ` : chapters.map(chapter => `
+                        <div class="chapter-item bg-white rounded-lg shadow-md p-4 flex items-center">
+                            <img src="${manhwa.manhwa_cover}" alt="${manhwa.manhwa_title}" class="w-12 h-16 object-cover rounded mr-4">
+                            <div class="flex-shrink-0 w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mr-4">
+                                <span class="font-bold text-indigo-600">${chapter.chapter_number}</span>
+                            </div>
+                            <div class="flex-grow cursor-pointer" onclick="readChapter('${manhwaId}', ${chapter.chapter_number})">
+                                <h3 class="font-semibold">Chapitre ${chapter.chapter_number}: ${chapter.chapter_title}</h3>
+                                ${chapter.chapter_description ? `<p class="text-sm text-gray-600">${chapter.chapter_description}</p>` : ''}
+                                <p class="text-xs text-gray-500 mt-1">${formatDate(chapter.date_added)}</p>
+                            </div>
+                            <button onclick="event.stopPropagation(); deleteChapter('${chapter.__backendId}')" class="ml-4 p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Supprimer ce chapitre">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+                            <svg class="w-6 h-6 text-gray-400 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24" onclick="readChapter('${manhwaId}', ${chapter.chapter_number})">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            showPage('manhwa-detail');
+        }
+
+        // Ouvrir le modal d'ajout de chapitre
+        function openAddChapterModal() {
+            addChapterModal.classList.remove('hidden');
+        }
+
+        // Retour à la bibliothèque
+        document.getElementById('back-to-library').addEventListener('click', () => {
+            showPage('library');
+        });
+
+        // Lire un chapitre
+        async function readChapter(manhwaId, chapterNumber) {
+            currentManhwaId = manhwaId;
+            currentChapterNumber = chapterNumber;
+
+            const chapter = allChapters.find(ch => 
+                ch.manhwa_id === manhwaId && ch.chapter_number === chapterNumber
+            );
+
+            if (!chapter) {
+                showNotification('Chapitre introuvable', 'error');
+                return;
+            }
+
+            const manhwa = allManhwas.find(m => m.manhwa_id === manhwaId);
+            
+            // Mettre à jour l'info du chapitre
+            document.getElementById('chapter-info').textContent = 
+                `${manhwa.manhwa_title} - Chapitre ${chapterNumber}`;
+
+            const readerContent = document.getElementById('reader-content');
+            
+            // Afficher un loader
+            readerContent.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-12">
+                    <div class="loading-spinner mb-4"></div>
+                    <p class="text-gray-600">Chargement du chapitre...</p>
+                </div>
+            `;
+
+            showPage('reader');
+            window.scrollTo(0, 0);
+
+            // Le chapter_pages contient maintenant le chemin du fichier MHTML
+            const mhtmlPath = chapter.chapter_pages.trim();
+            
+            // Nettoyer le chemin
+            let cleanPath = mhtmlPath.replace(/\\/g, '/');
+            if (cleanPath.includes('Site/')) {
+                cleanPath = cleanPath.split('Site/')[1];
+            }
+            if (cleanPath.includes('chapitres/') && !cleanPath.startsWith('chapitres/')) {
+                cleanPath = cleanPath.substring(cleanPath.indexOf('chapitres/'));
+            }
+            if (!cleanPath.startsWith('./') && !cleanPath.startsWith('/') && !cleanPath.startsWith('http')) {
+                cleanPath = './' + cleanPath;
+            }
+            
+            // Charger le fichier MHTML et extraire le contenu HTML pour l'afficher
+            try {
+                const response = await fetch(cleanPath);
+                if (!response.ok) {
+                    throw new Error(`Fichier non trouvé: ${cleanPath}`);
+                }
+                
+                const text = await response.text();
+                
+                // Trouver le boundary
+                const boundaryMatch = text.match(/boundary="?([^"\r\n]+)"?/i);
+                let boundary = '------MultipartBoundary';
+                if (boundaryMatch) {
+                    boundary = boundaryMatch[1].trim();
+                    if (!boundary.startsWith('----')) {
+                        boundary = '----' + boundary;
+                    }
+                }
+                
+                // Parser le MHTML pour trouver la partie HTML principale
+                const parts = text.split(new RegExp(boundary.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+                let htmlContent = '';
+                
+                for (const part of parts) {
+                    // Chercher la partie avec Content-Type: text/html
+                    if (part.includes('Content-Type: text/html') || part.includes('content-type: text/html')) {
+                        // Trouver la fin des headers (double saut de ligne)
+                        const headerEndMatch = part.match(/\r?\n\r?\n/);
+                        if (headerEndMatch) {
+                            const headerEndIndex = headerEndMatch.index + headerEndMatch[0].length;
+                            htmlContent = part.substring(headerEndIndex);
+                            // Nettoyer le HTML (enlever les boundaries restants)
+                            htmlContent = htmlContent.split(boundary)[0].trim();
+                            break;
+                        }
+                    }
+                }
+                
+                if (htmlContent) {
+                    // Créer un iframe sandbox pour afficher le HTML
+                    const iframe = document.createElement('iframe');
+                    iframe.style.cssText = 'width: 100%; min-height: 100vh; border: none; background: white;';
+                    iframe.sandbox = 'allow-same-origin allow-scripts';
+                    iframe.onload = () => {
+                        updateProgress();
+                        console.log('MHTML HTML chargé avec succès');
+                    };
+                    
+                    // Écrire le HTML dans l'iframe
+                    readerContent.innerHTML = '';
+                    readerContent.appendChild(iframe);
+                    
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    iframeDoc.open();
+                    iframeDoc.write(htmlContent);
+                    iframeDoc.close();
+                } else {
+                    throw new Error('Aucun contenu HTML trouvé dans le fichier MHTML');
+                }
+                
+            } catch (error) {
+                console.error('Erreur lors du chargement du MHTML:', error);
+                readerContent.innerHTML = `
+                    <div class="text-center py-12">
+                        <p class="text-red-600">Erreur lors du chargement du chapitre</p>
+                        <p class="text-gray-500 text-sm mt-2">${error.message}</p>
+                        <p class="text-gray-500 text-xs mt-1">Chemin: ${cleanPath}</p>
+                    </div>
+                `;
+            }
+
+            // Gérer les boutons de navigation
+            updateChapterNavigation(manhwaId, chapterNumber);
+        }
+
+        // Fonction optimisée pour extraire les images d'un MHTML (sans stockage)
+        async function extractImagesFromMhtml(mhtmlPath) {
+            // Nettoyer le chemin
+            let cleanPath = mhtmlPath.replace(/\\/g, '/');
+            if (cleanPath.includes('Site/')) {
+                cleanPath = cleanPath.split('Site/')[1];
+            }
+            if (cleanPath.includes('chapitres/') && !cleanPath.startsWith('chapitres/')) {
+                cleanPath = cleanPath.substring(cleanPath.indexOf('chapitres/'));
+            }
+            if (!cleanPath.startsWith('./') && !cleanPath.startsWith('/') && !cleanPath.startsWith('http')) {
+                cleanPath = './' + cleanPath;
+            }
+
+            // Charger le fichier
+            const response = await fetch(cleanPath);
+            if (!response.ok) {
+                throw new Error(`Fichier non trouvé: ${cleanPath}`);
+            }
+
+            const arrayBuffer = await response.arrayBuffer();
+            const uint8Array = new Uint8Array(arrayBuffer);
+            
+            // Convertir en texte pour trouver le boundary et parser les headers
+            const decoder = new TextDecoder('utf-8', { fatal: false });
+            const text = decoder.decode(arrayBuffer);
+
+            // Trouver le boundary dans l'en-tête
+            const boundaryMatch = text.match(/boundary="?([^"\r\n]+)"?/i);
+            let boundary = '------MultipartBoundary';
+            if (boundaryMatch) {
+                boundary = boundaryMatch[1].trim();
+                if (!boundary.startsWith('----')) {
+                    boundary = '----' + boundary;
+                }
+            }
+
+            // Parser le texte pour trouver les sections d'images
+            const parts = text.split(new RegExp(boundary.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+            const images = [];
+            
+            // Calculer les offsets de texte pour chaque partie
+            let textOffset = 0;
+            const partOffsets = [];
+            for (let i = 0; i < parts.length; i++) {
+                partOffsets.push(textOffset);
+                textOffset += parts[i].length;
+                if (i > 0) textOffset += boundary.length;
+            }
+
+            for (let partIndex = 0; partIndex < parts.length; partIndex++) {
+                const part = parts[partIndex];
+                const textOffset = partOffsets[partIndex];
+                
+                // Vérifier si c'est une image
+                const contentTypeMatch = part.match(/[Cc]ontent-[Tt]ype:\s*image\/(jpeg|jpg|png|gif|webp|bmp)/i);
+                if (!contentTypeMatch) continue;
+
+                const imageType = contentTypeMatch[1].toLowerCase() === 'jpg' ? 'jpeg' : contentTypeMatch[1].toLowerCase();
+                const isBase64 = /[Cc]ontent-[Tt]ransfer-[Ee]ncoding:\s*base64/i.test(part);
+                const isBinary = /[Cc]ontent-[Tt]ransfer-[Ee]ncoding:\s*binary/i.test(part);
+
+                // Trouver la fin des headers (double saut de ligne)
+                const headerEndMatch = part.match(/\r?\n\r?\n/);
+                if (!headerEndMatch) continue;
+                
+                const headerEndIndex = headerEndMatch.index + headerEndMatch[0].length;
+                const dataText = part.substring(headerEndIndex);
+
+                if (isBase64) {
+                    // Extraire les données base64
+                    const lines = dataText.split(/\r?\n/);
+                    let base64Data = '';
+                    for (const line of lines) {
+                        const trimmed = line.trim();
+                        if (trimmed.startsWith('----')) break;
+                        if (trimmed && /^[A-Za-z0-9+/=\s]+$/.test(trimmed)) {
+                            base64Data += trimmed.replace(/\s/g, '');
+                        }
+                    }
+                    if (base64Data && base64Data.length > 100) {
+                        // Valider que c'est du base64 valide
+                        const base64Regex = /^[A-Za-z0-9+/]*={0,2}$/;
+                        if (!base64Regex.test(base64Data)) {
+                            console.warn(`Image base64 ${images.length + 1}: données base64 invalides`);
+                            continue;
+                        }
+                        const dataUrl = `data:image/${imageType};base64,${base64Data}`;
+                        console.log(`Image base64 extraite: type=${imageType}, taille=${base64Data.length} chars`);
+                        images.push(dataUrl);
+                    }
+                } else {
+                    // Pour les données binaires, utiliser une méthode plus précise
+                    // Trouver le boundary suivant dans le texte pour déterminer la fin
+                    const nextBoundaryIndex = text.indexOf(boundary, textOffset + part.length);
+                    
+                    // Calculer les positions dans le fichier binaire
+                    // Trouver la position du début de cette partie dans le binaire
+                    const partStartInText = textOffset;
+                    const partHeaderText = part.substring(0, headerEndIndex);
+                    
+                    // Chercher le début de cette partie dans le binaire
+                    // Utiliser Content-Location ou Content-ID comme marqueur unique
+                    const contentLocationMatch = part.match(/[Cc]ontent-[Ll]ocation:\s*([^\r\n]+)/i);
+                    const contentIdMatch = part.match(/[Cc]ontent-[Ii][Dd]:\s*<([^>]+)>/i);
+                    
+                    let binaryPartStart = -1;
+                    let headerBytesLength = 0;
+                    let searchStart = Math.max(0, Math.floor(textOffset * 0.9)); // Commencer près de la position attendue
+                    
+                    if (contentLocationMatch || contentIdMatch) {
+                        // Utiliser un header unique pour la recherche
+                        const uniqueHeader = contentLocationMatch ? contentLocationMatch[1] : contentIdMatch[1];
+                        const headerBytes = new TextEncoder().encode(uniqueHeader);
+                        headerBytesLength = headerBytes.length;
+                        
+                        // Chercher à partir d'une position approximative
+                        for (let pos = searchStart; pos < Math.min(searchStart + 100000, uint8Array.length - headerBytes.length); pos++) {
+                            let match = true;
+                            for (let k = 0; k < headerBytes.length; k++) {
+                                if (uint8Array[pos + k] !== headerBytes[k]) {
+                                    match = false;
+                                    break;
+                                }
+                            }
+                            if (match) {
+                                // Remonter pour trouver le début du boundary
+                                for (let back = pos; back >= Math.max(0, pos - 200); back--) {
+                                    const testBoundary = decoder.decode(uint8Array.slice(back, back + Math.min(50, uint8Array.length - back)));
+                                    if (testBoundary.includes(boundary.substring(0, 20))) {
+                                        binaryPartStart = back;
+                                        break;
+                                    }
+                                }
+                                if (binaryPartStart !== -1) break;
+                            }
+                        }
+                    }
+                    
+                    // Fallback: utiliser la position approximative basée sur le texte
+                    if (binaryPartStart === -1) {
+                        // Estimer la position en supposant que texte et binaire sont alignés au début
+                        binaryPartStart = Math.floor(textOffset);
+                        // Calculer la longueur du header en bytes
+                        const headerBytes = new TextEncoder().encode(partHeaderText);
+                        headerBytesLength = headerBytes.length;
+                    }
+                    
+                    // Trouver la fin des headers (chercher \r\n\r\n ou \n\n)
+                    let binaryDataStart = binaryPartStart + headerBytesLength;
+                    for (let pos = binaryDataStart - 20; pos < binaryDataStart + 20 && pos < uint8Array.length; pos++) {
+                        if (pos >= 0 && uint8Array[pos] === 0x0A && pos + 1 < uint8Array.length && uint8Array[pos + 1] === 0x0A) {
+                            binaryDataStart = pos + 2;
+                            break;
+                        }
+                        if (pos >= 1 && uint8Array[pos - 1] === 0x0D && uint8Array[pos] === 0x0A && 
+                            pos + 1 < uint8Array.length && uint8Array[pos + 1] === 0x0D && pos + 2 < uint8Array.length && uint8Array[pos + 2] === 0x0A) {
+                            binaryDataStart = pos + 3;
+                            break;
+                        }
+                    }
+                    
+                    // Trouver la fin des données (chercher le boundary suivant)
+                    const boundaryBytes = new TextEncoder().encode(boundary);
+                    let binaryDataEnd = uint8Array.length;
+                    
+                    // Chercher le boundary avec différents préfixes possibles
+                    const prefixes = [
+                        new TextEncoder().encode('\r\n' + boundary),
+                        new TextEncoder().encode('\n' + boundary),
+                        boundaryBytes
+                    ];
+                    
+                    for (const prefixBytes of prefixes) {
+                        for (let pos = binaryDataStart; pos < uint8Array.length - prefixBytes.length; pos++) {
+                            let match = true;
+                            for (let k = 0; k < prefixBytes.length; k++) {
+                                if (uint8Array[pos + k] !== prefixBytes[k]) {
+                                    match = false;
+                                    break;
+                                }
+                            }
+                            if (match) {
+                                binaryDataEnd = pos;
+                                break;
+                            }
+                        }
+                        if (binaryDataEnd < uint8Array.length) break;
+                    }
+                    
+                    // Extraire les données binaires
+                    if (binaryDataEnd > binaryDataStart && binaryDataEnd <= uint8Array.length) {
+                        const binaryData = uint8Array.slice(binaryDataStart, binaryDataEnd);
+                        
+                        if (binaryData.length >= 100) {
+                            // Vérifier la signature du fichier image
+                            let isValidImage = false;
+                            if (imageType === 'jpeg' && binaryData[0] === 0xFF && binaryData[1] === 0xD8) {
+                                isValidImage = true;
+                            } else if (imageType === 'png' && binaryData[0] === 0x89 && binaryData[1] === 0x50 && binaryData[2] === 0x4E && binaryData[3] === 0x47) {
+                                isValidImage = true;
+                            } else if (imageType === 'gif' && binaryData[0] === 0x47 && binaryData[1] === 0x49 && binaryData[2] === 0x46) {
+                                isValidImage = true;
+                            } else if (imageType === 'webp' && binaryData[0] === 0x52 && binaryData[1] === 0x49 && binaryData[2] === 0x46 && binaryData[3] === 0x46) {
+                                isValidImage = true;
+                            } else {
+                                // Si la signature ne correspond pas, essayer quand même (peut être un format différent)
+                                isValidImage = true;
+                            }
+                            
+                            if (isValidImage) {
+                                // Convertir en base64 par chunks
+                                let base64String = '';
+                                const chunkSize = 8192;
+                                try {
+                                    for (let j = 0; j < binaryData.length; j += chunkSize) {
+                                        const chunk = binaryData.slice(j, Math.min(j + chunkSize, binaryData.length));
+                                        const binaryString = Array.from(chunk, byte => String.fromCharCode(byte)).join('');
+                                        base64String += btoa(binaryString);
+                                    }
+                                    
+                            if (base64String && base64String.length > 100) {
+                                // Valider que c'est du base64 valide
+                                const base64Regex = /^[A-Za-z0-9+/]*={0,2}$/;
+                                if (!base64Regex.test(base64String)) {
+                                    console.warn(`Image binaire ${images.length + 1}: base64 invalide après conversion`);
+                                    continue;
+                                }
+                                const dataUrl = `data:image/${imageType};base64,${base64String}`;
+                                console.log(`Image binaire extraite: type=${imageType}, taille=${binaryData.length} bytes, base64 length=${base64String.length}`);
+                                images.push(dataUrl);
+                            } else {
+                                console.warn(`Image ${images.length + 1}: base64 trop court (${base64String ? base64String.length : 0})`);
+                            }
+                                } catch (error) {
+                                    console.error(`Erreur lors de la conversion base64 pour image ${images.length + 1}:`, error);
+                                }
+                            } else {
+                                console.warn(`Image ${images.length + 1} ignorée: signature invalide pour type ${imageType} (premiers bytes: ${Array.from(binaryData.slice(0, 4)).map(b => '0x' + b.toString(16)).join(' ')})`);
+                            }
+                        }
+                    }
+                }
+            }
+
+            console.log(`Total d'images extraites: ${images.length}`);
+            return images;
+        }
+
+        // Mise à jour de la navigation des chapitres
+        function updateChapterNavigation(manhwaId, chapterNumber) {
+            const chapters = allChapters
+                .filter(ch => ch.manhwa_id === manhwaId)
+                .sort((a, b) => a.chapter_number - b.chapter_number);
+
+            const currentIndex = chapters.findIndex(ch => ch.chapter_number === chapterNumber);
+            const prevChapter = chapters[currentIndex - 1];
+            const nextChapter = chapters[currentIndex + 1];
+
+            const prevBtn = document.getElementById('prev-chapter');
+            const nextBtn = document.getElementById('next-chapter');
+
+            if (prevChapter) {
+                prevBtn.disabled = false;
+                prevBtn.onclick = () => readChapter(manhwaId, prevChapter.chapter_number);
+                prevBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                prevBtn.disabled = true;
+                prevBtn.onclick = null;
+                prevBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+
+            if (nextChapter) {
+                nextBtn.disabled = false;
+                nextBtn.onclick = () => readChapter(manhwaId, nextChapter.chapter_number);
+                nextBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                nextBtn.disabled = true;
+                nextBtn.onclick = null;
+                nextBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        }
+
+        // Mise à jour de la progression de lecture
+        function updateProgress() {
+            const readerContent = document.getElementById('reader-content');
+            const images = readerContent.querySelectorAll('img');
+            let loadedImages = 0;
+
+            images.forEach(img => {
+                if (img.complete && img.naturalHeight !== 0) {
+                    loadedImages++;
+                }
+            });
+
+            const progress = (loadedImages / images.length) * 100;
+            document.getElementById('reading-progress').style.width = progress + '%';
+        }
+
+        // Supprimer un chapitre
+        async function deleteChapter(chapterId) {
+            const chapter = allChapters.find(ch => ch.__backendId === chapterId);
+            if (!chapter) return;
+
+            const confirmed = await showConfirmDialog(
+                `Supprimer le chapitre ${chapter.chapter_number}?`,
+                'Cette action est irréversible.'
+            );
+
+            if (!confirmed) return;
+
+            const result = await window.dataSdk.delete(chapter);
+            
+            if (result.isOk) {
+                showNotification('Chapitre supprimé avec succès', 'success');
+            } else {
+                showNotification('Erreur lors de la suppression', 'error');
+            }
+        }
+
+        // Supprimer un manhwa
+        async function deleteManhwa(manhwaId) {
+            const manhwa = allManhwas.find(m => m.__backendId === manhwaId);
+            if (!manhwa) return;
+
+            const chapters = allChapters.filter(ch => ch.manhwa_id === manhwa.manhwa_id);
+            
+            const confirmed = await showConfirmDialog(
+                `Supprimer "${manhwa.manhwa_title}"?`,
+                `Cette action supprimera aussi les ${chapters.length} chapitres associés. Cette action est irréversible.`
+            );
+
+            if (!confirmed) return;
+
+            // Supprimer d'abord tous les chapitres
+            for (const chapter of chapters) {
+                await window.dataSdk.delete(chapter);
+            }
+
+            // Puis supprimer le manhwa
+            const result = await window.dataSdk.delete(manhwa);
+            
+            if (result.isOk) {
+                showNotification('Manhwa supprimé avec succès', 'success');
+                showPage('library');
+            } else {
+                showNotification('Erreur lors de la suppression', 'error');
+            }
+        }
+
+        // Dialog de confirmation (sans alert!)
+        function showConfirmDialog(title, message) {
+            return new Promise((resolve) => {
+                const dialog = document.createElement('div');
+                dialog.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+                dialog.innerHTML = `
+                    <div class="bg-white rounded-xl shadow-2xl max-w-md mx-4 p-6">
+                        <h3 class="text-xl font-bold mb-2">${title}</h3>
+                        <p class="text-gray-600 mb-6">${message}</p>
+                        <div class="flex justify-end space-x-3">
+                            <button id="cancel-confirm" class="px-4 py-2 border rounded-lg hover:bg-gray-100">
+                                Annuler
+                            </button>
+                            <button id="ok-confirm" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
+                                Supprimer
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(dialog);
+
+                dialog.querySelector('#cancel-confirm').onclick = () => {
+                    dialog.remove();
+                    resolve(false);
+                };
+
+                dialog.querySelector('#ok-confirm').onclick = () => {
+                    dialog.remove();
+                    resolve(true);
+                };
+            });
+        }
+
+        // Retour au détail depuis le lecteur
+        document.getElementById('back-to-detail').addEventListener('click', () => {
+            if (currentManhwaId) {
+                showManhwaDetail(currentManhwaId);
+            } else {
+                showPage('home');
+            }
+        });
+
+        // Fonction utilitaire pour formater les dates
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffTime = Math.abs(now - date);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays === 0 || diffDays === 1) return "Aujourd'hui";
+            if (diffDays === 2) return "Hier";
+            if (diffDays < 7) return `Il y a ${diffDays} jours`;
+            if (diffDays < 30) return `Il y a ${Math.floor(diffDays / 7)} semaines`;
+            return date.toLocaleDateString('fr-FR');
+        }
+
+        // Système de notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-20 right-4 px-6 py-3 rounded-lg shadow-lg z-50 ${
+                type === 'success' ? 'bg-green-500' : 
+                type === 'error' ? 'bg-red-500' : 
+                'bg-blue-500'
+            } text-white font-medium`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Initialiser l'application
+        window.addEventListener('DOMContentLoaded', () => {
+            initializeApp();
+        });
+    </script>
+</body>
+</html>

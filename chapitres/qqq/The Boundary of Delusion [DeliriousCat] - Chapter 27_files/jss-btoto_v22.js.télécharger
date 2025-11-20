@@ -1,0 +1,3418 @@
+const _jss = {
+  confs: {
+    domain: {"main":"animemark.com","static":"static.animemark.com","account":"id.animemark.com","account_prefix":"id","id":"id","app_marker_prefix":"app-marker","api_amark":"api.animemark.com","api_mpark":"api.mangapark.net","api_btoto":"api.bato.to","api_atoto":"api.ato.to","linkto":"aclink.to","linkto_rank":"aclink.to/rank/","linkto_file":"aclink.to/file/","image_url_no_image":"/amsta/img/no-image.png","image_url_no_avatar":"/amsta/img/no-avatar.jpg","amark":"animemark.com","mpark":"mangapark.net","mpark_v3":"mangapark.net","atoto":"ato.to","btoto":"bato.to","btoto_mirrors":["dto.to","fto.to","hto.to","jto.to","mto.to","wto.to","mangatoto.com","mangatoto.net","mangatoto.org","batotoo.com","batotwo.com","battwo.com","comiko.net","bato.to","comiko.org","batocomic.com","batocomic.net","batocomic.org","readtoto.com","readtoto.net","readtoto.org","xbato.com","xbato.net","xbato.org","zbato.com","zbato.net","zbato.org"],"btoto_mirrors_open":["dto.to","fto.to","hto.to","jto.to","mto.to","wto.to","mangatoto.com","bato.to","batotoo.com","battwo.com","comiko.net","mangatoto.net","mangatoto.org","comiko.org","batocomic.com","batocomic.net","batocomic.org","readtoto.com","readtoto.net","readtoto.org","xbato.com","xbato.net","xbato.org","zbato.com","zbato.net","zbato.org"],"mpark_mirrors":["mangapark.net","mangapark.org","mangapark.io","mangapark.to","comicpark.org","comicpark.to","readpark.org","readpark.net","mpark.to"],"mpark_mirrors_open":["mangapark.net","mangapark.org","comicpark.org","mangapark.io","mangapark.to"],"special_names":["xto.to","yto.to","mpark.cn","mbato.cn","mpark.co","mbato.co","xbato.com"],"editor":"aniedit.org","file_attachs":"file-attachs.animemark.com","file_attachs_api_prefix":"https://app-marker.dto.to/api/common/attach/","file_preview_comic_release":"zz-cr-o.aniedit.org","file_avatars":"file-avatars.animemark.com","file_avatars_old":"file-avatar.anyacg.com","file_archive":"file-archive.animemark.com","file_uploads":"file-uploads.animemark.com","file_torrents":"file-torrents.animemark.com","file_comics":"file-comics.animemark.com","file_torrents_anime":"file-torrents-anime.animemark.com","file_torrents_comic":"file-torrents-comic.animemark.com","file_torrents_novel":"file-torrents-novel.animemark.com","file_comic_release_orig":"zz-cr-o.ato.to","file_comic_release_dest":"zz-cr-d.ato.to","anime":"animewindow.com","comic":"comicwindow.com","novel":"novelwindow.com","fb_login":"anyacg.com","allies":["animemark.com","ato.to","aniedit.org","mangapark.net","mangawindow.net","anyacg.com","bato.to","batotoo.com","comiko.net","mto.to","mangatoto.com","battwo.com","batotwo.com","wto.to","mangatoto.com","mangatoto.net","mangatoto.org","batotoo.com","battwo.com","batotwo.com","comiko.net","bato.to","mto.to","dto.to","hto.to","mangapark.net","mangapark.org","mangapark.io","mangapark.to","comicpark.org","comicpark.to","readpark.org","readpark.net","mpark.to","fto.to","jto.to"],"archive":"animemark.com"},
+    status: {
+      full: {"draft":{"file":"draft","text":"Draft","color":"#90a4ae"},"normal":{"file":"normal","text":"Normal","color":"#81c784"},"hidden":{"file":"hidden","text":"Hidden","color":"#fff176"},"trashed":{"file":"trashed","text":"Trashed","color":"#e57373"}},
+    },
+    lang: {
+      items: {"af":{"file":"af","code":"af","text":"Afrikaans","sort":0,"show":3,"flag":"south_africa"},"sq":{"file":"sq","code":"sq","text":"Albanian","sort":0,"show":3,"flag":"albania"},"am":{"file":"am","code":"am","text":"Amharic","sort":0,"show":3,"flag":"ethiopia"},"ar":{"file":"ar","code":"ar","text":"Arabic","sort":2,"show":2,"flag":"united_arab_emirates"},"an":{"file":"an","code":"an","text":"Aragonese","sort":0,"show":0,"flag":""},"hy":{"file":"hy","code":"hy","text":"Armenian","sort":0,"show":3,"flag":"armenia"},"ast":{"file":"ast","code":"ast","text":"Asturian","sort":0,"show":0,"flag":""},"az":{"file":"az","code":"az","text":"Azerbaijani","sort":0,"show":3,"flag":"azerbaijan"},"eu":{"file":"eu","code":"eu","text":"Basque","sort":0,"show":0,"flag":""},"be":{"file":"be","code":"be","text":"Belarusian","sort":0,"show":3,"flag":"belarus"},"bn":{"file":"bn","code":"bn","text":"Bengali","sort":0,"show":3,"flag":"bangladesh"},"bh":{"file":"bh","code":"bh","text":"Bihari","sort":0,"show":0,"flag":""},"bs":{"file":"bs","code":"bs","text":"Bosnian","sort":0,"show":3,"flag":"bosnia_and_herzegovina"},"br":{"file":"br","code":"br","text":"Breton","sort":0,"show":0,"flag":""},"bg":{"file":"bg","code":"bg","text":"Bulgarian","sort":2,"show":2,"flag":"bulgaria"},"my":{"file":"my","code":"my","text":"Burmese","sort":0,"show":3,"flag":"myanmar_burma_"},"km":{"file":"km","code":"km","text":"Cambodian","sort":0,"show":3,"flag":"cambodia"},"ca":{"file":"ca","code":"ca","text":"Catalan","sort":0,"show":3,"flag":"andorra"},"ceb":{"file":"ceb","code":"ceb","text":"Cebuano","sort":0,"show":3,"flag":"philippines"},"zh":{"file":"zh","code":"zh","text":"Chinese","sort":1,"show":1,"flag":"china"},"zh_hk":{"file":"zh_hk","code":"zh-HK","text":"Chinese (粵)","sort":0,"show":3,"flag":"hong_kong_sar_china"},"zh_cn":{"file":"zh_cn","code":"zh-CN","text":"Chinese (Simplified)","sort":2,"show":0,"flag":"china","hide":true},"zh_tw":{"file":"zh_tw","code":"zh-TW","text":"Chinese (繁)","sort":0,"show":3,"flag":"taiwan"},"co":{"file":"co","code":"co","text":"Corsican","sort":0,"show":0,"flag":""},"hr":{"file":"hr","code":"hr","text":"Croatian","sort":0,"show":3,"flag":"croatia"},"cs":{"file":"cs","code":"cs","text":"Czech","sort":2,"show":2,"flag":"czechia"},"da":{"file":"da","code":"da","text":"Danish","sort":2,"show":2,"flag":"denmark"},"nl":{"file":"nl","code":"nl","text":"Dutch","sort":2,"show":2,"flag":"netherlands"},"en":{"file":"en","code":"en","text":"English","sort":1,"show":1,"flag":"united_kingdom"},"en_au":{"file":"en_au","code":"en-AU","text":"English (Australia)","sort":0,"show":0,"flag":""},"en_ca":{"file":"en_ca","code":"en-CA","text":"English (Canada)","sort":0,"show":0,"flag":""},"en_in":{"file":"en_in","code":"en-IN","text":"English (India)","sort":0,"show":0,"flag":""},"en_nz":{"file":"en_nz","code":"en-NZ","text":"English (New Zealand)","sort":0,"show":0,"flag":""},"en_za":{"file":"en_za","code":"en-ZA","text":"English (South Africa)","sort":0,"show":0,"flag":""},"en_gb":{"file":"en_gb","code":"en-GB","text":"English (United Kingdom)","sort":0,"show":0,"flag":"united_kingdom","hide":true},"en_us":{"file":"en_us","code":"en-US","text":"English (US)","sort":0,"show":0,"flag":"united_states"},"eo":{"file":"eo","code":"eo","text":"Esperanto","sort":0,"show":3,"flag":"special-rainbow"},"et":{"file":"et","code":"et","text":"Estonian","sort":0,"show":3,"flag":"estonia"},"fo":{"file":"fo","code":"fo","text":"Faroese","sort":0,"show":3,"flag":"faroe_islands"},"fil":{"file":"fil","code":"fil","text":"Filipino","sort":2,"show":2,"flag":"philippines"},"fi":{"file":"fi","code":"fi","text":"Finnish","sort":2,"show":2,"flag":"finland"},"fr":{"file":"fr","code":"fr","text":"French","sort":2,"show":2,"flag":"france"},"fr_ca":{"file":"fr_ca","code":"fr-CA","text":"French (Canada)","sort":0,"show":0,"flag":""},"fr_fr":{"file":"fr_fr","code":"fr-FR","text":"French (France)","sort":0,"show":0,"flag":"","hide":true},"fr_ch":{"file":"fr_ch","code":"fr-CH","text":"French (Switzerland)","sort":0,"show":0,"flag":""},"fy":{"file":"fy","code":"fy","text":"Frisian","sort":0,"show":0,"flag":""},"gl":{"file":"gl","code":"gl","text":"Galician","sort":0,"show":0,"flag":""},"ka":{"file":"ka","code":"ka","text":"Georgian","sort":0,"show":3,"flag":"georgia"},"de":{"file":"de","code":"de","text":"German","sort":2,"show":2,"flag":"germany"},"de_at":{"file":"de_at","code":"de-AT","text":"German (Austria)","sort":0,"show":0,"flag":""},"de_de":{"file":"de_de","code":"de-DE","text":"German (Germany)","sort":0,"show":0,"flag":"","hide":true},"de_li":{"file":"de_li","code":"de-LI","text":"German (Liechtenstein)","sort":0,"show":0,"flag":""},"de_ch":{"file":"de_ch","code":"de-CH","text":"German (Switzerland)","sort":0,"show":0,"flag":""},"el":{"file":"el","code":"el","text":"Greek","sort":2,"show":2,"flag":"greece"},"gn":{"file":"gn","code":"gn","text":"Guarani","sort":0,"show":3,"flag":"paraguay"},"gu":{"file":"gu","code":"gu","text":"Gujarati","sort":0,"show":3,"flag":"india"},"ht":{"file":"ht","code":"ht","text":"Haitian Creole","sort":0,"show":3,"flag":"haiti"},"ha":{"file":"ha","code":"ha","text":"Hausa","sort":0,"show":3,"flag":"niger"},"haw":{"file":"haw","code":"haw","text":"Hawaiian","sort":0,"show":0,"flag":""},"he":{"file":"he","code":"he","text":"Hebrew","sort":2,"show":2,"flag":"israel"},"hi":{"file":"hi","code":"hi","text":"Hindi","sort":2,"show":2,"flag":"india"},"hmn":{"file":"hmn","code":"hmn","text":"Hmong","sort":0,"show":0,"flag":""},"hu":{"file":"hu","code":"hu","text":"Hungarian","sort":2,"show":2,"flag":"hungary"},"is":{"file":"is","code":"is","text":"Icelandic","sort":0,"show":3,"flag":"iceland"},"ig":{"file":"ig","code":"ig","text":"Igbo","sort":0,"show":3,"flag":"nigeria"},"id":{"file":"id","code":"id","text":"Indonesian","sort":2,"show":2,"flag":"indonesia"},"ia":{"file":"ia","code":"ia","text":"Interlingua","sort":0,"show":0,"flag":""},"ga":{"file":"ga","code":"ga","text":"Irish","sort":0,"show":3,"flag":"iceland"},"it":{"file":"it","code":"it","text":"Italian","sort":2,"show":2,"flag":"italy"},"it_it":{"file":"it_it","code":"it-IT","text":"Italian (Italy)","sort":0,"show":0,"flag":"","hide":true},"it_ch":{"file":"it_ch","code":"it-CH","text":"Italian (Switzerland)","sort":0,"show":0,"flag":""},"ja":{"file":"ja","code":"ja","text":"Japanese","sort":1,"show":1,"flag":"japan"},"jv":{"file":"jv","code":"jv","text":"Javanese","sort":0,"show":3,"flag":"indonesia"},"kn":{"file":"kn","code":"kn","text":"Kannada","sort":0,"show":3,"flag":"india"},"kk":{"file":"kk","code":"kk","text":"Kazakh","sort":0,"show":3,"flag":"kazakhstan"},"ko":{"file":"ko","code":"ko","text":"Korean","sort":1,"show":1,"flag":"south_korea"},"ku":{"file":"ku","code":"ku","text":"Kurdish","sort":0,"show":3,"flag":"iraq"},"ckb":{"file":"ckb","code":"ckb","text":"Kurdish (Arabci), Sorani","sort":0,"show":0,"flag":"","hide":true},"ky":{"file":"ky","code":"ky","text":"Kyrgyz","sort":0,"show":3,"flag":"kyrgyzstan"},"lo":{"file":"lo","code":"lo","text":"Laothian","sort":0,"show":3,"flag":"laos"},"la":{"file":"la","code":"la","text":"Latin","sort":0,"show":0,"flag":""},"lv":{"file":"lv","code":"lv","text":"Latvian","sort":0,"show":3,"flag":"latvia"},"ln":{"file":"ln","code":"ln","text":"Lingala","sort":0,"show":0,"flag":""},"lt":{"file":"lt","code":"lt","text":"Lithuanian","sort":0,"show":3,"flag":"lithuania"},"lb":{"file":"lb","code":"lb","text":"Luxembourgish","sort":0,"show":3,"flag":"luxembourg"},"mk":{"file":"mk","code":"mk","text":"Macedonian","sort":0,"show":3,"flag":"north_macedonia"},"mg":{"file":"mg","code":"mg","text":"Malagasy","sort":0,"show":3,"flag":"madagascar"},"ms":{"file":"ms","code":"ms","text":"Malay","sort":2,"show":2,"flag":"malaysia"},"ml":{"file":"ml","code":"ml","text":"Malayalam","sort":0,"show":3,"flag":"india"},"mt":{"file":"mt","code":"mt","text":"Maltese","sort":0,"show":3,"flag":"malta"},"mi":{"file":"mi","code":"mi","text":"Maori","sort":0,"show":3,"flag":"new_zealand"},"mr":{"file":"mr","code":"mr","text":"Marathi","sort":0,"show":3,"flag":"india"},"mo":{"file":"mo","code":"mo","text":"Moldavian","sort":0,"show":3,"flag":"moldova"},"mn":{"file":"mn","code":"mn","text":"Mongolian","sort":0,"show":3,"flag":"mongolia"},"ne":{"file":"ne","code":"ne","text":"Nepali","sort":0,"show":3,"flag":"nepal"},"no":{"file":"no","code":"no","text":"Norwegian","sort":0,"show":3,"flag":"norway"},"nb":{"file":"nb","code":"nb","text":"Norwegian (Bokmal)","sort":0,"show":0,"flag":"norway"},"nn":{"file":"nn","code":"nn","text":"Norwegian (Nynorsk)","sort":0,"show":0,"flag":"norway"},"ny":{"file":"ny","code":"ny","text":"Nyanja","sort":0,"show":3,"flag":"malawi"},"oc":{"file":"oc","code":"oc","text":"Occitan","sort":0,"show":0,"flag":""},"or":{"file":"or","code":"or","text":"Oriya","sort":0,"show":0,"flag":""},"om":{"file":"om","code":"om","text":"Oromo","sort":0,"show":0,"flag":""},"ps":{"file":"ps","code":"ps","text":"Pashto","sort":0,"show":3,"flag":"afghanistan"},"fa":{"file":"fa","code":"fa","text":"Persian","sort":0,"show":3,"flag":"iran"},"pl":{"file":"pl","code":"pl","text":"Polish","sort":2,"show":2,"flag":"poland"},"pt":{"file":"pt","code":"pt","text":"Portuguese","sort":2,"show":2,"flag":"portugal"},"pt_br":{"file":"pt_br","code":"pt-BR","text":"Portuguese (BR)","sort":2,"show":2,"flag":"brazil"},"pt_pt":{"file":"pt_pt","code":"pt-PT","text":"Portuguese (PT)","sort":2,"show":0,"flag":"portugal","hide":true},"pa":{"file":"pa","code":"pa","text":"Punjabi","sort":0,"show":0,"flag":""},"qu":{"file":"qu","code":"qu","text":"Quechua","sort":0,"show":0,"flag":""},"ro":{"file":"ro","code":"ro","text":"Romanian","sort":2,"show":2,"flag":"romania"},"rm":{"file":"rm","code":"rm","text":"Romansh","sort":0,"show":3,"flag":"switzerland"},"ru":{"file":"ru","code":"ru","text":"Russian","sort":2,"show":2,"flag":"russia"},"sm":{"file":"sm","code":"sm","text":"Samoan","sort":0,"show":3,"flag":"samoa"},"gd":{"file":"gd","code":"gd","text":"Scots Gaelic","sort":0,"show":0,"flag":""},"sr":{"file":"sr","code":"sr","text":"Serbian","sort":0,"show":3,"flag":"serbia"},"sh":{"file":"sh","code":"sh","text":"Serbo-Croatian","sort":0,"show":3,"flag":"serbia"},"st":{"file":"st","code":"st","text":"Sesotho","sort":0,"show":3,"flag":"lesotho"},"sn":{"file":"sn","code":"sn","text":"Shona","sort":0,"show":3,"flag":"zimbabwe"},"sd":{"file":"sd","code":"sd","text":"Sindhi","sort":0,"show":3,"flag":"pakistan"},"si":{"file":"si","code":"si","text":"Sinhalese","sort":0,"show":3,"flag":"sri_lanka"},"sk":{"file":"sk","code":"sk","text":"Slovak","sort":0,"show":3,"flag":"slovakia"},"sl":{"file":"sl","code":"sl","text":"Slovenian","sort":0,"show":3,"flag":"slovenia"},"so":{"file":"so","code":"so","text":"Somali","sort":0,"show":3,"flag":"somalia"},"es":{"file":"es","code":"es","text":"Spanish","sort":2,"show":2,"flag":"spain"},"es_ar":{"file":"es_ar","code":"es-AR","text":"Spanish (Argentina)","sort":0,"show":0,"flag":""},"es_cl":{"file":"es_cl","code":"es-CL","text":"Spanish (Chile)","sort":0,"show":0,"flag":""},"es_co":{"file":"es_co","code":"es-CO","text":"Spanish (Colombia)","sort":0,"show":0,"flag":""},"es_cr":{"file":"es_cr","code":"es-CR","text":"Spanish (Costa Rica)","sort":0,"show":0,"flag":""},"es_hn":{"file":"es_hn","code":"es-HN","text":"Spanish (Honduras)","sort":0,"show":0,"flag":""},"es_419":{"file":"es_419","code":"es-419","text":"Spanish (LA)","sort":2,"show":2,"flag":"mexico"},"es_mx":{"file":"es_mx","code":"es-MX","text":"Spanish (Mexico)","sort":2,"show":0,"flag":"mexico"},"es_pe":{"file":"es_pe","code":"es-PE","text":"Spanish (Peru)","sort":0,"show":0,"flag":""},"es_es":{"file":"es_es","code":"es-ES","text":"Spanish (Spain)","sort":2,"show":0,"flag":"spain","hide":true},"es_us":{"file":"es_us","code":"es-US","text":"Spanish (US)","sort":0,"show":0,"flag":""},"es_uy":{"file":"es_uy","code":"es-UY","text":"Spanish (Uruguay)","sort":0,"show":0,"flag":""},"es_ve":{"file":"es_ve","code":"es-VE","text":"Spanish (Venezuela)","sort":0,"show":0,"flag":""},"su":{"file":"su","code":"su","text":"Sundanese","sort":0,"show":0,"flag":""},"sw":{"file":"sw","code":"sw","text":"Swahili","sort":0,"show":3,"flag":"kenya"},"sv":{"file":"sv","code":"sv","text":"Swedish","sort":2,"show":2,"flag":"sweden"},"tg":{"file":"tg","code":"tg","text":"Tajik","sort":0,"show":3,"flag":"tajikistan"},"ta":{"file":"ta","code":"ta","text":"Tamil","sort":0,"show":3,"flag":"sri_lanka"},"tt":{"file":"tt","code":"tt","text":"Tatar","sort":0,"show":0,"flag":""},"te":{"file":"te","code":"te","text":"Telugu","sort":0,"show":3,"flag":"india"},"th":{"file":"th","code":"th","text":"Thai","sort":2,"show":2,"flag":"thailand"},"ti":{"file":"ti","code":"ti","text":"Tigrinya","sort":0,"show":3,"flag":"eritrea"},"to":{"file":"to","code":"to","text":"Tonga","sort":0,"show":3,"flag":"tonga"},"tr":{"file":"tr","code":"tr","text":"Turkish","sort":2,"show":2,"flag":"turkey"},"tk":{"file":"tk","code":"tk","text":"Turkmen","sort":0,"show":3,"flag":"turkmenistan"},"tw":{"file":"tw","code":"tw","text":"Twi","sort":0,"show":0,"flag":""},"ug":{"file":"ug","code":"ug","text":"Uighur","sort":0,"show":0,"flag":""},"uk":{"file":"uk","code":"uk","text":"Ukrainian","sort":2,"show":2,"flag":"ukraine"},"ur":{"file":"ur","code":"ur","text":"Urdu","sort":0,"show":3,"flag":"pakistan"},"uz":{"file":"uz","code":"uz","text":"Uzbek","sort":0,"show":3,"flag":"uzbekistan"},"vi":{"file":"vi","code":"vi","text":"Vietnamese","sort":2,"show":2,"flag":"vietnam"},"wa":{"file":"wa","code":"wa","text":"Walloon","sort":0,"show":0,"flag":""},"cy":{"file":"cy","code":"cy","text":"Welsh","sort":0,"show":0,"flag":""},"xh":{"file":"xh","code":"xh","text":"Xhosa","sort":0,"show":0,"flag":"south_africa"},"yi":{"file":"yi","code":"yi","text":"Yiddish","sort":0,"show":0,"flag":""},"yo":{"file":"yo","code":"yo","text":"Yoruba","sort":0,"show":3,"flag":"nigeria"},"zu":{"file":"zu","code":"zu","text":"Zulu","sort":0,"show":3,"flag":"south_africa"},"_t":{"file":"_t","code":"_t","text":"Other","sort":0,"show":3,"flag":"rainbow"}},
+    },
+    genre: {"anime":{"josei":{"file":"josei","text":"Josei","sort":1,"tips":"A class of manga written for an older female audience"},"seinen":{"file":"seinen","text":"Seinen","sort":1,"tips":"A class of manga written for an older male audience, generally 18-30 years old."},"shoujo":{"file":"shoujo","text":"Shoujo","sort":1,"tips":"A style of anime and manga intended for young women."},"shoujo_ai":{"file":"shoujo_ai","text":"Shoujo ai","sort":1,"tips":"A narrative or visual work featuring a romance or non-sexual relationship between two or more females."},"shounen":{"file":"shounen","text":"Shounen","sort":1,"tips":"A style of anime and manga aimed at a younger male audience."},"shounen_ai":{"file":"shounen_ai","text":"Shounen ai","sort":1,"tips":" A narrative or visual work featuring a romance or non-sexual relationship between two or more males, primarily intended for a female audience."},"yaoi":{"file":"yaoi","text":"Yaoi","sort":1,"tips":"A form of hentai involving two or more males in a homosexual relationship, primarily intended for a female audience."},"yuri":{"file":"yuri","text":"Yuri","sort":1,"tips":"A form of hentai involving two or more females in a homosexual relationship."},"ecchi":{"file":"ecchi","text":"Ecchi","sort":2},"mature":{"file":"mature","text":"Mature","sort":2},"adult":{"file":"adult","text":"Adult","sort":2,"orig":"18_restricted"},"gore":{"file":"gore","text":"Gore","sort":2},"violence":{"file":"violence","text":"Violence","sort":2},"smut":{"file":"smut","text":"Smut","sort":2},"hentai":{"file":"hentai","text":"Hentai","sort":2},"action":{"file":"action","text":"action","orig":"action"},"action_game":{"file":"action_game","text":"action game","orig":"action_game"},"adventure":{"file":"adventure","text":"adventure","orig":"adventure"},"air_force":{"file":"air_force","text":"air force","orig":"air_force"},"alien":{"file":"alien","text":"alien","orig":"alien"},"american_derived":{"file":"american_derived","text":"american derived","orig":"american_derived"},"anal":{"file":"anal","text":"anal","orig":"anal"},"android":{"file":"android","text":"android","orig":"android"},"angel":{"file":"angel","text":"angel","orig":"angel"},"angst":{"file":"angst","text":"angst","orig":"angst"},"anthropomorphism":{"file":"anthropomorphism","text":"anthropomorphism","orig":"anthropomorphism"},"association_football":{"file":"association_football","text":"association football","orig":"association_football"},"baseball":{"file":"baseball","text":"baseball","orig":"baseball"},"basketball":{"file":"basketball","text":"basketball","orig":"basketball"},"bdsm":{"file":"bdsm","text":"bdsm","orig":"bdsm"},"bestiality":{"file":"bestiality","text":"bestiality","orig":"bestiality"},"bishounen":{"file":"bishounen","text":"bishounen","orig":"bishounen"},"bondage":{"file":"bondage","text":"bondage","orig":"bondage"},"bounty_hunter":{"file":"bounty_hunter","text":"bounty hunter","orig":"bounty_hunter"},"boxing":{"file":"boxing","text":"boxing","orig":"boxing"},"cars":{"file":"cars","text":"cars","orig":"cars"},"cg_collection":{"file":"cg_collection","text":"cg collection","orig":"cg_collection"},"chikan":{"file":"chikan","text":"chikan","orig":"chikan"},"comedy":{"file":"comedy","text":"comedy","orig":"comedy"},"coming_of_age":{"file":"coming_of_age","text":"coming of age","orig":"coming_of_age"},"conspiracy":{"file":"conspiracy","text":"conspiracy","orig":"conspiracy"},"contemporary_fantasy":{"file":"contemporary_fantasy","text":"contemporary fantasy","orig":"contemporary_fantasy"},"cooking":{"file":"cooking","text":"cooking","orig":"cooking"},"cyberpunk":{"file":"cyberpunk","text":"cyberpunk","orig":"cyberpunk"},"cyborg":{"file":"cyborg","text":"cyborg","orig":"cyborg"},"cycling":{"file":"cycling","text":"cycling","orig":"cycling"},"daily_life":{"file":"daily_life","text":"daily life","orig":"daily_life"},"dark_fantasy":{"file":"dark_fantasy","text":"dark fantasy","orig":"dark_fantasy"},"deflowering":{"file":"deflowering","text":"deflowering","orig":"deflowering"},"deity":{"file":"deity","text":"deity","orig":"deity"},"dementia":{"file":"dementia","text":"dementia","orig":"dementia"},"demon":{"file":"demon","text":"demon","orig":"demon"},"demons":{"file":"demons","text":"demons","orig":"demons"},"detective":{"file":"detective","text":"detective","orig":"detective"},"dieselpunk":{"file":"dieselpunk","text":"dieselpunk","orig":"dieselpunk"},"dildos_vibrators":{"file":"dildos_vibrators","text":"dildos   vibrators","orig":"dildos___vibrators"},"dragon":{"file":"dragon","text":"dragon","orig":"dragon"},"drama":{"file":"drama","text":"drama","orig":"drama"},"dystopia":{"file":"dystopia","text":"dystopia","orig":"dystopia"},"elementary_school":{"file":"elementary_school","text":"elementary school","orig":"elementary_school"},"elf":{"file":"elf","text":"elf","orig":"elf"},"erotic_game":{"file":"erotic_game","text":"erotic game","orig":"erotic_game"},"erotic_torture":{"file":"erotic_torture","text":"erotic torture","orig":"erotic_torture"},"fantasy":{"file":"fantasy","text":"fantasy","orig":"fantasy"},"female_student":{"file":"female_student","text":"female student","orig":"female_student"},"female_teacher":{"file":"female_teacher","text":"female teacher","orig":"female_teacher"},"feudal_warfare":{"file":"feudal_warfare","text":"feudal warfare","orig":"feudal_warfare"},"futanari":{"file":"futanari","text":"futanari","orig":"futanari"},"game":{"file":"game","text":"game","orig":"game"},"gang_bang":{"file":"gang_bang","text":"gang bang","orig":"gang_bang"},"gigantic_breasts":{"file":"gigantic_breasts","text":"gigantic breasts","orig":"gigantic_breasts"},"goblin":{"file":"goblin","text":"goblin","orig":"goblin"},"golf":{"file":"golf","text":"golf","orig":"golf"},"gunfights":{"file":"gunfights","text":"gunfights","orig":"gunfights"},"gymnastics":{"file":"gymnastics","text":"gymnastics","orig":"gymnastics"},"harem":{"file":"harem","text":"harem","orig":"harem"},"high_fantasy":{"file":"high_fantasy","text":"high fantasy","orig":"high_fantasy"},"high_school":{"file":"high_school","text":"high school","orig":"high_school"},"historical":{"file":"historical","text":"historical","orig":"historical"},"horror":{"file":"horror","text":"horror","orig":"horror"},"housewives":{"file":"housewives","text":"housewives","orig":"housewives"},"human_enhancement":{"file":"human_enhancement","text":"human enhancement","orig":"human_enhancement"},"humanoid_alien":{"file":"humanoid_alien","text":"humanoid alien","orig":"humanoid_alien"},"idol":{"file":"idol","text":"idol","orig":"idol"},"incest":{"file":"incest","text":"incest","orig":"incest"},"judo":{"file":"judo","text":"judo","orig":"judo"},"juujin":{"file":"juujin","text":"juujin","orig":"juujin"},"karuta":{"file":"karuta","text":"karuta","orig":"karuta"},"kids":{"file":"kids","text":"kids","orig":"kids"},"kodomo":{"file":"kodomo","text":"kodomo","orig":"kodomo"},"large_breasts":{"file":"large_breasts","text":"large breasts","orig":"large_breasts"},"law_and_order":{"file":"law_and_order","text":"law and order","orig":"law_and_order"},"loli":{"file":"loli","text":"loli","orig":"loli"},"love_polygon":{"file":"love_polygon","text":"love polygon","orig":"love_polygon"},"mafia":{"file":"mafia","text":"mafia","orig":"mafia"},"magic":{"file":"magic","text":"magic","orig":"magic"},"magical_girl":{"file":"magical_girl","text":"magical girl","orig":"magical_girl"},"maid":{"file":"maid","text":"maid","orig":"maid"},"manga":{"file":"manga","text":"manga","orig":"manga"},"manhua":{"file":"manhua","text":"manhua","orig":"manhua"},"manhwa":{"file":"manhwa","text":"manhwa","orig":"manhwa"},"martial_arts":{"file":"martial_arts","text":"martial arts","orig":"martial_arts"},"mecha":{"file":"mecha","text":"mecha","orig":"mecha"},"mechanical_tentacle":{"file":"mechanical_tentacle","text":"mechanical tentacle","orig":"mechanical_tentacle"},"middle_school":{"file":"middle_school","text":"middle school","orig":"middle_school"},"military":{"file":"military","text":"military","orig":"military"},"mina":{"file":"mina","text":"mina","orig":"mina"},"motorsport":{"file":"motorsport","text":"motorsport","orig":"motorsport"},"movie":{"file":"movie","text":"movie","orig":"movie"},"music":{"file":"music","text":"music","orig":"music"},"musical_band":{"file":"musical_band","text":"musical band","orig":"musical_band"},"mystery":{"file":"mystery","text":"mystery","orig":"mystery"},"ninja":{"file":"ninja","text":"ninja","orig":"ninja"},"noitamina":{"file":"noitamina","text":"noitamina","orig":"noitamina"},"novel":{"file":"novel","text":"novel","orig":"novel"},"nudity":{"file":"nudity","text":"nudity","orig":"nudity"},"nun":{"file":"nun","text":"nun","orig":"nun"},"nurse":{"file":"nurse","text":"nurse","orig":"nurse"},"office_lady":{"file":"office_lady","text":"office lady","orig":"office_lady"},"pantsu":{"file":"pantsu","text":"pantsu","orig":"pantsu"},"parallel_world":{"file":"parallel_world","text":"parallel world","orig":"parallel_world"},"parasite":{"file":"parasite","text":"parasite","orig":"parasite"},"parody":{"file":"parody","text":"parody","orig":"parody"},"performance":{"file":"performance","text":"performance","orig":"performance"},"piloted_robot":{"file":"piloted_robot","text":"piloted robot","orig":"piloted_robot"},"police":{"file":"police","text":"police","orig":"police"},"post_apocalyptic":{"file":"post_apocalyptic","text":"post apocalyptic","orig":"post_apocalyptic"},"power_suit":{"file":"power_suit","text":"power suit","orig":"power_suit"},"proxy_battles":{"file":"proxy_battles","text":"proxy battles","orig":"proxy_battles"},"psychological":{"file":"psychological","text":"psychological","orig":"psychological"},"rape":{"file":"rape","text":"rape","orig":"rape"},"reverse_harem":{"file":"reverse_harem","text":"reverse harem","orig":"reverse_harem"},"reverse_trap":{"file":"reverse_trap","text":"reverse trap","orig":"reverse_trap"},"robot_helper":{"file":"robot_helper","text":"robot helper","orig":"robot_helper"},"romance":{"file":"romance","text":"romance","orig":"romance"},"rotten_world":{"file":"rotten_world","text":"rotten world","orig":"rotten_world"},"rpg":{"file":"rpg","text":"rpg","orig":"rpg"},"samurai":{"file":"samurai","text":"samurai","orig":"samurai"},"scat":{"file":"scat","text":"scat","orig":"scat"},"school":{"file":"school","text":"school","orig":"school"},"school_clubs":{"file":"school_clubs","text":"school clubs","orig":"school_clubs"},"school_life":{"file":"school_life","text":"school life","orig":"school_life"},"sci_fi":{"file":"sci_fi","text":"sci fi","orig":"sci_fi"},"science_fiction":{"file":"science_fiction","text":"science fiction","orig":"science_fiction"},"sex":{"file":"sex","text":"sex","orig":"sex"},"short_episodes":{"file":"short_episodes","text":"short episodes","orig":"short_episodes"},"short_movie":{"file":"short_movie","text":"short movie","orig":"short_movie"},"shota":{"file":"shota","text":"shota","orig":"shota"},"slice_of_life":{"file":"slice_of_life","text":"slice of life","orig":"slice_of life"},"small_breasts":{"file":"small_breasts","text":"small breasts","orig":"small_breasts"},"space":{"file":"space","text":"space","orig":"space"},"space_travel":{"file":"space_travel","text":"space travel","orig":"space_travel"},"sports":{"file":"sports","text":"sports","orig":"sports"},"steampunk":{"file":"steampunk","text":"steampunk","orig":"steampunk"},"sudden_girlfriend_appearance":{"file":"sudden_girlfriend_appearance","text":"sudden girlfriend appearance","orig":"sudden_girlfriend_appearance"},"super_deformed":{"file":"super_deformed","text":"super deformed","orig":"super_deformed"},"super_power":{"file":"super_power","text":"super power","orig":"super_power"},"supernatural":{"file":"supernatural","text":"supernatural","orig":"supernatural"},"swordplay":{"file":"swordplay","text":"swordplay","orig":"swordplay"},"television_programme":{"file":"television_programme","text":"television programme","orig":"television_programme"},"tennis":{"file":"tennis","text":"tennis","orig":"tennis"},"tentacle":{"file":"tentacle","text":"tentacle","orig":"tentacle"},"the_arts":{"file":"the_arts","text":"the arts","orig":"the_arts"},"thriller":{"file":"thriller","text":"thriller","orig":"thriller"},"time_travel":{"file":"time_travel","text":"time travel","orig":"time_travel"},"tragedy":{"file":"tragedy","text":"tragedy","orig":"tragedy"},"transforming_craft":{"file":"transforming_craft","text":"transforming craft","orig":"transforming_craft"},"trap":{"file":"trap","text":"trap","orig":"trap"},"university":{"file":"university","text":"university","orig":"university"},"vampire":{"file":"vampire","text":"vampire","orig":"vampire"},"virtual_world":{"file":"virtual_world","text":"virtual world","orig":"virtual_world"},"visual_novel":{"file":"visual_novel","text":"visual novel","orig":"visual_novel"},"volleyball":{"file":"volleyball","text":"volleyball","orig":"volleyball"},"waitress":{"file":"waitress","text":"waitress","orig":"waitress"},"wakate_animator_ikusei_project":{"file":"wakate_animator_ikusei_project","text":"wakate animator ikusei project","orig":"wakate_animator_ikusei_project"},"western_animated_cartoon":{"file":"western_animated_cartoon","text":"western animated cartoon","orig":"western_animated_cartoon"},"western_comics":{"file":"western_comics","text":"western comics","orig":"western_comics"},"world_war_ii":{"file":"world_war_ii","text":"world war ii","orig":"world_war_ii"}},"comic":{"artbook":{"file":"artbook","text":"Artbook","sort":1},"cartoon":{"file":"cartoon","text":"Cartoon","sort":1},"comic":{"file":"comic","text":"Comic","sort":1},"doujinshi":{"file":"doujinshi","text":"Doujinshi","sort":1},"imageset":{"file":"imageset","text":"Imageset","sort":1},"manga":{"file":"manga","text":"Manga","sort":1},"manhua":{"file":"manhua","text":"Manhua","sort":1},"manhwa":{"file":"manhwa","text":"Manhwa","sort":1},"webtoon":{"file":"webtoon","text":"Webtoon","sort":1},"western":{"file":"western","text":"Western","sort":1},"josei":{"file":"josei","text":"Josei","sort":2,"tips":"A class of manga written for an older female audience"},"seinen":{"file":"seinen","text":"Seinen","sort":2,"tips":"A class of manga written for an older male audience, generally 18-30 years old."},"shoujo":{"file":"shoujo","text":"Shoujo","sort":2,"tips":"A style of anime and manga intended for young women."},"shoujo_ai":{"file":"shoujo_ai","text":"Shoujo ai","sort":2,"tips":"A narrative or visual work featuring a romance or non-sexual relationship between two or more females."},"shounen":{"file":"shounen","text":"Shounen","sort":2,"tips":"A style of anime and manga aimed at a younger male audience."},"shounen_ai":{"file":"shounen_ai","text":"Shounen ai","sort":2,"tips":" A narrative or visual work featuring a romance or non-sexual relationship between two or more males, primarily intended for a female audience."},"yaoi":{"file":"yaoi","text":"Yaoi","sort":2,"tips":"A form of hentai involving two or more males in a homosexual relationship, primarily intended for a female audience."},"yuri":{"file":"yuri","text":"Yuri","sort":2,"tips":"A form of hentai involving two or more females in a homosexual relationship."},"gore":{"file":"gore","text":"Gore","sort":3},"bloody":{"file":"bloody","text":"Bloody","sort":3},"violence":{"file":"violence","text":"Violence","sort":3},"ecchi":{"file":"ecchi","text":"Ecchi","sort":3},"adult":{"file":"adult","text":"Adult","sort":3},"mature":{"file":"mature","text":"Mature","sort":3},"smut":{"file":"smut","text":"Smut","sort":3},"hentai":{"file":"hentai","text":"Hentai","sort":3},"_4_koma":{"file":"_4_koma","text":"4-Koma","sort":0},"action":{"file":"action","text":"Action","sort":0},"adaptation":{"file":"adaptation","text":"Adaptation","sort":0},"adventure":{"file":"adventure","text":"Adventure","sort":0},"aliens":{"file":"aliens","text":"Aliens","sort":0},"animals":{"file":"animals","text":"Animals","sort":0},"anthology":{"file":"anthology","text":"Anthology","sort":0},"cars":{"file":"cars","text":"cars","sort":0},"comedy":{"file":"comedy","text":"Comedy","sort":0},"cooking":{"file":"cooking","text":"Cooking","sort":0},"crime":{"file":"crime","text":"crime","sort":0},"crossdressing":{"file":"crossdressing","text":"Crossdressing","sort":0},"cultivation":{"file":"cultivation","text":"Cultivation","sort":0},"delinquents":{"file":"delinquents","text":"Delinquents","sort":0},"dementia":{"file":"dementia","text":"Dementia","sort":0},"demons":{"file":"demons","text":"Demons","sort":0},"drama":{"file":"drama","text":"Drama","sort":0},"fantasy":{"file":"fantasy","text":"Fantasy","sort":0},"fan_colored":{"file":"fan_colored","text":"Fan-Colored","sort":0},"full_color":{"file":"full_color","text":"Full Color","sort":0},"game":{"file":"game","text":"Game","sort":0},"gender_bender":{"file":"gender_bender","text":"Gender Bender","sort":0},"genderswap":{"file":"genderswap","text":"Genderswap","sort":0},"ghosts":{"file":"ghosts","text":"Ghosts","sort":0},"gyaru":{"file":"gyaru","text":"Gyaru","sort":0},"harem":{"file":"harem","text":"Harem","sort":0},"harlequin":{"file":"harlequin","text":"Harlequin","sort":0},"historical":{"file":"historical","text":"Historical","sort":0},"horror":{"file":"horror","text":"Horror","sort":0},"incest":{"file":"incest","text":"Incest","sort":0},"isekai":{"file":"isekai","text":"Isekai","sort":0},"kids":{"file":"kids","text":"Kids","sort":0},"loli":{"file":"loli","text":"Loli","sort":0},"magic":{"file":"magic","text":"Magic","sort":0},"magical_girls":{"file":"magical_girls","text":"Magical Girls","sort":0},"martial_arts":{"file":"martial_arts","text":"Martial Arts","sort":0},"mecha":{"file":"mecha","text":"Mecha","sort":0},"medical":{"file":"medical","text":"Medical","sort":0},"military":{"file":"military","text":"Military","sort":0},"monster_girls":{"file":"monster_girls","text":"Monster Girls","sort":0},"monsters":{"file":"monsters","text":"Monsters","sort":0},"music":{"file":"music","text":"Music","sort":0},"mystery":{"file":"mystery","text":"Mystery","sort":0},"netorare":{"file":"netorare","text":"Netorare/NTR","sort":0},"ninja":{"file":"ninja","text":"Ninja","sort":0},"office_workers":{"file":"office_workers","text":"Office Workers","sort":0},"oneshot":{"file":"oneshot","text":"Oneshot","sort":0},"parody":{"file":"parody","text":"parody","sort":0},"philosophical":{"file":"philosophical","text":"Philosophical","sort":0},"police":{"file":"police","text":"Police","sort":0},"post_apocalyptic":{"file":"post_apocalyptic","text":"Post-Apocalyptic","sort":0},"psychological":{"file":"psychological","text":"Psychological","sort":0},"reincarnation":{"file":"reincarnation","text":"Reincarnation","sort":0},"reverse_harem":{"file":"reverse_harem","text":"Reverse Harem","sort":0},"romance":{"file":"romance","text":"Romance","sort":0},"samurai":{"file":"samurai","text":"Samurai","sort":0},"school_life":{"file":"school_life","text":"School Life","sort":0},"sci_fi":{"file":"sci_fi","text":"Sci-Fi","sort":0},"shota":{"file":"shota","text":"Shota","sort":0},"slice_of_life":{"file":"slice_of_life","text":"Slice of Life","sort":0},"sm_bdsm":{"file":"sm_bdsm","text":"SM/BDSM","sort":0},"space":{"file":"space","text":"Space","sort":0},"sports":{"file":"sports","text":"Sports","sort":0},"super_power":{"file":"super_power","text":"Super Power","sort":0},"superhero":{"file":"superhero","text":"Superhero","sort":0},"supernatural":{"file":"supernatural","text":"Supernatural","sort":0},"survival":{"file":"survival","text":"Survival","sort":0},"thriller":{"file":"thriller","text":"Thriller","sort":0},"time_travel":{"file":"time_travel","text":"Time Travel","sort":0},"traditional_games":{"file":"traditional_games","text":"Traditional Games","sort":0},"tragedy":{"file":"tragedy","text":"Tragedy","sort":0},"vampires":{"file":"vampires","text":"Vampires","sort":0},"video_games":{"file":"video_games","text":"Video Games","sort":0},"villainess":{"file":"villainess","text":"Villainess","sort":0},"virtual_reality":{"file":"virtual_reality","text":"Virtual Reality","sort":0},"wuxia":{"file":"wuxia","text":"Wuxia","sort":0},"xianxia":{"file":"xianxia","text":"Xianxia","sort":0},"xuanhuan":{"file":"xuanhuan","text":"Xuanhuan","sort":0},"zombies":{"file":"zombies","text":"Zombies","sort":0}},"novel":{"josei":{"file":"josei","text":"Josei","sort":1,"tips":"A class of manga written for an older female audience"},"seinen":{"file":"seinen","text":"Seinen","sort":1,"tips":"A class of manga written for an older male audience, generally 18-30 years old."},"shoujo":{"file":"shoujo","text":"Shoujo","sort":1,"tips":"A style of anime and manga intended for young women."},"shoujo_ai":{"file":"shoujo_ai","text":"Shoujo ai","sort":1,"tips":"A narrative or visual work featuring a romance or non-sexual relationship between two or more females."},"shounen":{"file":"shounen","text":"Shounen","sort":1,"tips":"A style of anime and manga aimed at a younger male audience."},"shounen_ai":{"file":"shounen_ai","text":"Shounen ai","sort":1,"tips":" A narrative or visual work featuring a romance or non-sexual relationship between two or more males, primarily intended for a female audience."},"yaoi":{"file":"yaoi","text":"Yaoi","sort":1,"tips":"A form of hentai involving two or more males in a homosexual relationship, primarily intended for a female audience."},"yuri":{"file":"yuri","text":"Yuri","sort":1,"tips":"A form of hentai involving two or more females in a homosexual relationship."},"ecchi":{"file":"ecchi","text":"Ecchi","sort":2},"mature":{"file":"mature","text":"Mature","sort":2},"adult":{"file":"adult","text":"Adult","sort":2},"gore":{"file":"gore","text":"Gore","sort":2},"violence":{"file":"violence","text":"Violence","sort":2},"smut":{"file":"smut","text":"Smut","sort":2},"hentai":{"file":"hentai","text":"Hentai","sort":2},"action":{"file":"action","text":"action","orig":"action"},"adventure":{"file":"adventure","text":"adventure","orig":"adventure"},"comedy":{"file":"comedy","text":"comedy","orig":"comedy"},"drama":{"file":"drama","text":"drama","orig":"drama"},"fantasy":{"file":"fantasy","text":"fantasy","orig":"fantasy"},"gender_bender":{"file":"gender_bender","text":"gender bender","orig":"gender_bender"},"harem":{"file":"harem","text":"harem","orig":"harem"},"historical":{"file":"historical","text":"historical","orig":"historical"},"horror":{"file":"horror","text":"horror","orig":"horror"},"isekai":{"file":"isekai","text":"Isekai"},"martial_arts":{"file":"martial_arts","text":"martial arts","orig":"martial_arts"},"mecha":{"file":"mecha","text":"mecha","orig":"mecha"},"mystery":{"file":"mystery","text":"mystery","orig":"mystery"},"psychological":{"file":"psychological","text":"psychological","orig":"psychological"},"romance":{"file":"romance","text":"romance","orig":"romance"},"school_life":{"file":"school_life","text":"school life","orig":"school_life"},"sci_fi":{"file":"sci_fi","text":"sci fi","orig":"sci_fi"},"slice_of_life":{"file":"slice_of_life","text":"slice of life","orig":"slice_of_life"},"sports":{"file":"sports","text":"sports","orig":"sports"},"supernatural":{"file":"supernatural","text":"supernatural","orig":"supernatural"},"tragedy":{"file":"tragedy","text":"tragedy","orig":"tragedy"},"wuxia":{"file":"wuxia","text":"wuxia","orig":"wuxia"},"xianxia":{"file":"xianxia","text":"xianxia","orig":"xianxia"},"xuanhuan":{"file":"xuanhuan","text":"xuanhuan","orig":"xuanhuan"}},"not_safe_comic":["hentai","smut","adult","mature"],"not_safe":["hentai","smut","adult","mature"]},
+    regexp: {
+      url: /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/i,
+http: /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/i,
+ftp: /ftp:\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/i,
+ed2k: /^ed2k:\/\/\|file\|*\|\d+\|[0-9a-zA-Z]{32}\|$/i,
+thunder: /thunder:\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/i,
+magnet: /magnet:\?xt=urn:[a-z0-9]*/i,
+irc: /([#&][^\x07\x2C\s]{,200})/i,
+provider: /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/i,
+email: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
+p_and_br: /<p.*?>|<\/p>|<br.*?>/gi,
+hex_color: /^#([a-f0-9]{3,4}|[a-f0-9]{4}(?:[a-f0-9]{2}){1,2})\b$/i,
+attach_img_src: /^attach\:[a-z0-9]{24}_[0-9]+_[0-9]+_[0-9]+\.[jpeg|jpg|gif|png|webp]/i,
+user_account_name: /^[a-zA-Z0-9\_]{6,18}$/i,
+punctuations: /[\u3002\uff1b\uff0c\uff1a\u201c\u201d\uff08\uff09\u3001\uff1f\u300a\u300b\\\|\~\`\!\@\#\$\%\^\&\*\(\)\-\_\=\+\[\{\]\}\;\:\’\'\"\,\<\.\>\/\?\t\s\n\r\・\♥\♡\★\！\·\~\！\@\#\￥\%\…\&\*\（\）\—\=\+\【\】\{\}\、\|\；\：\；\「\」\『\』\，\《\》\、\？]/gi,
+user_name: function (str) {
+    if (!str) {
+      return 1;
+    }
+    str = String(str).trim();
+    if (String(str).length < 6 || String(str).length > 18) {
+      return 2;
+    }
+    if (/^[a-zA-Z0-9\_]{6,18}$/i.test(str) === false) {
+      return 3;
+    }
+    if (String(str).includes('__')) {
+      return 4;
+    }
+    const mat = String(str).match(/\_/g);
+    if (mat && mat.length > 3) {
+      return 5;
+    }
+    return 0;
+  },
+    },
+    timezone: {
+      zones: {"-12:00":{"file":"-12:00","text":"-12:00","diff":-720},"-11:00":{"file":"-11:00","text":"-11:00","diff":-660},"-10:00":{"file":"-10:00","text":"-10:00","diff":-600},"-09:30":{"file":"-09:30","text":"-09:30","diff":-570},"-09:00":{"file":"-09:00","text":"-09:00","diff":-540},"-08:00":{"file":"-08:00","text":"-08:00","diff":-480},"-07:00":{"file":"-07:00","text":"-07:00","diff":-420},"-06:00":{"file":"-06:00","text":"-06:00","diff":-360},"-05:00":{"file":"-05:00","text":"-05:00","diff":-300},"-04:00":{"file":"-04:00","text":"-04:00","diff":-240},"-03:30":{"file":"-03:30","text":"-03:30","diff":-210},"-03:00":{"file":"-03:00","text":"-03:00","diff":-180},"-02:00":{"file":"-02:00","text":"-02:00","diff":-120},"-01:00":{"file":"-01:00","text":"-01:00","diff":-60},"+00:00":{"file":"+00:00","text":"UTC","diff":0},"+01:00":{"file":"+01:00","text":"+01:00","diff":60},"+02:00":{"file":"+02:00","text":"+02:00","diff":120},"+03:00":{"file":"+03:00","text":"+03:00","diff":180},"+03:30":{"file":"+03:30","text":"+03:30","diff":210},"+04:00":{"file":"+04:00","text":"+04:00","diff":240},"+04:30":{"file":"+04:30","text":"+04:30","diff":270},"+05:00":{"file":"+05:00","text":"+05:00","diff":300},"+05:30":{"file":"+05:30","text":"+05:30","diff":330},"+05:45":{"file":"+05:45","text":"+05:45","diff":345},"+06:00":{"file":"+06:00","text":"+06:00","diff":360},"+06:30":{"file":"+06:30","text":"+06:30","diff":390},"+07:00":{"file":"+07:00","text":"+07:00","diff":420},"+08:00":{"file":"+08:00","text":"+08:00","diff":480},"+08:45":{"file":"+08:45","text":"+08:45","diff":525},"+09:00":{"file":"+09:00","text":"+09:00","diff":540},"+09:30":{"file":"+09:30","text":"+09:30","diff":570},"+10:00":{"file":"+10:00","text":"+10:00","diff":600},"+10:30":{"file":"+10:30","text":"+10:30","diff":630},"+11:00":{"file":"+11:00","text":"+11:00","diff":660},"+11:30":{"file":"+11:30","text":"+11:30","diff":690},"+12:00":{"file":"+12:00","text":"+12:00","diff":720},"+12:45":{"file":"+12:45","text":"+12:45","diff":765},"+13:00":{"file":"+13:00","text":"+13:00","diff":780},"+14:00":{"file":"+14:00","text":"+14:00","diff":840}},
+    },
+  },
+  utils:{
+    math: {
+      random(min, max) {
+    min = Number(min);
+    max = Number(max);
+    return Math.floor(Math.random() * (max - min + 1) + min)
+  },
+      random8char() {
+    return Math.random().toString(36).substring(2, 10);
+  },
+    },
+    url: {
+      alter_query(url, dels = [], adds = null, encode = true) {
+    url = String(url);
+    if (url.includes('?') && dels && dels.length) {
+      const parts = url.split('?');
+      const base = parts[0];
+      const pars = [];
+      for (const q_and_v of String(parts[1]).split('&')) {
+        const q = String(q_and_v).split('=')[0];
+        if (dels.includes(q) === false) {
+          pars.push(q_and_v);
+        }
+      }
+      if (pars.length) {
+        url = `${base}?${pars.join('&')}`;
+      } else {
+        url = `${base}`;
+      }
+    }
+    if (adds && (adds.length || Object.keys(adds).length)) {
+      if (url.includes('?') === false) {
+        url += '?';
+      }
+      if (url.endsWith('?') === false) {
+        url += '&';
+      }
+      if (Array.isArray(adds)) {
+        url += adds.join('&');
+      } else if (typeof adds === 'string') {
+        url += adds;
+      } else {
+        const pars = [];
+        for (const [key, val] of Object.entries(adds)) {
+          if (val === undefined || val === null || Number.isNaN(val)) {
+            pars.push(key);
+            continue;
+          }
+          pars.push(`${key}=${encode ? encodeURIComponent(val) : val}`);
+        }
+        url += pars.join('&');
+      }
+    }
+    return url;
+  },
+    },
+    string: {
+      range_str_to_arr(str, min = null, max = null, glue = '~') {
+    const arr = [];
+    const exp = new RegExp(`[^0-9\-\,\s\\${glue}]`, 'g');
+    str = String(str).replace(exp, '');
+    str.split(',').forEach(s => {
+      let [vl, vr] = String(s).split(glue);
+      if (!vl) return;
+      vl = Number(vl);
+      if (Number.isInteger(vl) === false || (min !== null && vl < min) || (max !== null && vl > max)) {
+        return;
+      }
+
+      if (vr) {
+        vr = Number(vr);
+        if (Number.isInteger(vr) && vr > vl && (min === null || vr >= min) && (max === null || vr <= max)) {
+          for (let n = vl; n <= vr; n++) {
+            if (arr.includes(n) === false) {
+              arr.push(n);
+            }
+          }
+          return;
+        }
+      }
+
+      if (arr.includes(vl) === false) {
+        arr.push(vl);
+      }
+    });
+    return arr.sort((a, b) => a - b);
+  },
+      range_arr_to_str(arr, min = null, max = null, glue = '~') {
+    if (!arr || Array.isArray(arr) === false) return '';
+    arr = arr
+      .map(n => Number(n))
+      .filter(n => Number.isInteger(n) && (min === null || n >= min) && (max === null || n <= max))
+      .sort((a, b) => a - b)
+      .filter((val, idx, self) => self.indexOf(val) === idx);
+    arr.push('END');
+
+    const str = [];
+
+    let last = null;
+    let temp = [];
+    arr.forEach(curr => {
+      if (last === 'END') return;
+      if (curr !== 'END') {
+        // first one || continuous
+        if (last === null || curr - last === 1) {
+          temp.push(curr);
+          last = curr;
+          return;
+        }
+      }
+
+      // Discontinuous then End this section
+      if (temp.length === 1) {
+        str.push(temp.pop())
+      } else if (temp.length === 2) {
+        str.push(temp.shift())
+        str.push(temp.shift())
+      } else if (temp.length >= 3) {
+        str.push(`${temp.shift()}${glue}${temp.pop()}`)
+      }
+
+      temp = [curr];
+      last = curr;
+    }); // end forEach
+
+    return str.join(',');
+  },
+      int_str_to_arr(str, opt = {}) {
+    opt = Object.assign({ min: null, max: null, unique: false, sort: false, glue: ',', hyphen: '~' }, opt);
+
+    const arr = [];
+    const exp = new RegExp(`[^0-9\-\s\\${opt.glue}\\${opt.hyphen}]`, 'g');
+    str = String(str).replace(exp, '');
+    str.split(opt.glue).forEach(s => {
+      let [vl, vr] = String(s).split(opt.hyphen);
+      if (!vl) return;
+      vl = Number(vl);
+      if (Number.isInteger(vl) === false || (opt.min !== null && vl < opt.min) || (opt.max !== null && vl > opt.max)) {
+        console.log(`return ${vl}`);
+        return;
+      }
+
+      if (vr) {
+        vr = Number(vr);
+        if (Number.isInteger(vr) && (opt.min === null || vr >= opt.min) && (opt.max === null || vr <= opt.max)) {
+          if (vr >= vl) {
+            for (let n = vl; n <= vr; n++) {
+              if (!opt.unique || arr.includes(n) === false) {
+                arr.push(n);
+              }
+            }
+            return;
+          }
+          for (let n = vl; n >= vr; n--) {
+            if (!opt.unique || arr.includes(n) === false) {
+              arr.push(n);
+            }
+          }
+          return;
+        }
+      }
+
+      if (!opt.unique || arr.includes(vl) === false) {
+        arr.push(vl);
+      }
+    });
+    if (opt.sort) {
+      const func = typeof opt.sort === 'function' ? opt.sort : (a, b) => a - b;
+      arr.sort(func);
+    }
+    return arr;
+  },
+      int_arr_to_str(arr, opt = {}) {
+    opt = Object.assign({ min: null, max: null, unique: false, sort: false, glue: ',', hyphen: '~' }, opt);
+
+    if (!arr || Array.isArray(arr) === false) return '';
+    arr = arr
+      .map(n => Number(n))
+      .filter(n => Number.isInteger(n) && (opt.min === null || n >= opt.min) && (opt.max === null || n <= opt.max))
+
+    if (opt.unique) {
+      arr = arr
+        .filter((val, idx, self) => self.indexOf(val) === idx);// unique array
+    }
+
+    if (opt.sort) {
+      const func = typeof opt.sort === 'function' ? opt.sort : (a, b) => a - b;
+      arr.sort(func);
+    }
+
+    arr.push('END');
+
+    const str = [];
+
+    let last = null;
+    let temp = [];// range
+    let sign = 0;// -1 0 1
+    arr.forEach(curr => {
+      if (last === 'END') return;
+      if (curr !== 'END') {
+        // first one || continuous
+        if (last === null) {
+          temp.push(curr);
+          last = curr;
+          return;
+        }
+        const diff = curr - last;
+        if (Math.abs(diff) === 1) {
+          if (sign === 0 || diff === sign) {
+            temp.push(curr);
+            sign = diff;
+            last = curr;
+            return;
+          }
+        }
+      }
+
+      // Discontinuous then End this section
+      if (temp.length === 1) {
+        str.push(temp.pop())
+      } else if (temp.length === 2) {
+        str.push(temp.shift())
+        str.push(temp.shift())
+      } else if (temp.length >= 3) {
+        str.push(`${temp.shift()}${opt.hyphen}${temp.pop()}`)
+      }
+
+      temp = [curr];
+      sign = 0;
+      last = curr;
+    }); // end forEach
+
+    return str.join(opt.glue);
+  },
+    },
+  },
+};
+
+
+/* -BLOCK- */
+
+/**
+ * random int between [min, max]
+ * min and max can be negative number
+ */
+function random(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+};
+
+function random8char() {
+  return Math.random().toString(36).substr(2, 8) // 8char length
+};
+
+function isMobile() {
+  const minWidth = 768; // Minimum width for desktop devices
+  return window.innerWidth < minWidth || screen.width < minWidth;
+};
+
+/**
+ * @deprecated change to "let O = new URL(url);"
+ * parseURL
+ * 
+ * @param {any} url 
+ * @returns 
+ */
+function parseURL(url) {
+  return new URL(url);
+};
+
+function set_iframe_height(fid, val) {
+  try {
+    document.getElementById(fid).setAttribute("height", val);
+  } catch (error) {
+    console.log(error);
+  }
+}
+if (!window.mbato) {
+  window.mbato = {};
+}
+window.mbato.set_iframe_height = set_iframe_height;
+
+function toggle_body_modal_mode(mask = null) {
+  //console.log('toggle_body_modal_mode:', mask);
+  const toggler = function (mask) {
+    const class_name = 'body-for-modal-mask';
+    if (mask) {
+      if (document.body.classList.contains(class_name) === false) {
+        document.body.classList.add(class_name);
+      }
+      return;
+    }
+    if (document.body.classList.contains(class_name)) {
+      document.body.classList.remove(class_name);
+    }
+  }
+  if (mask === 1 || mask === true) {
+    toggler(true);
+    return;
+  }
+  if (mask === 0 || mask === false) {
+    toggler(false);
+    return;
+  }
+  setTimeout(function () {
+    const mask = document.querySelector('.modal-mask');
+    toggler(mask ? true : false);
+  }, 1000);
+}
+
+function format_image_url(name, width = null) {
+  if (!name) {
+    return `//${_cfg.static}/img/no-image.png`;
+  }
+  const ws = width ? `/W${width}` : '';
+  return `//${window._confs.domain.file_archive}${ws}/${name}`;
+}
+
+function limitHeight_prepare(domIds = null) {
+  if (domIds === null) {
+    domIds = [];
+    const items = document.querySelectorAll('.limit-height-ctrl');
+    if (items && items.length) {
+      for (const item of items) {
+        const ctrl = item.getAttribute('data-ctrl');
+        if (ctrl) {
+          domIds.push(ctrl);
+        }
+      }
+    }
+  }
+  if (Array.isArray(domIds) === false) {
+    domIds = [domIds];
+  }
+  for (const id of domIds) {
+    const o_ctrl = document.getElementById('limit-height-ctrl-' + id);
+    const o_body = document.getElementById('limit-height-body-' + id);
+    //const o_more = document.getElementById('limit-height-more-' + id);
+    const o_left = document.getElementById('limit-height-left-' + id);
+    if (!o_ctrl) continue;
+    if (o_ctrl.classList.contains('expanded')) {
+      console.log('expanded');
+      continue;
+    }
+    const hs = o_body.scrollHeight;
+    const hc = o_body.clientHeight;
+    const ho = o_body.offsetHeight;
+    const hl = hs - hc;
+    const hp = Math.max(1, Math.min(99, (Number(hl / hs * 100).toFixed(0))));
+    o_left.innerText = ` ${hp}%`;//' ' + (hp) + '%';
+    if (hs > ho || hs > hc) {
+      if (o_ctrl.classList.contains('contracted') === false) {
+        o_ctrl.classList.add('contracted');
+      }
+    }
+  }
+}
+function limitHeight_seeMore(id) {
+  const o_ctrl = document.getElementById('limit-height-ctrl-' + id);
+  if (!o_ctrl) return;
+  o_ctrl.classList.remove('contracted');
+  o_ctrl.classList.add('expanded');
+};
+
+
+function flash_msg(msg, type = 'primary', timeout = 3000, icon = true) {
+  app._notify_b({
+    type,
+    text: msg,
+    icon,
+  })
+}
+
+/**
+ * Catch defined system error
+ * Or trigger an error
+ * return false if no defined system error catched
+ * 
+ * Test if error exists
+ * if(handle_defined_error(eno)){
+ *  return
+ * }
+ * OR
+ * Throw an error
+ * handle_defined_error(401)
+ * 
+ * @param {*} data | eno 
+ * @returns {Boolean} Catch defined error then return true else return false
+ */
+function handle_defined_error(data) {
+  if (data && data.error) {
+    flash_msg(`System error, please try again!`, 'danger');
+    return true;
+  }
+  let eno = data && data.eno ? data.eno : data;
+  switch (eno) {
+    case 4001:
+      flash_msg(`Unknown error, please try again!`, 'danger');
+      break;
+    case 4002:
+      flash_msg(`System error, please try again!`, 'danger');
+      break;
+    case 4003:
+      flash_msg(`FileSystem error, please try again!`, 'danger');
+      break;
+    case 4004:
+      flash_msg(`Database error, please try again!`, 'danger');
+      break;
+    case 4005:
+      flash_msg(`Session error, please try again!`, 'danger');
+      break;
+    case 4006:
+      flash_msg(`Account error, please try again!`, 'danger');
+      break;
+    case 4007:
+      flash_msg(`Please login first!`, 'danger');
+      break;
+    case 4008:
+      flash_msg(`Param error , please try again!`, 'danger');
+      break;
+    case 4009:
+      flash_msg(`Input error , please try again!`, 'danger');
+      break;
+    case 4010:
+      flash_msg(`Duplicate entry exists!`, 'danger');
+      break;
+    case 4011:
+      flash_msg(`Mail server failure, please try again!`, 'danger');
+      break;
+    case 4012:
+      flash_msg(`Captcha verification failure, please try again!`, 'danger');
+      break;
+    case 4015:
+      flash_msg(`Sorry, but Google AI said you are a robot and blocked your operation. Please check your device and try again!`, 'danger');
+      break;
+
+    default:
+      return false
+  }
+
+  return true
+}
+
+if (axios) {
+  axios.defaults.params = {
+    _r: random8char()
+  };
+  axios.defaults.timeout = 59000;
+  axios.defaults.withCredentials = true;
+}
+
+/**
+ * global mixin
+ */
+const VueMixin_Global = function () {
+  return {
+    directives: {
+      // indeterminate: function (value) {
+      //   this.el.indeterminate = Boolean(value)
+      // },
+      indeterminate: function (el, binding) {
+        el.indeterminate = Boolean(binding.value)
+      },
+    },
+    data() {
+      return {}
+    },
+    methods: {
+      _go_login(cf = false) {
+        if (!cf || confirm(cf)) {
+          const url = `/login`;
+          window.location.href = url
+        }
+      },
+      _go_logout(cf = false) {
+        if (!cf || confirm(cf)) {
+          const url = `/logout`;
+          window.location.href = url;
+        }
+      },
+      // _format_image_url(name, width = null) {
+      //   return format_image_url(name, width);
+      // },
+      // __lang_code_to_flag(code) {
+      //   return window._confs.lang.items[code].flag;
+      // },
+      // __emoji(name, addClass = '') {
+      //   return `emoji emoji-${name}` + (addClass ? ` ${addClass}` : '');
+      // },
+      limitHeight_prepare(id) {
+        limitHeight_prepare(id);
+      },
+      limitHeight_seeMore(id) {
+        limitHeight_seeMore(id);
+      },
+    }
+  }
+}; // global mixin end
+
+const VueMixin_ADTags = function () {
+  return {
+    data() {
+      return {
+        "adtags_plus_inRead": "<div align=\"center\"><script async src=\"https://cdn.ad.plus/player/adplus.js\"></script> <script data-playerPro=\"current\">(function(){var s=document.querySelector('script[data-playerPro=\"current\"]');s.removeAttribute(\"data-playerPro\");(playerPro=window.playerPro||[]).push({id:\"EgjEvfeqExnO\",after:s});})();</script></div>",
+        "adtags_plus_interstitial": "<script async src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\"></script>\n    <script>   window.googletag = window.googletag || {cmd: []};\n          googletag.cmd.push(function() {\n            var interstitialSlot = googletag.defineOutOfPageSlot('/21849154601,10749368/Ad.Plus-Mobile-Interstitial', googletag.enums.OutOfPageFormat.INTERSTITIAL);\n            if (interstitialSlot) interstitialSlot.addService(googletag.pubads());\n            googletag.pubads().enableSingleRequest();\n            googletag.enableServices();   googletag.display(interstitialSlot);     }); </script>\n",
+        "adtags_plus_multiPlex": "<script async src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\"></script>\n<div id=\"Native-MultiPlex\"><script>\n    window.googletag = window.googletag || {cmd: []};\n    googletag.cmd.push(function() {\n    googletag.defineSlot('/21849154601,10749368/Ad.Plus-MultiPlex', ['fluid'], 'Native-MultiPlex').addService(googletag.pubads());\n    googletag.enableServices();\n    googletag.display('Native-MultiPlex');\n    }); </script></div>\n",
+        "adtags_plus_respHor": "<script async='async' src='https://www.googletagservices.com/tag/js/gpt.js'></script>\n<script>\n  var gptadslots = [];\n  var googletag = googletag || {cmd:[]};\n</script>\n<script>\n  googletag.cmd.push(function() {\n    var responsiveads = googletag.sizeMapping()\n          .addSize([0,0],[[336,280],[300,250],[250,250],[320,250],[320,100],[320,50],[300,100],[300,50]])\n          .addSize([750,200],[[728,90],[336,280],[300,250],[400,300],[480,320],[320,250]])\n          .addSize([975,200],[[728,90],[970,250],[336,280],[300,250],[400,300],[480,320],[320,250],[980,90],[980,120]])\n                    .build();\n                           gptadslots.push(googletag.defineSlot('/21849154601,10749368/Ad.Plus-AI-Responsive', [[336,280]], 'responsive-1')\n                            .defineSizeMapping(responsiveads)\n                            .addService(googletag.pubads()));\n                      googletag.pubads().setTargeting('site', ['bato.to']);\n                       googletag.enableServices();  });</script>\t\n<center><div id='responsive-1'><script>\n    googletag.cmd.push(function() { googletag.display('responsive-1'); });\n  </script></div></center>\n",
+        "adtags_plus_sticky": "<div id='fixedban' style='width:100%;margin:auto; text-align:center;float:none;overflow:hidden; display:scroll;position:fixed; bottom:0;z-index:91081'>\n  <div style='text-align:center;display:block;max-width:970px;height:auto;overflow:hidden;margin:auto'>  \n  <script async='async' src='https://www.googletagservices.com/tag/js/gpt.js'></script>\n  <script>  var gptadslots = [];\n    var googletag = googletag || {cmd:[]};</script>\n  <script>  googletag.cmd.push(function() {\n      var responsiveads = googletag.sizeMapping()\n             .addSize([0,0],[[320,50],[300,75],[300,50]])\n             .addSize([730,200],[[728,90],[468,60]])\n             .addSize([975,200],[[970,90],[728,90],[960,90],[750,100],[950,90],[468,60]])  .build();\n                             gptadslots.push(googletag.defineSlot('/21849154601,10749368/Ad.Plus-Anchor', [[320,100]], 'adplus-anchor')\n                              .setTargeting('site', ['bato.to'])\n                              .defineSizeMapping(responsiveads)\n                              .addService(googletag.pubads()));\n                         googletag.enableServices();  }); </script>\n       <div> <a id='close-fixedban' onclick='document.getElementById(&apos;fixedban&apos;).style.display = &apos;none&apos;;' style='cursor:pointer;'><img src=\"https://ad.plus/adplus-advertising.svg\" alt=\"adplus-dvertising\" title='Ad.Plus Advertising' style='vertical-align:middle;'/></a></div> <div id='adplus-anchor'>\n    <script>   googletag.cmd.push(function() { googletag.display('adplus-anchor'); });  </script></div></div></div>\n  ",
+      }
+    },
+  }
+};
+
+Vue.component('notification', {
+  props: ['msg'],
+  data() {
+    return {
+      time: 0,
+      left: 0,
+    };
+  },
+  computed: {
+    item() {
+      const val = this.msg.text ? this.msg : { text: this.msg };
+      let time = 5;
+      switch (val.type) {
+        case 'danger':
+          time = 15
+          break;
+        case 'warning':
+          time = 10;
+          break;
+        case 'success':
+          time = 1;
+          break;
+      }
+      const def = {
+        type: 'primary',
+        text: '',
+        time,
+        icon: false,
+      }
+      return Object.assign({}, def, val);
+    },
+    icon() {
+      if (!this.item.icon) return '';
+      switch (this.item.type) {
+        case 'primary':
+        case 'secondary':
+          return '<i class="mr-2 fas fa-info-circle"></i>';
+        case 'success':
+          return '<i class="mr-2 fas fa-check-circle"></i>';
+        case 'danger':
+          return '<i class="mr-2 fas fa-times-circle"></i>';
+        case 'warning':
+          return '<i class="mr-2 fas fa-exclamation-triangle"></i>';
+        case 'info':
+          return '<i class="mr-2 fas fa-info-circle"></i>';
+        case 'light':
+          return '<i class="mr-2 fas fa-info-circle"></i>';
+        case 'dark':
+          return '<i class="mr-2 fas fa-info-circle"></i>';
+      }
+      return '';
+    },
+    prog() {
+      if (this.time <= 0) return '0%';
+      return `${(this.left / this.time).toFixed(4) * 100}%`;
+    }
+  },
+  mounted() {
+    if (this.item.time > 0) {
+      this.time = Number(this.item.time);
+      this.left = Number(this.item.time);
+      this.countdown();
+    }
+  },
+  methods: {
+    countdown(step = 100) {
+      if (this.left < 0) {
+        return;
+      }
+      this.left = this.left - (step / 1000);
+      setTimeout(() => {
+        this.countdown(step);
+      }, step);
+    },
+    close() {
+      this.left = -1;
+      console.log(this.left);
+    }
+  },
+  template: `<transition name="fade">
+    <div v-if="left >= 0" class="alert alert-dismissible fade show" :class="'alert-'+this.item.type">
+      <span v-if="icon" v-html="icon"></span>{{item.text}}
+      <button type="button" class="btn btn-sm btn-secondary close" @click="close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <div v-if="left > 0" class="progress">
+        <div class="progress-bar" :class="'bg-'+this.item.type" :style="'width: '+ this.prog"></div>
+      </div>
+    </div>
+  </transition>`,
+});
+
+const VueMixin_Notify = function () {
+  return {
+    data() {
+      return {
+        notify_msg_t: [],
+        notify_msg_b: [],
+      }
+    },
+    methods: {
+      _notify_t(msg) {
+        if (!msg) return;
+        this.notify_msg_t.push(msg);
+      },
+      _notify_b(msg) {
+        if (!msg) return;
+        this.notify_msg_b.push(msg);
+      }
+    },
+  }
+};
+
+function notify_t(msg) {
+  app._notify_t(msg);
+}
+
+function notify_b(msg) {
+  app._notify_b(msg);
+}
+
+if (false) {
+  Vue.component('back-to-top-btn', {
+    data() {
+      return {
+        show: false,
+      };
+    },
+    computed: {
+
+    },
+    mounted() {
+      window.addEventListener('scroll', this.handleScroll);
+    },
+    methods: {
+      handleScroll(event) {
+        const scrollY = window.scrollY;
+        if (scrollY >= 300) {
+          this.show = true;
+        } else {
+          this.show = false;
+        }
+      },
+      scrollToTop() {
+        window.scrollTo({
+          top: 0,
+          //left: 0,
+          behavior: "smooth"
+        });
+      }
+    },
+    template: `<transition name="back-to-top-btn">
+    <div v-if="show" class="back-to-top-btn" @click="scrollToTop">
+      <i class="fas fa-fw fa-arrow-up"></i>
+    </div>
+  </transition>`,
+  });
+}
+
+Vue.component('back-to-top-bot', {
+  data() {
+    return {};
+  },
+  methods: {
+    scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    },
+    scrollToBot() {
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth"
+      });
+    },
+  },
+  template: `<div class="back-to-top-bot">
+    <div class="to-top-btn" @click="scrollToTop">
+      <i class="fas fa-fw fa-arrow-up"></i>
+    </div>
+    <div class="to-bot-btn" @click="scrollToBot">
+      <i class="fas fa-fw fa-arrow-down"></i>
+    </div>
+  </div>`,
+});
+
+
+try {
+  if (String(document.domain).endsWith('.translate.goog') || String(document.domain).endsWith('.proxysite.com')) {
+
+  } else if (typeof _uid !== undefined && _uid) {
+
+  } else {
+    if (typeof _jss !== 'undefined') {
+      if (_jss.confs && _jss.confs.domain) {
+        const cfg_dms = _jss.confs.domain;
+        const all_dms = [];
+        if (cfg_dms.btoto_mirrors) {
+          for (const s of cfg_dms.btoto_mirrors) {
+            all_dms.push(s)
+          }
+        }
+        if (cfg_dms.mpark_mirrors) {
+          for (const s of cfg_dms.mpark_mirrors) {
+            all_dms.push(s)
+          }
+        }
+        if (cfg_dms.special_names) {
+          for (const s of cfg_dms.special_names) {
+            all_dms.push(s)
+          }
+        }
+        if (all_dms.length) {
+          const basename = String(document.domain).split('.').slice(-2).join('.');
+          if (all_dms.includes(basename) === false) {
+            window.location.href = 'https://fto.to';
+          }
+        }
+      }
+    }
+  }
+} catch (error) {
+  console.log(error);
+}
+
+let _idb_his = null;
+function localHistory_init_idb() {
+  if (_idb_his) return;
+  try {
+    _idb_his = new Dexie('history');
+    _idb_his.version(1).stores({
+      episodes: "++iid, &sid", // eid text
+    });
+    _idb_his.version(2).stores({
+      episodes: "++iid, &sid, time", // Primary key and indexed props
+    });
+    _idb_his.open();
+  } catch (error) {
+    console.log(error);
+    _idb_his = null;
+  }
+}
+function localHistory_format_his_item(doc) {
+  if (!doc) return;
+  doc._text_sub = _.unescape(doc.text_sub);
+  doc._text_epi = _.unescape(doc.text_epi);
+  doc._time_ago = moment(doc.time).fromNow();
+}
+
+
+
+/* -BLOCK- */
+
+
+let _gf_slot_inc = 0;
+function gf_builder($slot){
+
+  const slotName = `gf_slot_${++_gf_slot_inc}`;
+
+  //let slotType = 'respHor';
+  // if(window.screen && window.screen.width && window.screen.width < 600){
+  //   const dataTypes = $slot.getAttribute('data-types');
+  //   const slotTypes = dataTypes ? String(dataTypes).split(',') : ['respHor'];
+  //   console.log('slotTypes:', slotTypes);
+  //   if(slotTypes.length > 1){
+  //     const slotRand = Math.floor(Math.random() * slotTypes.length);
+  //     if(slotTypes[slotRand]){
+  //       slotType = slotTypes[slotRand];
+  //     }
+  //   }else if(slotTypes[0]){
+  //     slotType = slotTypes[0];
+  //   }
+  // }
+
+  const slotType = $slot.getAttribute('data-type') || $slot.getAttribute('data-types') || 'respHor';
+
+  //console.log(slotName, slotType);
+
+  if(slotType === 'inRead'){
+
+    $slot.innerHTML = `<div align="center"><div id="inRead-outStream" data-playerPro="current"></div></div>`;
+    (function () {
+      var s = document.querySelector('div#inRead-outStream');
+      s.removeAttribute("data-playerPro");
+      (playerPro = window.playerPro || []).push({id: "EgjEvfeqExnO", after: s});
+    })();
+
+  } else if(slotType === 'respHor'){
+
+    $slot.innerHTML = `<center><div id="${slotName}"></div></center>`;
+    window.googletag = window.googletag || {cmd: []}; 
+    const gptadslots = [];
+
+    googletag.cmd.push(function() {
+      const responsiveads = googletag.sizeMapping()
+        .addSize([0,0],[[336,280],[300,250],[250,250],[320,250],[320,100],[320,50],[300,100],[300,50]])
+        .addSize([750,200],[[728,90],[336,280],[300,250],[400,300],[480,320],[320,250]])
+        .addSize([975,200],[[728,90],[970,250],[336,280],[300,250],[400,300],[480,320],[320,250],[980,90],[980,120]])
+        .build();
+
+      gptadslots.push(googletag.defineSlot('/21849154601,10749368/Ad.Plus-AI-Responsive', [[336,280]], slotName)
+        .defineSizeMapping(responsiveads)
+        .addService(googletag.pubads()));
+
+      googletag.pubads().setTargeting('site', ['bato.to']);
+      googletag.enableServices(); 
+     });
+                       
+    googletag.cmd.push(function() { 
+      googletag.display(slotName); 
+    });
+
+  } else if(slotType === '300x600'){
+
+    $slot.innerHTML = `<center><div id="${slotName}"></div></center>`;
+    window.googletag = window.googletag || {cmd: []}; 
+    googletag.cmd.push(function() {
+        googletag.defineSlot('/21849154601,10749368/Ad.Plus-300x600', [[300, 600], [200, 446], [240, 400], [250, 250], [250, 360], [120, 600], [300, 250], [160, 600]], slotName)
+          .addService(googletag.pubads())
+          .setTargeting('site', ['bato.to']);
+        googletag.enableServices(); 
+        googletag.display(slotName); 
+    });
+
+  } else if(slotType === '336x280') {
+
+    $slot.innerHTML = `<center><div id="${slotName}"></div></center>`;
+    window.googletag = window.googletag || {cmd: []}; 
+    googletag.cmd.push(function() {
+      googletag.defineSlot('/21849154601,10749368/Ad.Plus-336x280', [[336, 280], [200, 200], [320, 100], [240, 133], [300, 100], [120, 240], [180, 150], [320, 250], [250, 250], [300, 250], [300, 75]], slotName)
+        .addService(googletag.pubads())
+        .setTargeting('site', ['bato.to']);
+      googletag.enableServices();
+      googletag.display(slotName);
+    });
+
+  }
+};
+
+/* -BLOCK- */
+
+
+(function () {
+  function removeCrawlInOutbrain() {
+    if (!window._removeCrawlInOutbrain) {
+      window._removeCrawlInOutbrain = 1;
+    } else {
+      window._removeCrawlInOutbrain++;
+    }
+    const $obdivs = document.querySelectorAll('div.OUTBRAIN');
+    for (const $obdiv of $obdivs) {
+      const $shadow = $obdiv.shadowRoot;
+      if (!$shadow) continue;
+      const $links = $shadow.querySelectorAll('a.ob-dynamic-rec-link');
+      for (const $link of $links) {
+        const href = $link.getAttribute('href');
+
+        // mobile
+        if (String(href).startsWith(`https://traffic.outbrain.com/network/redir?p=`)) {
+          $link.remove();
+          continue;
+        }
+
+        // desktop
+        if (String(href).includes('?oburltocrawl=http') && String(href).includes('obOrigUrl=true')) {
+          $link.remove();
+          continue;
+        }
+
+        const onmousedown = $link.getAttribute('onmousedown');
+        if (String(onmousedown).startsWith(`this.href='https://traffic.outbrain.com/network/redir?p=`)) {
+          $link.remove();
+          continue;
+        }
+      }
+    }
+  }
+
+  const timer = setInterval(function () {
+    removeCrawlInOutbrain();
+    if (window._removeCrawlInOutbrain > 100) {
+      clearInterval(timer);
+    }
+  }, 100);
+})();
+
+try {
+  if (document.addEventListener && isMobile()) {
+    document.addEventListener("DOMContentLoaded", function () {
+      if (!document.querySelector('#js-ob-float')) {
+        return;
+      }
+      const ts = Date.now();
+      const tl = Number(Cookies.get('obt') || 0);
+      if ((ts - tl) < (1000 * 3600)) {
+        return;
+      }
+      const timer = setInterval(function () {
+        if (Date.now() - ts > 1000 * 10) {
+          clearInterval(timer);
+          return;
+        }
+        const $cnt = document.querySelector('div.ob-mobile-read-next');
+        if (!$cnt) {
+          return;
+        }
+        const $div = document.querySelector('div.ob-widget-items-container');
+        if (!$div || !$div.addEventListener) {
+          return;
+        }
+        const $btn = document.querySelector('button.ob-read-next-close-container');
+        if (!$btn || !$btn.addEventListener) {
+          return;
+        }
+
+        console.log('ob-hack');
+
+        document.querySelectorAll('a.ob-dynamic-rec-link').forEach(($a) => {
+          if ($a.getAttribute('target') === '_self') {
+            $a.setAttribute('target', '_blank');
+          }
+        });
+
+        $div.addEventListener('click', function () {
+          Cookies.set('obt', Date.now(), { path: '/', expires: 1 / 24 });
+          $btn.style.pointerEvents = 'auto';
+          $cnt.remove();
+        });
+        $btn.style.pointerEvents = 'none';
+        clearInterval(timer);
+      }, 100);
+    });
+  }
+} catch (error) {
+  console.log(error);
+}
+
+
+/* -BLOCK- */
+
+/**
+ * type: radio check multi
+ */
+
+const VueMixin_Filter = function (filterType) {
+  return {
+    data: function () {
+      return {
+        filterParams: params,
+        filterFattrs: fattrs,
+
+        filterType,
+        filterTimer: null,
+        filterDone: false,
+        filterShow: 0,
+        filterTree: {
+
+          genres: {
+            type: 'multi',
+            title: 'Genres',
+            hasAll: true,
+            hasCount: true,
+            items: []
+          },
+
+          langs: {
+            type: 'check',
+            title: 'Translated',
+            hasAll: true,
+            hasCount: true,
+            items: []
+          },
+
+          origs: {
+            type: 'check',
+            title: 'Original',
+            hasAll: true,
+            hasCount: true,
+            items: []
+          },
+
+          release: {
+            type: 'radio',
+            title: 'Status',
+            hasAll: true,
+            items: [
+              {
+                title: 'Pending',
+                value: 'pending',
+                state: 0
+              },
+              {
+                title: 'Ongoing',
+                value: 'ongoing',
+                state: 0
+              },
+              {
+                title: 'Completed',
+                value: 'completed',
+                state: 0
+              },
+              {
+                title: 'Hiatus',
+                value: 'hiatus',
+                state: 0
+              },
+              {
+                title: 'Cancelled',
+                value: 'cancelled',
+                state: 0
+              },
+            ]
+          },
+
+          chapters: {
+            title: 'Chapters',
+            name: 'chapters',
+            type: 'radio',
+            hasAll: true,
+            hasCount: false,
+            default: 'all',
+            items: [{
+              title: '1 ~ 9',
+              value: '1-9',
+              state: 0
+            },
+            {
+              title: '10 ~ 29',
+              value: '10-29',
+              state: 0
+            },
+            {
+              title: '30 ~ 99',
+              value: '30-99',
+              state: 0
+            },
+            {
+              title: '100 ~ 199',
+              value: '100-199',
+              state: 0
+            },
+            {
+              title: '200+',
+              value: '200',
+              state: 0
+            },
+            {
+              title: '100+',
+              value: '100',
+              state: 0
+            },
+            {
+              title: '50+',
+              value: '50',
+              state: 0
+            },
+            {
+              title: '10+',
+              value: '10',
+              state: 0
+            },
+            {
+              title: '1+',
+              value: '1',
+              state: 0
+            },
+            ]
+          },
+
+        },
+      }
+    },
+    created: function () {
+      const showKey = `filter-show-${this.filterType}`;
+      const showVal = Number(window.localStorage.getItem(showKey)) ? 1 : 0;
+      this.filterShow = showVal;
+    },
+    mounted() {
+      this.filterBuildTree(this.filterParams);
+    },
+    methods: {
+      filterToggleShowHide() {
+        const showKey = `filter-show-${this.filterType}`;
+        const showVal = this.filterShow === 0 ? 1 : 0;
+        this.filterShow = showVal;
+        window.localStorage.setItem(showKey, showVal);
+      },
+
+      filterBuildTree: function (states) {
+
+        const _confs = {
+          langs: { all: _jss.confs.lang.items, has: this.filterFattrs.langs, },
+          origs: { all: _jss.confs.lang.items, has: this.filterFattrs.origs, },
+          genres: { all: _genres, has: this.filterFattrs.genres, },
+        }
+
+        for (let field in this.filterTree) {
+          const items = this.filterTree[field].items;
+
+          // from _confs
+          if (_confs[field]) {
+            const _all = _confs[field].all;
+            const _has = _confs[field].has;
+
+            let last_sort = 1;
+            for (const [file, item] of Object.entries(_all)) {
+              if (_has.includes(file) === false) continue;
+              items.push({
+                title: item.text,
+                value: item.file,
+                state: 0,
+                break: (field === 'genres' && item.sort !== last_sort ? 1 : 0),
+              })
+              last_sort = item.sort;
+            }
+          }
+
+          // from saved state
+          let selectAll = true
+          for (let key in items) {
+            let item = items[key]
+            let state = 0
+            if (states[field]) {
+              if (states[field].inc.includes(item.value) === true) {
+                state = 1
+                selectAll = false
+              }
+              if (states[field].exc.includes(item.value) === true) {
+                state = 2
+                selectAll = false
+              }
+            }
+            //console.log(state)
+            items[key].state = state;//randomInt(0, 2)
+          }
+
+          // add the all item
+          if (this.filterTree[field].hasAll) {
+            const item = {
+              title: 'All',
+              value: 'all',
+              state: selectAll ? 1 : 0,
+              isAll: true,
+            }
+            items.unshift(item)
+          }
+
+          this.filterTree[field].items = items
+        }
+
+        this.filterDone = true
+        // setTimeout(function () {
+        //   this.filterShow = true
+        // }.bind(this), 300)
+      }, // end build tree
+
+      filterOnClick: function (field, idx) {
+        idx = parseInt(idx)
+
+        let group = this.filterTree[field]
+        let items = group.items
+        let item = items[idx]
+        let oldState = item.state
+        let maxState = group.type == 'multi' ? 2 : 1
+
+        // change
+        if (item.isAll || group.type == 'radio') {
+          item.state = 1
+        } else {
+          let newState = oldState + 1
+          if (newState > maxState) {
+            newState = 0
+          }
+          item.state = newState
+        }
+
+        // compress
+        if (item.isAll || group.type == 'radio') {
+          // all clicked or radio mode
+          for (let key in items) {
+            key = parseInt(key)
+            if (key !== idx) {
+              items[key].state = 0
+            }
+          }
+        } else {
+          // not clicked the all button
+          let hasU = false, hasI = false, hasE = false;
+          let arrU = [], arrI = [], arrE = [];
+          let I2U = false, E2U = false;
+          let A2V = -1;// all to value
+
+          for (let k in items) {
+            let item = items[k]
+
+            // exclude the all item
+            if (item.isAll) {
+              continue
+            }
+
+            let state = item.state
+            if (state == 0) {
+              hasU = true
+              arrU.push(k)
+            } else if (state == 1) {
+              hasI = true
+              arrI.push(k)
+            } else if (state == 2) {
+              hasE = true
+              arrE.push(k)
+            }
+          }
+
+          if (hasU && hasI && hasE) {
+            // has all, ignore
+            A2V = 0
+          } else if (hasU && hasI) {
+            // ignore
+            A2V = 0
+          } else if (hasI && hasE) {
+            // I change to U
+            I2U = true
+            A2V = 0
+          } else if (hasU && hasE) {
+            // ignore
+            A2V = 0
+          } else if (hasU) {
+            // ignore
+            A2V = 1
+          } else if (hasI) {
+            // I change to U
+            I2U = true
+            A2V = 1
+          } else if (hasE) {
+            // E change to U
+            E2U = true
+            A2V = 1
+          }
+
+          if (I2U) {
+            for (let i = 0; i < arrI.length; i++) {
+              items[arrI[i]].state = 0
+            }
+          }
+
+          if (E2U) {
+            for (let i = 0; i < arrE.length; i++) {
+              items[arrI[i]].state = 0
+            }
+          }
+
+          if (A2V > -1) {
+            if (group.hasAll) {
+              for (let key in items) {
+                if (items[key].isAll) {
+                  items[key].state = A2V
+                  break
+                }
+              }
+            }
+          }
+        }
+        // @todo this.filterApplyChange()
+        if (this.filterTimer) {
+          clearTimeout(this.filterTimer)
+        }
+        this.filterTimer = setTimeout(() => {
+          this.filterApplyChange()
+        }, 2000)
+      }, // end onClick
+
+      filterBuildUrl: function (page) {
+        let arrays = {}
+
+        for (let field in this.filterTree) {
+          let group = this.filterTree[field]
+          let items = group.items
+
+          for (let key in items) {
+            let item = items[key]
+            if (item.isAll && item.state == 1) {
+              break
+            }
+
+            if (item.state == 0) {
+              continue
+            }
+
+            if (!arrays[field]) {
+              arrays[field] = {
+                inc: [],
+                exc: [],
+              }
+            }
+
+            if (item.state == 1) {
+              arrays[field].inc.push(item.value)
+            }
+            if (item.state == 2) {
+              arrays[field].exc.push(item.value)
+            }
+          }
+        }
+
+        let parts = []
+        for (let field in arrays) {
+
+          let str = ''
+          let array = arrays[field]
+          if (array.inc && array.inc.length) {
+            str += array.inc.join(',')
+          }
+          if (array.exc && array.exc.length) {
+            str += '|'
+            str += array.exc.join(',')
+          }
+
+          if (str) {
+            parts.push(field + '=' + str)
+          }
+        }
+
+        // base path
+        let path = '/' + this.filterType
+
+        // if has orderBy
+        if (lister && lister.sort) {
+          parts.push('sort=' + lister.sort)
+        }
+
+        // add page
+        page = page ? page : 1
+        page = Math.max(1, page)
+        if (page > 1) {
+          parts.push('page=' + page)
+        }
+
+        return path + (parts.length > 0 ? '?' + parts.join('&') : '')
+      }, // end tree to params
+
+      filterApplyChange: function () {
+        let url = this.filterBuildUrl(1)
+        window.location.href = url
+      }, // end apply change
+    }
+  }
+};
+/*
+styles: {
+  type: 'multi',
+  title: 'Styles',
+  hasAll: true,
+  hasCount: false,
+  items: []
+},
+demogs: {
+  type: 'multi',
+  title: 'Demographic',
+  hasAll: true,
+  hasCount: true,
+  items: []
+},
+
+stars: {
+  type: 'radio',
+  title: 'Stars',
+  hasAll: true,
+  hasCount: false,
+  items: [{
+    title: '5 Stars',
+    value: '5',
+    state: 0
+  },
+  {
+    title: '4 Stars',
+    value: '4',
+    state: 0
+  },
+  {
+    title: '3 Stars',
+    value: '3',
+    state: 0
+  },
+  {
+    title: '2 Stars',
+    value: '2',
+    state: 0
+  },
+  {
+    title: '1 Stars',
+    value: '1',
+    state: 0
+  }
+  ]
+},
+*/
+
+/* -BLOCK- */
+
+/**
+ * guest functino enhancement
+ */
+const VueMixin_LocalHome = function () {
+  return {
+    data() {
+      return {
+
+        localHistory_show: [1].includes(_crs.home_page_my_history_local) ? true : false,
+
+        localHistory_size: 6,
+        localHistory_page: 1,
+        localHistory_loading: 0,// 0 init, 1 loading, 2 no-more
+        localHistory_items: [],
+        localHistory_lastEpis: {}, // sid => lastEpiDoc
+      }
+    },
+    computed: {
+      localHistory_missing_lastEpi_sids() {
+        const sids = [];
+        this.localHistory_items.forEach(item => {
+          if (this.localHistory_lastEpis[item.sid]) return;
+          sids.push(item.sid);
+        });
+        return sids;
+      },
+    },
+    created() {
+      /**
+       * for guest only
+       */
+      if (_crs.history_episode_local >= 0 && _crs.home_page_my_history_local !== 2) {
+        localHistory_init_idb();
+        if (_idb_his) {
+          this.localHistory_LoadMore()
+            .then(res => {
+              if (res) console.log(res);
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        }
+      }
+    },
+    methods: {
+      localHistory_toggle() {
+        this.localHistory_show = !this.localHistory_show;
+      },
+      /**
+       * read history from indexedDB
+       */
+      async localHistory_LoadMore() {
+
+        if (this.localHistory_loading === 2) return;
+        this.localHistory_loading = 1;
+
+        const offset = this.localHistory_size * (this.localHistory_page - 1);
+
+        const items = await _idb_his.episodes
+          .reverse()
+          .offset(offset)
+          .limit(this.localHistory_size)
+          .toArray();
+
+        if (!items || !items.length) {
+          this.localHistory_loading = 2;
+          return;
+        }
+
+        for (const item of items) {
+          localHistory_format_his_item(item);
+          this.localHistory_items.push(item);
+        }
+
+        //console.log('this.localHistory_items:', this.localHistory_items);
+
+        if (items.length < this.localHistory_size) {
+          this.localHistory_loading = 2;
+        } else {
+          this.localHistory_loading = 0;
+          this.localHistory_page = this.localHistory_page + 1;
+        }
+
+        this.localHistory_LoadLastEpis();
+      },
+
+      localHistory_LoadLastEpis() {
+        const sids = this.localHistory_missing_lastEpi_sids;
+        if (!sids.length) return;
+        const data = {
+          sids,
+        };
+        axios.post('/ajax.my.history.local.lastEpis', data)
+          .then(resp => resp.data)
+          .then(json => {
+            const { result } = json;
+            //console.log('result:', result);
+            try {
+              for (const [sid, epi] of Object.entries(result)) {
+                this.$set(this.localHistory_lastEpis, sid, epi);
+              }
+            } catch (error) {
+              console.log(error);
+            }
+            //console.log('this.localHistory_lastEpis:', this.localHistory_lastEpis);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      },
+    },
+  }
+};
+
+
+/* -BLOCK- */
+
+/**
+ * guest functino enhancement
+ * every thing should be prefixed with local_
+ */
+const VueMixin_LocalEpisode = function () {
+  return {
+    data() {
+      return {
+        localHistory_max_items: _crs.history_episode_local === 0 ? 300 : _crs.history_episode_local,
+      }
+    },
+    created() {
+      /**
+       * for guest only
+       */
+      if (_crs.history_episode_local >= 0) {
+        localHistory_init_idb();
+        if (_idb_his) {
+          this.localHistory_main()
+            .then(res => {
+              if (res) console.log(res);
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        }
+      }
+    },
+    methods: {
+      /**
+       * log episode history
+       */
+      async localHistory_main() {
+        const time = (new Date()).getTime();
+        await _idb_his.episodes.where({ sid: subjectIid }).delete();
+        await _idb_his.episodes.add({
+          sid: subjectIid,
+          eid: episodeIid,
+          text_sub: local_text_sub,
+          text_epi: local_text_epi,
+          time: time,
+        });
+        this.localHistory_delete_old(this.localHistory_max_items);
+      },
+
+      /**
+       * @deprecated
+       * @param {*} max max history to record
+       */
+      async ___deprecated_localHistory_delete_old(max = 100) {
+        const old_line = await _idb_his.episodes
+          .offset(max)
+          .limit(1)
+          .last();
+        //console.log('last:', old_line);
+        if (!old_line) {
+          return;
+        }
+        const iid_line = old_line.iid;
+        const deleteCount = await _idb_his.episodes
+          .where('iid')
+          .belowOrEqual(iid_line)
+          .delete();
+        //console.log("Deleted " + deleteCount + " objects");
+      },
+
+      /**
+       * @param {*} max max history to record
+       */
+      async localHistory_delete_old(max = 100) {
+        const old_arr = await _idb_his.episodes
+          .reverse()
+          .offset(max)
+          .limit(1)
+          .toArray();
+
+        const old_row = old_arr.pop();
+        if (!old_row) return;
+
+        const deleteCount = await _idb_his.episodes
+          .where('iid')
+          .belowOrEqual(old_row.iid)
+          .delete();
+        console.log("Deleted " + deleteCount + " objects");
+      },
+    },
+  }
+};
+
+
+/* -BLOCK- */
+
+/**
+ * guest functino enhancement
+ */
+const VueMixin_LocalSubject = function () {
+  return {
+    data() {
+      return {
+        localHistory_item: null,
+      }
+    },
+    created() {
+      /**
+       * for guest only
+       */
+      if (_crs.history_episode_local >= 0) {
+        localHistory_init_idb();
+        if (_idb_his) {
+          this.localHistory_main()
+            .then(res => {
+              if (res) console.log(res);
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        }
+      }
+    },
+    methods: {
+      /**
+       * read history from indexedDB
+       */
+      async localHistory_main() {
+        const hisItem = await _idb_his.episodes.get({ sid: subjectIid });
+        //console.log('localHistory_item:', hisItem);
+        if (hisItem) {
+          localHistory_format_his_item(hisItem);
+          this.localHistory_item = hisItem;
+        }
+      },
+    },
+  }
+};
+
+
+/* -BLOCK- */
+
+const VueMixin_My_History = function (opts = {
+  where: 'browse'
+}) {
+  return {
+    data() {
+      return {
+        my_history_loading: 0, // 0 normal 1 loading 2 no-more
+        my_history_prevPos: null,
+      }
+    },
+    created() { },
+    methods: {
+      my_history_LoadMore() {
+        const data = Object.assign(opts, {
+          prevPos: this.my_history_prevPos,
+        });
+        this.my_history_loading = 1;
+        axios.post('/ajax.my.history.paging', data)
+          .then(resp => resp.data)
+          .then(json => {
+            const { html, isLast, lastPos } = json;
+
+            const o_ele = document.getElementById('my-history-list');
+            if (o_ele) {
+              o_ele.innerHTML += html;
+            }
+
+            this.my_history_prevPos = lastPos;
+            this.my_history_loading = isLast ? 2 : 0;
+          })
+          .catch((error) => {
+            notify_b({
+              type: 'danger',
+              text: 'Unknown error, try again please.',
+            })
+            this.my_history_loading = 0;
+            console.log(error);
+          });
+      },
+    }
+  }
+};
+
+/* -BLOCK- */
+
+const VueMixin_My_Updates = function (opts = {
+  where: 'browse', // browse home
+}) {
+  return {
+    data() {
+      return {
+        my_updates_loading: 0, // 0 normal 1 loading 2 no-more
+        my_updates_prevPos: null,
+      }
+    },
+    created() { },
+    methods: {
+      my_updates_LoadMore() {
+        const data = Object.assign(opts, {
+          prevPos: this.my_updates_prevPos,
+        });
+        this.my_updates_loading = 1;
+        axios.post('/ajax.my.updates.paging', data)
+          .then(resp => resp.data)
+          .then(json => {
+            const { html, isLast, lastPos } = json;
+
+            const o_ele = document.getElementById('my-updates-list');
+            if (o_ele) {
+              o_ele.innerHTML += html;
+            }
+
+            this.my_updates_prevPos = lastPos;
+            this.my_updates_loading = isLast ? 2 : 0;
+          })
+          .catch((error) => {
+            notify_b({
+              type: 'danger',
+              text: 'Unknown error, try again please.',
+            })
+            this.my_updates_loading = 0;
+            console.log(error);
+          });
+      },
+    }
+  }
+};
+
+/* -BLOCK- */
+
+
+/**
+ * guest functino enhancement
+ */
+const VueMixin_UploaderMessage = function (comicId = 0, chapterId = 0) {
+  return {
+    data() {
+      return {
+
+        UploaderMessage_loading: 0,
+
+        UploaderMessage_reason: null,
+        UploaderMessage_content: '',
+        UploaderMessage_contact: typeof your_email === 'undefined' ? '' : your_email,
+
+        UploaderMessage_comicId: comicId,
+        UploaderMessage_chapterId: chapterId,
+
+        UploaderMessage_messageOid: null,
+
+        modal_uploader_message: null,
+      }
+    },
+    created() {
+
+    },
+    methods: {
+
+      UploaderMessage_modal_toggle() {
+        if (!this.modal_uploader_message) {
+          this.modal_uploader_message = new bootstrap.Modal(document.getElementById('modal_uploader_message'));
+        }
+        this.modal_uploader_message.toggle();
+      },
+      UploaderMessage_submit() {
+        this.UploaderMessage_loading = 1;
+        const data = {
+          reason: this.UploaderMessage_reason,
+          content: this.UploaderMessage_content,
+          contact: this.UploaderMessage_contact,
+          comicId: this.UploaderMessage_comicId,
+          chapterId: this.UploaderMessage_chapterId,
+        };
+        axios.post('/_utils/ajax.uploader.message.submit', data)
+          .then((resp) => resp.data)
+          .then((json) => {
+            if (json.err) {
+              alert(json.err);
+              this.UploaderMessage_loading = 0;
+              return;
+            }
+            this.UploaderMessage_messageOid = json.res.messageOid;
+            this.UploaderMessage_loading = 0;
+          })
+          .catch((err) => {
+            console.log(err)
+            alert('Network Error? please try again');
+            this.UploaderMessage_loading = 0;
+          });
+      },
+    },
+  }
+};
+
+
+/* -BLOCK- */
+
+const VueModule_Default = function () {
+  return {
+    el: '#app',
+    delimiters: ['${', '}'],
+    mixins: [
+      VueMixin_Global(),
+      VueMixin_Notify(),
+    ],
+  };
+};
+
+
+/* -BLOCK- */
+
+const VueModule_Home = function () {
+  return {
+    el: '#app',
+    delimiters: ['${', '}'],
+    mixins: [
+      VueMixin_Global(),
+      VueMixin_Notify(),
+      VueMixin_LocalHome(),
+      VueMixin_My_History({
+        _where: 'home',
+        first: 6,
+        limit: 24,
+      }),
+      VueMixin_My_Updates({
+        _where: 'home',
+        first: 6,
+        limit: 24,
+      }),
+    ],
+    data() {
+      return {
+        page: 1,
+        loading: 0, // 0 normal, 1 loading, 2 no-more
+
+        my_updates_show: _crs.home_page_my_updates_login === 1 ? 1 : 0,
+        my_updates_load: 0,// first loaded
+
+        my_history_show: _crs.home_page_my_history_login === 1 ? 1 : 0,
+        my_history_load: 0,// first loaded
+      }
+    },
+    created() { },
+    mounted() {
+      if (_uid) {
+        if (this.my_updates_show) {
+          this.do_my_updates_load();
+        }
+        if (!_crs.history_episode_login) {
+          if (this.my_history_show) {
+            this.do_my_history_load();
+          }
+        }
+      }
+    },
+    methods: {
+      tg_my_updates_show() {
+        this.do_my_updates_load();
+        this.my_updates_show = !this.my_updates_show;
+      },
+      tg_my_history_show() {
+        this.do_my_history_load();
+        this.my_history_show = !this.my_history_show;
+      },
+      do_my_updates_load() {
+        if (this.my_updates_load) return;
+        this.my_updates_LoadMore();
+        this.my_updates_load = 1;
+      },
+      do_my_history_load() {
+        if (this.my_history_load) return;
+        this.my_history_LoadMore();
+        this.my_history_load = 1;
+      },
+
+      latestLoadMore() {
+        if (this.loading != 0) {
+          return;
+        }
+        const nextPage = this.page + 1;
+        const data = {
+          page: nextPage
+        }
+        this.loading = 1;
+        axios.post('/ajax/home-latest-more', data)
+          .then(resp => resp.data)
+          .then((json) => {
+            if (json.res.html) {
+              const obj = document.getElementById('series-list');
+              obj.innerHTML += json.res.html;
+            }
+            this.page = nextPage;
+            this.loading = json.res.more ? 0 : 2;
+          }).catch((err) => {
+            this.loading = 0;
+          })
+
+        return;
+      },
+
+      hide_tip(num) {
+        const id = 'tip-' + num;
+        const copt = { expires: 365, path: '/', domain: '.' + _cfg.base };
+        Cookies.set(id, 1, copt);
+        const o_tip = document.getElementById(id);
+        if (o_tip) {
+          o_tip.outerHTML = '';
+        }
+      },
+    },
+  };
+};
+
+
+/* -BLOCK- */
+
+const VueModule_Latest = function () {
+  return {
+    el: '#app',
+    delimiters: ['${', '}'],
+    mixins: [
+      VueMixin_Global(),
+      VueMixin_Notify(),
+      VueMixin_Filter('latest'),
+    ],
+    data() {
+      return {
+        page: 1,
+        limit: 36,
+        loading: 0, // 0 normal, 1 loading, 2 no-more
+      }
+    },
+    created() { },
+    methods: {
+      latestLoadMore() {
+        if (this.loading != 0) {
+          return;
+        }
+
+        const nextPage = this.page + 1;;
+        const url = this.filterBuildUrl(nextPage);
+        console.log('next url:', url);
+
+        this.loading = 1;
+        axios.get(url)
+          .then((json) => {
+            const data = json.data;
+            if (data.res.html) {
+              const obj = document.getElementById('series-list');
+              obj.innerHTML += data.res.html;
+            }
+            this.page = nextPage;
+            this.loading = data.res.more ? 0 : 2;
+          }).catch((err) => {
+            this.loading = 0;
+          })
+
+        return;
+      }
+    },
+  };
+};
+
+
+/* -BLOCK- */
+
+const VueModule_Browse = function () {
+  return {
+    el: '#app',
+    delimiters: ['${', '}'],
+    mixins: [
+      VueMixin_Global(),
+      VueMixin_Notify(),
+      VueMixin_Filter('browse'),
+    ],
+    data() {
+      return {}
+    },
+    created() { },
+    methods: {},
+  };
+};
+
+
+/* -BLOCK- */
+
+const VueModule_Search = function () {
+  return {
+    el: '#app',
+    delimiters: ['${', '}'],
+    mixins: [
+      VueMixin_Global(),
+      VueMixin_Notify(),
+    ],
+    data() {
+      return {
+        ls_key: 'search-words',
+        word,
+        words: [],
+
+        hot_words: hot_words && hot_words.length ? hot_words : [],
+        new_words: new_words && new_words.length ? new_words : [],
+      };
+    },
+    created() {
+      // if (this.word) {
+      //   this.add_word(this.word);
+      // }
+      this.words = this.get_words();
+    },
+    methods: {
+      onClick_Submit() {
+        if (!window.localStorage) {
+          return;
+        }
+        //console.log('word:', this.word);
+        if (this.word) {
+          this.add_word(this.word);
+        }
+      },
+      click_hot_new_word(word, add = false) {
+        if (add) {
+          this.add_word(word);
+        }
+        window.location.href = `/search?word=${word}`;
+      },
+      get_words() {
+        let words = [];
+        try {
+          const data = window.localStorage.getItem(this.ls_key);
+          words = JSON.parse(data);
+        } catch (error) {
+          console.log(error);
+        }
+        if (Array.isArray(words) === false) {
+          words = [];
+        }
+        return words;
+      },
+      add_word(word) {
+        //console.log('add_word:', word);
+        let words = [];
+        try {
+          const data = window.localStorage.getItem(this.ls_key);
+          words = JSON.parse(data);
+        } catch (error) {
+          console.log(error);
+        }
+        if (Array.isArray(words) === false) {
+          words = [];
+        }
+        if (words.includes(word) === true) {
+          _.remove(words, function (w) {
+            return w == word;
+          });
+        }
+        words.unshift(word);
+        words = _.slice(words, 0, 30);
+        try {
+          const data = JSON.stringify(words);
+          window.localStorage.setItem(this.ls_key, data);
+        } catch (error) {
+          console.log(error);
+        }
+        return true;
+      },
+      del_word(word = null) {
+        if (word === null) {
+          window.localStorage.removeItem(this.ls_key);
+          this.words = [];
+          return;
+        }
+        let words;
+        try {
+          const old_data = window.localStorage.getItem(this.ls_key);
+          words = JSON.parse(old_data);
+        } catch (error) {
+          console.log(error);
+        }
+        if (!words || !words.length) {
+          return;
+        }
+        _.remove(words, function (w) {
+          return w == word;
+        });
+        const new_data = JSON.stringify(words);
+        window.localStorage.setItem(this.ls_key, new_data);
+        this.words = [];
+      }
+    },
+  };
+};
+
+
+/* -BLOCK- */
+
+const VueModule_Subject = function () {
+  return {
+    el: '#app',
+    delimiters: ['${', '}'],
+    mixins: [
+      VueMixin_Global(),
+      VueMixin_Notify(),
+      //VueMixin_ADTags(),
+      VueMixin_LocalSubject(),
+      VueMixin_UploaderMessage(subjectIid, 0),
+    ],
+    data: function () {
+      return {
+        load: {
+          favorite: false,
+          favFolder: false, // if show the favorite folder change overlay
+        },
+        favFolders: [],
+        favorite: null,
+        newFavFolderId: null,
+        history: null,
+
+        modal_favorite: null,
+
+        // new code ====
+        follows: null,
+        followed: null,
+
+
+        mark_list_load: 0,
+        mark_list_show: _crs.comic_page_reviews === 0 ? 1 : 0,
+
+        v2_comment: _crs.v2_comment,
+        v2_review: _crs.v2_review,
+
+        post_list_load: 0,
+        post_list_show: _crs.comic_page_dicsuss === 0 ? 1 : 0,
+        post_list_epis: _crs.comic_page_discuss_without_epi ? 0 : 1,
+
+        disqus_load: 0,
+        disqus_show: _crs.comic_page_disqus === 1 ? 1 : 0,
+      }
+    },
+    created: function () { },
+    mounted: function () {
+      this.loadHistory();
+      this.loadFavorite();
+      const ele_modal_favorite = document.getElementById('modal-favorite');
+      this.modal_favorite = new bootstrap.Modal(ele_modal_favorite);
+      ele_modal_favorite.addEventListener('hidden.bs.modal', (e) => {
+        this.load.favorite = false;
+      });
+
+      limitHeight_prepare('summary');
+
+      if (this.mark_list_show) {
+        this.do_mark_list_load();
+      }
+      if (this.post_list_show) {
+        this.do_post_list_load();
+      }
+      if (this.disqus_show) {
+        this.do_disqus_load();
+      }
+
+    },
+    methods: {
+      loadHistory: function () {
+        if (!_uid) {
+          return
+        }
+        const that = this
+        axios.post('/ajax.my.history.getone', { seriesId: subjectIid })
+          .then((res) => {
+            const data = res.data
+            if (data.result) {
+              that.history = data.result
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      },
+      loadFavorite: function () {
+        if (!_uid) {
+          return
+        }
+        const that = this
+        that.load.favorite = true
+        axios.post('/ajax.my.favorite.getone', { seriesId: subjectIid })
+          .then((res) => {
+            const data = res.data
+            if (data.result) {
+              that.favorite = data.result
+            }
+            that.load.favorite = false
+          })
+          .catch((err) => {
+            console.log(err)
+            that.load.favorite = false
+          })
+      },
+      onClickFavorite: function () {
+        if (!_uid) {
+          this._go_login()
+          return
+        }
+        const that = this
+        that.load.favorite = true
+        axios.post('/ajax.my.favorite.getone', { seriesId: subjectIid, withFolders: 1 })
+          .then((res) => {
+            const data = res.data
+            if (data.result) {
+              that.favorite = data.result
+              that.newFavFolderId = that.favorite.folderId
+            }
+            if (data.folders) {
+              that.favFolders = data.folders
+            }
+            this.modal_favorite.show();
+          })
+          .catch((err) => {
+            console.log(err)
+            that.load.favorite = false
+          })
+      },
+      favoriteFolderOnChange: function () {
+        const that = this
+        this.load.favFolder = true
+        axios.post('/ajax.my.favorite.upsert', {
+          seriesId: subjectIid,
+          folderId: that.newFavFolderId,
+        })
+          .then((res) => {
+            const data = res.data
+            if (data.eno) {
+              throw new Error(eno)
+            }
+            if (data.result) {
+              that.favorite = data.result
+            }
+            that.load.favFolder = false
+          })
+          .catch((err) => {
+            console.log(err)
+            // if fail, restore the newFavFolderId to favorite.folderId
+            that.newFavFolderId = that.favorite ? that.favorite.folderId : null
+            that.load.favFolder = false
+          })
+      },
+      favoriteFolderOnDelete: function () {
+        const that = this
+        this.load.favFolder = true
+        axios.post('/ajax.my.favorite.delete', {
+          seriesIds: subjectIid,
+        })
+          .then((res) => {
+            const data = res.data
+            if (data.eno) {
+              throw new Error(eno)
+            }
+            if (data.result) {
+              that.favorite = null
+              that.newFavFolderId = null
+            }
+            that.load.favFolder = false
+          })
+          .catch((err) => {
+            console.log(err)
+            that.load.favFolder = false
+          })
+      },
+
+      // reviews discuss disqus
+
+      do_mark_list_load(re = 0) {
+        if (this.mark_list_load && !re) return;
+        const o = document.getElementById('iframe_MarkList');
+        if (o) {
+          if (this.v2_review === '2') {
+            o.innerHTML = iframe_MarkList;
+          } else {
+            o.innerHTML = iframe_MarkList_v3x;
+          }
+        }
+        this.mark_list_load = 1;
+      },
+      tg_mark_list_show() {
+        this.do_mark_list_load();
+        this.mark_list_show = !this.mark_list_show;
+      },
+      tg_mark_list_ver(ver) {
+        this.v2_review = ver;
+        this.do_mark_list_load(1);
+        const copt = { expires: 365 * 100, path: '/', domain: '.' + _cfg.base };
+        Cookies.set('v2_review', ver, copt);
+      },
+
+      do_post_list_load(re = 0) {
+        if (this.post_list_load && !re) return;
+        const o = document.getElementById('iframe_PostList');
+        if (o) {
+          if (this.v2_comment === '2') {
+            o.innerHTML = this.post_list_epis ? iframe_PostList_withEpis_1 : iframe_PostList_withEpis_0;
+          } else {
+            o.innerHTML = iframe_PostList_v3x;
+          }
+        }
+        this.post_list_load = 1;
+      },
+      tg_post_list_show() {
+        this.do_post_list_load();
+        this.post_list_show = !this.post_list_show;
+      },
+      tg_post_list_epis() {
+        this.post_list_epis = !this.post_list_epis;
+        this.do_post_list_load(1);
+      },
+      tg_post_list_ver(ver) {
+        this.v2_comment = ver;
+        this.do_post_list_load(1);
+        const copt = { expires: 365 * 100, path: '/', domain: '.' + _cfg.base };
+        Cookies.set('v2_comment', ver, copt);
+      },
+
+
+      do_disqus_load(re = 0) {
+        if (this.disqus_load && !re) return;
+        window.disqus_config = function () {
+          this.page.identifier = disqus_id;
+        };
+        (function () {
+          var d = document, s = d.createElement('script');
+          s.src = '//mangawindow.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', +new Date());
+          s.setAttribute('async', 'async');
+          (d.head || d.body).appendChild(s);
+        })();
+        this.disqus_load = 1;
+      },
+      tg_disqus_show() {
+        this.do_disqus_load();
+        this.disqus_show = !this.disqus_show;
+      },
+
+    }
+  }
+};
+
+/* -BLOCK- */
+
+
+function manga_page_left_right(evt) {
+  var e = evt ? evt : top.window.event;
+  if (e.keyCode == 37) {
+    if (page) {
+      if (page == 1) {
+        if (prevEpi) {
+          window.location.href = '/chapter/' + prevEpi.iid + '/1'
+        } else {
+          window.location.href = '/series/' + subjectIid
+        }
+      } else {
+        window.location.href = '/chapter/' + episodeIid + '/' + (page - 1)
+      }
+    } else {
+      if (prevEpi) {
+        window.location.href = '/chapter/' + prevEpi.iid
+      } else {
+        window.location.href = '/series/' + subjectIid
+      }
+    }
+  }
+  if (e.keyCode == 39) {
+    if (page) {
+      if (page == pages) {
+        if (nextEpi) {
+          window.location.href = '/chapter/' + nextEpi.iid + '/1'
+        } else {
+          window.location.href = '/series/' + subjectIid
+        }
+      } else {
+        window.location.href = '/chapter/' + episodeIid + '/' + (page + 1)
+      }
+    } else {
+      if (nextEpi) {
+        window.location.href = '/chapter/' + nextEpi.iid
+      } else {
+        window.location.href = '/series/' + subjectIid
+      }
+    }
+  }
+}
+
+function read_image_on_error(obj) {
+  return;
+  if (!obj || !obj.src) {
+    console.log('??? !obj || !obj.src');
+    return;
+  }
+  let url = String(obj.src);
+  if (url.startsWith('https://xfs-') === false) {
+    return;
+  }
+  url = url.replace('https://xfs-', 'https://yfs-');
+  obj.src = url;
+};
+
+const VueModule_Episode = function () {
+  return {
+    el: '#app',
+    delimiters: ['${', '}'],
+    mixins: [
+      VueMixin_Global(),
+      VueMixin_Notify(),
+      VueMixin_LocalEpisode(),
+      VueMixin_UploaderMessage(subjectIid, episodeIid),
+    ],
+    data: function () {
+      return {
+        clientWidth: document.documentElement.clientWidth || document.body.clientWidth || window.innerWidth,
+        clientHeight: window.innerHeight,
+        fixedWidth: document.getElementById('container').clientWidth || 960,
+        eiid: episodeIid,
+        // server: JSON.parse(CryptoJS.AES.decrypt(server, batojs).toString(CryptoJS.enc.Utf8)),
+        // images: images,
+
+        imgHttpLis: typeof imgHttps === 'undefined' ? imgHttpLis : imgHttps,
+        imgWordLis: {}, // JSON.parse(CryptoJS.AES.decrypt(batoWord, batoPass).toString(CryptoJS.enc.Utf8)),
+
+        pages: pages,
+        page: page,
+        load: 'a',
+        zoom: 'f',
+        items: [],
+        loaded: 1, // Manually mode, current loaded
+
+        post_list_load: 0,
+        post_list_show: _crs.read_page_discuss === 0 ? 1 : 0,
+        v2_comment: _crs.v2_comment,
+      }
+    },
+    created: function () {
+      // const href = window.location.href;
+      // if (String(href).includes('bato.to') === false) {
+      //   window.location.replace('https://bato.to');
+      // };
+
+    },
+    mounted: function () {
+      this.prepareData();
+      window.addEventListener('resize', () => {
+        this.prepareData()
+      });
+      document.onkeyup = manga_page_left_right;
+
+      if (this.post_list_show) {
+        this.do_post_list_load();
+      }
+
+      if (false) {
+        try {
+          const o_gfs = document.getElementsByClassName('gf-click');
+          Array.prototype.map.call(o_gfs, function (o_gf) {
+            o_gf.addEventListener('click', function inc_gf_clicks() {
+              axios.post('/ajax.misc.click.gf.inc', {})
+                .then((json) => {
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+              return true;
+            });
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    },
+    methods: {
+
+      prepareData: function () {
+        this._readClient();
+        this._parseItems();
+      },
+
+      _readClient: function () {
+
+        this.clientWidth = document.documentElement.clientWidth || document.body.clientWidth || window.innerWidth;
+        this.clientHeight = window.innerHeight;
+        this.fixedWidth = document.getElementById('container').clientWidth || 960;
+
+        // cookie 
+        let load;
+        if (this.page) {
+          load = 'o';
+        } else {
+          load = Cookies.get('read_load');
+          if (['a', 'm'].indexOf(load) === -1) {
+            load = 'a';
+          }
+        }
+        this.load = load;
+
+        let zoom;
+        if (this.clientWidth <= 992) {
+          // small screen always full width image
+          zoom = 'f';
+        } else {
+          zoom = Cookies.get('read_zoom');
+          if (['f', 'o', 'a'].indexOf(zoom) === -1) {
+            zoom = 'a';
+          }
+        }
+        this.zoom = zoom;
+      },
+
+      _parseItems: function () {
+        this.items = [];
+        if (this.load == 'o') {
+          let page = this.page
+          let item = this._parseImgSrc(page)
+          this.items.push(item);
+          this.preLoadNextImg(page + 1)
+          return
+        }
+        if (this.load == 'a') {
+          for (let iidx in this.imgHttpLis) {
+            iidx = Number(iidx);
+            let page = iidx + 1;
+            let item = this._parseImgSrc(page)
+            this.items.push(item)
+          }
+          return
+        }
+        if (this.load == 'm') {
+          for (let iidx in this.imgHttpLis) {
+            iidx = Number(iidx);
+            let page = iidx + 1;
+            let item = this._parseImgSrc(page)
+            this.items.push(item)
+            if (page >= this.loaded) {
+              break
+            }
+          }
+          this.preLoadNextImg(this.loaded + 1)
+          return
+        }
+      },
+      _parseImgSrc: function (page) {
+        page = Number(page);
+        const aidx = page - 1;
+        const file = this.imgHttpLis[aidx];
+        // const word = this.imgWordLis[aidx];
+
+        const arr = String(file).split('/').pop().split('.').shift().split('_').map(i => Number(i));
+
+        const bwh = ((arr[0] || 0) < 1500000) && (arr[1] > arr[2]) && (arr[1] > arr[3]) ? true : false;
+        const imW = bwh ? arr[2] : arr[1]; // 1500000
+        const imH = bwh ? arr[3] : arr[2]; // 1500000
+
+        let toW = imW;
+        let toH = imH;
+        switch (this.zoom) {
+          case 'o':
+            // original width
+            toW = imW;
+            toH = imH;
+            break;
+
+          case 'a':
+            // 600 <= w <= screen width - 60
+            toW = imW;
+            toW = Math.min(toW, this.clientWidth - 60);
+            toW = Math.max(toW, 600);
+            toH = Number(toW * imH / imW);
+            break;
+
+          case 'f':
+          default:
+            // fixed width
+            toW = this.fixedWidth;
+            toH = Number(toW * imH / imW);
+            break;
+        }
+
+        const item = {
+          page: page,
+          // src: `${file}?${word}`,
+          src: `${file}`,
+          ow: imW,
+          oh: imH,
+          tw: toW,
+          th: toH,
+        }
+        return item
+      },
+      changeChap: function () {
+        let url = '/chapter/' + this.eiid;
+        if (this.page) {
+          url += '/1';
+        }
+        window.location.href = url;
+      },
+      changePage: function () {
+        let url = '/chapter/' + episodeIid + '/' + this.page;
+        window.location.href = url
+      },
+      changeLoad: function () {
+        console.log('this.laod:', this.load);
+        Cookies.set('read_load', this.load, {
+          expires: 365 * 100,
+          path: '/',
+          domain: '.' + _cfg.host
+        });
+
+        var url
+        if (this.load == 'o') {
+          url = '/chapter/' + episodeIid + '/1';
+        } else {
+          url = '/chapter/' + episodeIid;
+        }
+        window.location.href = url;
+      },
+      changeZoom: function () {
+        console.log('this.zoom:', this.zoom);
+        Cookies.set('read_zoom', this.zoom, {
+          expires: 365 * 100,
+          path: '/',
+          domain: '.' + _cfg.host
+        })
+        this.prepareData();
+      },
+
+      loadMore: function (num) {
+        if (this.loaded >= this.pages) {
+          return
+        }
+        if (num == 'a') {
+          this.loaded = this.pages;
+          this.prepareData()
+          return
+        }
+        this.loaded = Math.min(this.loaded + num, pages)
+        this.prepareData()
+      },
+      onClickImg: function (page) {
+        console.log('clicked page: ' + page)
+        switch (this.load) {
+          case 'o':
+            this.goNextPage()
+            break
+          case 'm':
+            if (page == this.loaded) {
+              this.loadMore(1)
+            }
+            this.scrollDown()
+            break
+          case 'a':
+            this.scrollDown()
+            break
+        }
+      },
+      preLoadNextImg: function (nextPage) {
+        try {
+          const fidx = nextPage - 1;
+          if (this.imgHttpLis[fidx]) {
+            const o_img = new Image()
+            // o_img.src = `${this.imgHttpLis[fidx]}?${this.imgWordLis[fidx]}`;
+            o_img.src = `${this.imgHttpLis[fidx]}`;
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      goNextPage: function () {
+        if (page) {
+          if (page == pages) {
+            if (nextEpi) {
+              window.location.href = '/chapter/' + nextEpi.iid + '/1'
+            } else {
+              window.location.href = '/series/' + subjectIid
+            }
+          } else {
+            window.location.href = '/chapter/' + episodeIid + '/' + (page + 1)
+          }
+        } else {
+          if (nextEpi) {
+            window.location.href = '/chapter/' + nextEpi.iid
+          } else {
+            window.location.href = '/series/' + subjectIid
+          }
+        }
+      },
+      scrollDown: function () {
+        const win_h = this.clientHeight;
+        if (win_h) {
+          window.scrollBy({
+            top: win_h * 0.8,
+            left: 0,
+            behavior: 'smooth'
+          });
+        }
+      },
+      onKeyupLeft: function () {
+        console.log('left')
+      },
+      onKeyupRight: function () {
+        console.log('right')
+      },
+
+      // discuss {
+      do_post_list_load(re = 0) {
+        if (this.post_list_load && !re) return;
+        const o = document.getElementById('iframe_PostList');
+        if (o) {
+          if (this.v2_comment === '2') {
+            o.innerHTML = iframe_PostList;
+          } else {
+            o.innerHTML = iframe_PostList_v3x;
+          }
+        }
+        this.post_list_load = 1;
+      },
+      tg_post_list_show() {
+        this.do_post_list_load();
+        this.post_list_show = !this.post_list_show;
+      },
+      tg_post_list_ver(ver) {
+        //if (this.v2_comment === ver) return;
+        this.v2_comment = ver;
+        this.do_post_list_load(1);
+        const copt = { expires: 365 * 100, path: '/', domain: '.' + _cfg.base };
+        Cookies.set('v2_comment', ver, copt);
+      },
+      // } end discuss
+    },// end methods
+  }
+}
+
+
+/* -BLOCK- */
+
+const VueModule_Reader_Settings = function () {
+  return {
+    el: '#app',
+    delimiters: ['${', '}'],
+    mixins: [
+      VueMixin_Global(),
+      VueMixin_Notify(),
+      //VueMixin_Reader_Search_Suggestion(),
+    ],
+    data() {
+      return {
+        loading: 0,
+        svals: settings_vals, // long key => val
+      };
+    },
+    mounted() {
+    },
+    computed: {
+      block_adult_mode() {
+        return this.svals.site_adult_mode === -1 ? 1 : 0;
+      },
+    },
+    methods: {
+
+      onChange_site_adult_mode() {
+        for (let [long_key, vals] of Object.entries(this.svals)) {
+          if (long_key.startsWith('block_genres_')) {
+            if (this.block_adult_mode) {
+              for (const file of not_safe_genres) {
+                if (vals.includes(file) === false) {
+                  vals.push(file)
+                }
+              }
+            } else {
+              vals = vals.filter(file => {
+                return not_safe_genres.includes(file) ? false : true;
+              });
+            }
+            this.$set(this.svals, long_key, vals);
+          }
+        }
+      },
+      should_disable_genre(file) {
+        let rs = false;
+        if (not_safe_genres.includes(file) === true) {
+          if (this.block_adult_mode) {
+            rs = true;
+          }
+        }
+        return rs;
+      },
+      reset() {
+
+        const r = confirm("Confirm to reset to default settings?");
+        if (r !== true) {
+          return;
+        }
+
+        const that = this;
+        const copt = { expires: -1, path: '/', domain: '.' + _cfg.base };
+        that.loading = 1;
+
+        if (true) {
+          axios.post('/aok/cookies-set', {
+            cookies: [{
+              key: 'reader_settings',
+              val: null,
+            }],
+          })
+            .then(resp => resp.data)
+            .then(json => {
+              console.log(json);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } else {
+          Cookies.set('reader_settings', null, copt);
+        }
+
+        that.loading = 0;
+        window.location.reload();
+      },
+      submit() {
+        const that = this;
+        const copt = { expires: 365, path: '/', domain: '.' + _cfg.base };
+        that.loading = 1;
+        const cookie_vals = {};
+        for (let [skey, sval] of Object.entries(that.svals)) {
+          const short_key = settings_keys[skey];
+          if (!short_key) continue;
+          let val = JSON.parse(JSON.stringify(sval));
+          if (Array.isArray(val)) {
+            val = val.filter(v => v);
+            if (!val.length) val = null;
+          } else if (val === true) {
+            val = 1;
+          } else if (val === false) {
+            val = 0;
+          } else {
+            val = Number(val) || 0;
+          }
+          if (!val) continue;
+          cookie_vals[short_key] = val;
+        }
+        cookie_vals.s0 = settings_vers;
+
+        if (true) {
+          axios.post('/aok/cookies-set', {
+            cookies: [{
+              key: 'reader_settings',
+              val: JSON.stringify(cookie_vals),
+            }],
+          })
+            .then(resp => resp.data)
+            .then(json => {
+              console.log(json);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } else {
+          Cookies.set('reader_settings', JSON.stringify(cookie_vals), copt);
+        }
+
+        that.loading = 0;
+
+        notify_b({
+          type: 'success',
+          icon: true,
+          text: 'Settings saved.',
+        })
+      },
+    },
+  };
+};
+
+
+/* -BLOCK- */
+
+/**
+ * notifications
+ * @returns 
+ */
+const VueModule_My_Notifications = function () {
+  return {
+    el: '#app',
+    delimiters: ['${', '}'],
+    mixins: [
+      VueMixin_Global(),
+      VueMixin_Notify(),
+    ],
+    data() {
+      return {
+        my_notifications_loading: 0, // 0 normal 1 loading 2 no-more
+        my_notifications_prevPos: null,
+      }
+    },
+    mounted() {
+      if (_uid) {
+        this.my_notifications_LoadMore();
+      }
+    },
+    methods: {
+      my_notifications_LoadMore() {
+        const data = {
+          prevPos: this.my_notifications_prevPos,
+        }
+        this.my_notifications_loading = 1;
+        axios.post('ajax.my.notifications', data)
+          .then(resp => resp.data)
+          .then(json => {
+            const { html, isLast, lastPos } = json;
+
+            const o_ele = document.getElementById('my-notification-list');
+            if (o_ele) {
+              o_ele.innerHTML += html;
+            }
+
+            this.my_notifications_prevPos = lastPos;
+            this.my_notifications_loading = isLast ? 2 : 0;
+          })
+          .catch((error) => {
+            notify_b({
+              type: 'danger',
+              text: 'Unknown error, try again please.',
+            })
+            this.my_notifications_loading = 0;
+            console.log(error);
+          });
+      },
+    },
+  };
+};
+
+
+/* -BLOCK- */
+
+const VueModule_My_History = function () {
+  return {
+    el: '#app',
+    delimiters: ['${', '}'],
+    mixins: [
+      VueMixin_Global(),
+      VueMixin_Notify(),
+      //VueMixin_Reader_Search_Suggestion(),
+      VueMixin_My_History({
+        _where: 'browse',
+        first: 24,
+        limit: 48,
+      }),
+    ],
+    data() {
+      return {
+        delete_loading: {
+
+        },
+      }
+    },
+    mounted() {
+      if (_uid) {
+        this.my_history_LoadMore();
+      }
+    },
+    methods: {
+
+      onClick_delete(what) {
+        if (!confirm('Sure to delete all?')) {
+          return;
+        }
+        this.$set(this.delete_loading, what, 1);
+        const data = {
+          hisOids: what,
+        };
+        //axios.post('https://webapp.mangapark.net/api/v001/mpark/my.history.delete', data)
+        axios.post('/ajax.my.history.delete', data)
+          .then(resp => resp.data)
+          .then(json => {
+            const { hisOids } = json;
+
+            if (hisOids === 'all') {
+              window.location.reload();
+
+              // const o_ele = document.getElementById('my-history-list');
+              // o_ele.innerHTML = '';
+              // notify_b({
+              //   type: 'success',
+              //   text: 'All history deleted.',
+              // });
+
+            } else if (Array.isArray(hisOids)) {
+
+
+            } else {
+
+            }
+            this.$set(this.delete_loading, what, 0);
+          })
+          .catch((error) => {
+            notify_b({
+              type: 'danger',
+              text: 'Unknown error, try again please.',
+            })
+            this.$set(this.delete_loading, what, 1);
+          });
+      },
+    },
+  };
+};
+
+
+/* -BLOCK- */
+
+const VueModule_My_History_Local = function () {
+  return {
+    el: '#app',
+    delimiters: ['${', '}'],
+    mixins: [
+      VueMixin_Global(),
+      VueMixin_Notify(),
+    ],
+    data() {
+      return {
+
+
+        localHistory_enabled: _crs.history_episode_local >= 0 ? true : false,
+
+        localHistory_warn_deleting: true,
+
+        localHistory_size: 10000,
+        localHistory_loading: 0,// 0 init, 1 loading, 2 loaded, 3 error
+        localHistory_items: [],
+
+        localHistory_deleing_iids: {}, // 1 deleing 2 deleted
+      }
+    },
+    created() {
+      /**
+       * for guest only
+       */
+      if (_crs.history_episode_local >= 0 && _crs.home_page_my_history_local !== 2) {
+        localHistory_init_idb();
+        if (_idb_his) {
+          this.localHistory_LoadMore()
+            .then(res => {
+              if (res) console.log(res);
+            })
+            .catch(err => {
+              console.log(err);
+              this.localHistory_loading = 3;
+            });
+        }
+      }
+    },
+    mounted() { },
+    methods: {
+      /**
+       * read history from indexedDB
+       */
+      async localHistory_LoadMore() {
+
+        if (this.localHistory_loading === 2) return;
+        this.localHistory_loading = 1;
+
+        const items = await _idb_his.episodes
+          .reverse()
+          .toArray();
+
+        if (!items || !items.length) {
+          this.localHistory_loading = 2;
+          return;
+        }
+
+        for (const item of items) {
+          localHistory_format_his_item(item);
+          this.localHistory_items.push(item);
+        }
+
+        this.localHistory_loading = 2;
+      },
+
+      async localHistory_delete_one(iid = null) {
+        if (this.localHistory_warn_deleting) {
+          if (!confirm('Sure to delete this reading history entry?')) {
+            return;
+          }
+        }
+
+        iid = Number(iid);
+
+        this.$set(this.localHistory_deleing_iids, iid, 1);
+        await _idb_his.episodes.delete(iid);
+        this.$set(this.localHistory_deleing_iids, iid, 2);
+      },
+
+      async localHistory_delete_all() {
+        if (!confirm('Sure to delete all your reading history?')) {
+          return;
+        }
+
+        this.$set(this.localHistory_deleing_iids, 'all', 1);
+        await _idb_his.episodes.clear();
+        window.location.reload();
+      },
+
+
+      onClick_delete(what) {
+        if (!confirm('Sure to delete all?')) {
+          return;
+        }
+        this.$set(this.delete_loading, what, 1);
+        const data = {
+          hisOids: what,
+        };
+        //axios.post('https://webapp.mangapark.net/api/v001/mpark/my.history.delete', data)
+        axios.post('/ajax.my.history.delete', data)
+          .then(resp => resp.data)
+          .then(json => {
+            const { hisOids } = json;
+
+            if (hisOids === 'all') {
+              window.location.reload();
+
+              // const o_ele = document.getElementById('my-history-list');
+              // o_ele.innerHTML = '';
+              // notify_b({
+              //   type: 'success',
+              //   text: 'All history deleted.',
+              // });
+
+            } else if (Array.isArray(hisOids)) {
+
+
+            } else {
+
+            }
+            this.$set(this.delete_loading, what, 0);
+          })
+          .catch((error) => {
+            notify_b({
+              type: 'danger',
+              text: 'Unknown error, try again please.',
+            })
+            this.$set(this.delete_loading, what, 1);
+          });
+      },
+    },
+  };
+};
+
+
+/* -BLOCK- */
+
+const VueModule_My_Updates = function () {
+  return {
+    el: '#app',
+    delimiters: ['${', '}'],
+    mixins: [
+      VueMixin_Global(),
+      VueMixin_Notify(),
+      VueMixin_My_Updates({
+        _where: 'browse',
+        first: 24,
+        limit: 48,
+      }),
+    ],
+    data() {
+      return {};
+    },
+    mounted() {
+      if (_uid) {
+        this.my_updates_LoadMore();
+      }
+    },
+    methods: {
+
+    },
+  };
+};
+
+
+/* -BLOCK- */
+
+const VueModule_My_Follows = function () {
+  return {
+    el: '#app',
+    delimiters: ['${', '}'],
+    mixins: [
+      VueMixin_Global(),
+      VueMixin_Notify(),
+    ],
+    data() {
+      return {
+        folder: lister.folder,
+        sortby: lister.sortby,
+      };
+    },
+    mounted() {
+
+    },
+    methods: {
+      change_filter() {
+        let url = '/my-follows';
+        const qstrs = [];
+        if (this.folder) {
+          qstrs.push(`folder=${this.folder}`);
+        }
+        if (this.sortby) {
+          qstrs.push(`sortby=${this.sortby}`);
+        }
+        if (qstrs.length) {
+          url += '?' + qstrs.join('&');
+        }
+        window.location.href = url;
+      },
+    },
+  };
+};
+
+
+/* -BLOCK- */
+
+const VueModule_My_Folders = function () {
+  return {
+    el: '#app',
+    delimiters: ['${', '}'],
+    mixins: [
+      VueMixin_Global(),
+      VueMixin_Notify(),
+    ],
+    data() {
+      return {
+        show_names: {},
+        edit_names: {},
+        edit_status: {}, // undefined|0 init; 1 open edit; 2 loading
+
+        dele_status: {}, // undefined|0 init; 1 deleing; 2 deleted
+
+        create_name: '',
+        create_status: 0,
+      }
+    },
+    mounted() {
+      const o_names = document.querySelectorAll('div.folder-item');
+      for (const o_name of o_names) {
+        const oid = o_name.getAttribute('data-oid');
+        const name = o_name.getAttribute('data-name');
+        this.$set(this.show_names, oid, name);
+        this.$set(this.edit_names, oid, name);
+      }
+    },
+    methods: {
+      set_edit_status(folderOid, val) {
+        this.$set(this.edit_status, folderOid, val);
+      },
+      set_dele_status(folderOid, val) {
+        this.$set(this.dele_status, folderOid, val);
+      },
+
+      submit_edit(folderOid) {
+
+        const folderName = this.edit_names[folderOid];
+        if (!folderName) {
+          alert('folder name required');
+        }
+
+        this.$set(this.edit_status, folderOid, 2);
+        const data = {
+          folderOid,
+          folderName,
+        };
+        axios.post('/ajax.my.folder.modify', data)
+          .then(resp => resp.data)
+          .then(json => {
+            window.location.reload();
+            return;
+          })
+          .catch((error) => {
+            notify_b({
+              type: 'danger',
+              text: 'Unknown error, try again please.',
+            })
+            this.$set(this.edit_status, folderOid, 0);
+          });
+      },
+
+      submit_dele(folderOid, is_default = false) {
+        if (is_default) {
+          if (!confirm('Sure to purge the default folder? All your follows in this folder will be deleted and cannot be recovered')) {
+            return;
+          }
+        } else {
+          if (!confirm('Sure to delete this folder? All your follows in this folder will also be deleted and cannot be recovered')) {
+            return;
+          }
+        }
+
+        this.$set(this.dele_status, folderOid, 1);
+        const data = {
+          folderOid,
+        };
+        axios.post('/ajax.my.folder.delete', data)
+          .then(resp => resp.data)
+          .then(json => {
+            window.location.reload();
+            return;
+          })
+          .catch((error) => {
+            notify_b({
+              type: 'danger',
+              text: 'Unknown error, try again please.',
+            })
+            this.$set(this.dele_status, folderOid, 0);
+          });
+      },
+
+      submit_create() {
+        if (!this.create_name) {
+          alert('folder name required');
+        }
+
+        this.create_status = 1;
+        const data = {
+          name: this.create_name,
+        };
+        axios.post('/ajax.my.folder.create', data)
+          .then(resp => resp.data)
+          .then(json => {
+            window.location.reload();
+            return;
+          })
+          .catch((error) => {
+            notify_b({
+              type: 'danger',
+              text: 'Unknown error, try again please.',
+            })
+            this.create_status = 0;
+          });
+      }
+    },
+  };
+};
