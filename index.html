@@ -287,7 +287,7 @@
       </div><button id="theme-toggle" class="relative inline-flex items-center h-6 rounded-full w-11 bg-gray-300 transition-colors"> <span id="toggle-circle" class="inline-block w-4 h-4 transform translate-x-1 bg-white rounded-full transition-transform"></span> </button>
      </div>
     </div><!-- Ajouter manhwa -->
-    <div class="mb-6"><button id="add-manhwa-settings" class="w-full flex items-center justify-between p-4 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors">
+    <div id="add-manhwa-settings-container" class="mb-6"><button id="add-manhwa-settings" class="w-full flex items-center justify-between p-4 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors">
       <div class="flex items-center">
        <svg class="w-5 h-5 mr-3 text-indigo-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
        </svg>
@@ -324,6 +324,56 @@
         let allChapters = [];
         let isDarkMode = false;
         let isLocalMode = false;
+        
+        // Détection du mode développeur (localhost)
+        function isDeveloperMode() {
+            const hostname = window.location.hostname;
+            return hostname === 'localhost' || 
+                   hostname === '127.0.0.1' || 
+                   hostname === '' ||
+                   hostname.startsWith('192.168.') ||
+                   hostname.startsWith('10.') ||
+                   hostname.startsWith('172.');
+        }
+        
+        // Fonction pour afficher le popup "vous n'êtes pas en mode développeur"
+        function showDeveloperModeRequired() {
+            const dialog = document.createElement('div');
+            dialog.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            dialog.innerHTML = `
+                <div class="bg-white rounded-xl shadow-2xl max-w-md mx-4 p-6">
+                    <div class="flex items-center mb-4">
+                        <svg class="w-8 h-8 text-orange-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        </svg>
+                        <h3 class="text-xl font-bold">Mode développeur requis</h3>
+                    </div>
+                    <p class="text-gray-600 mb-6">
+                        Vous n'êtes pas en mode développeur. La création et modification de manhwas et chapitres est uniquement disponible en localhost.
+                    </p>
+                    <p class="text-sm text-gray-500 mb-6">
+                        Pour ajouter des manhwas ou chapitres, ouvrez le site en localhost (http://localhost) et faites vos modifications. Ensuite, utilisez <code class="bg-gray-100 px-2 py-1 rounded">git push</code> pour mettre à jour le site en ligne.
+                    </p>
+                    <div class="flex justify-end">
+                        <button id="close-dev-mode-dialog" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700">
+                            Compris
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(dialog);
+            
+            dialog.querySelector('#close-dev-mode-dialog').onclick = () => {
+                dialog.remove();
+            };
+            
+            // Fermer en cliquant en dehors
+            dialog.onclick = (e) => {
+                if (e.target === dialog) {
+                    dialog.remove();
+                }
+            };
+        }
 
         // Éléments DOM
         const menuBtn = document.getElementById('menu-btn');
@@ -404,6 +454,14 @@
         };
 
         async function initializeApp() {
+            // Masquer les boutons d'ajout si on n'est pas en mode développeur
+            if (!isDeveloperMode()) {
+                const addManhwaContainer = document.getElementById('add-manhwa-settings-container');
+                if (addManhwaContainer) {
+                    addManhwaContainer.style.display = 'none';
+                }
+            }
+            
             // Détection automatique: local ou Canva
             if (!window.dataSdk) {
                 console.log('🔧 Mode LOCAL détecté - Utilisation de localStorage');
@@ -492,6 +550,13 @@
         addManhwaSettings.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
+            
+            // Vérifier le mode développeur
+            if (!isDeveloperMode()) {
+                showDeveloperModeRequired();
+                return;
+            }
+            
             addManhwaModal.classList.remove('hidden');
             settingsPanel.classList.add('translate-x-full');
         });
@@ -559,6 +624,12 @@
 
         addManhwaForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            // Vérifier le mode développeur
+            if (!isDeveloperMode()) {
+                showDeveloperModeRequired();
+                return;
+            }
 
             const submitBtn = e.target.querySelector('button[type="submit"]');
             const submitText = document.getElementById('manhwa-submit-text');
@@ -681,6 +752,12 @@
         addChapterForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
+            // Vérifier le mode développeur
+            if (!isDeveloperMode()) {
+                showDeveloperModeRequired();
+                return;
+            }
+            
             if (!currentManhwaId) {
                 showNotification('Erreur: Aucun manhwa sélectionné', 'error');
                 return;
@@ -802,10 +879,12 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                         </svg>
                         <h3 class="text-xl font-semibold text-gray-600 mb-2">Aucun manhwa dans votre bibliothèque</h3>
-                        <p class="text-gray-500 mb-4">Commencez par ajouter votre premier manhwa!</p>
+                        <p class="text-gray-500 mb-4">${isDeveloperMode() ? 'Commencez par ajouter votre premier manhwa!' : 'La bibliothèque est vide. Les manhwas doivent être ajoutés en mode développeur (localhost).'}</p>
+                        ${isDeveloperMode() ? `
                         <button onclick="openAddManhwaModal()" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700">
                             Ajouter un Manhwa
                         </button>
+                        ` : ''}
                     </div>
                 `;
                 return;
@@ -864,6 +943,12 @@
 
         // Fonction pour ouvrir le modal d'ajout de manhwa
         function openAddManhwaModal() {
+            // Vérifier le mode développeur
+            if (!isDeveloperMode()) {
+                showDeveloperModeRequired();
+                return;
+            }
+            
             addManhwaModal.classList.remove('hidden');
         }
 
@@ -959,6 +1044,7 @@
                             <span class="badge bg-green-100 text-green-600">En cours</span>
                         </div>
                         <div class="flex space-x-3">
+                            ${isDeveloperMode() ? `
                             <button onclick="openAddChapterModal()" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 flex items-center">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -971,6 +1057,7 @@
                                 </svg>
                                 Supprimer ce Manhwa
                             </button>
+                            ` : ''}
                         </div>
                     </div>
                 </div>
@@ -992,11 +1079,13 @@
                                 ${chapter.chapter_description ? `<p class="text-sm text-gray-600">${chapter.chapter_description}</p>` : ''}
                                 <p class="text-xs text-gray-500 mt-1">${formatDate(chapter.date_added)}</p>
                             </div>
+                            ${isDeveloperMode() ? `
                             <button onclick="event.stopPropagation(); deleteChapter('${chapter.__backendId}')" class="ml-4 p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Supprimer ce chapitre">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                 </svg>
                             </button>
+                            ` : ''}
                             <svg class="w-6 h-6 text-gray-400 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24" onclick="readChapter('${manhwaId}', ${chapter.chapter_number})">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                             </svg>
@@ -1010,6 +1099,12 @@
 
         // Ouvrir le modal d'ajout de chapitre
         function openAddChapterModal() {
+            // Vérifier le mode développeur
+            if (!isDeveloperMode()) {
+                showDeveloperModeRequired();
+                return;
+            }
+            
             addChapterModal.classList.remove('hidden');
         }
 
@@ -1442,6 +1537,12 @@
 
         // Supprimer un chapitre
         async function deleteChapter(chapterId) {
+            // Vérifier le mode développeur
+            if (!isDeveloperMode()) {
+                showDeveloperModeRequired();
+                return;
+            }
+            
             const chapter = allChapters.find(ch => ch.__backendId === chapterId);
             if (!chapter) return;
 
@@ -1463,6 +1564,12 @@
 
         // Supprimer un manhwa
         async function deleteManhwa(manhwaId) {
+            // Vérifier le mode développeur
+            if (!isDeveloperMode()) {
+                showDeveloperModeRequired();
+                return;
+            }
+            
             const manhwa = allManhwas.find(m => m.__backendId === manhwaId);
             if (!manhwa) return;
 
