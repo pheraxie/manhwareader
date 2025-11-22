@@ -24,23 +24,6 @@
         "trash_type": "tracking",
         "original_data": {
             "type": "tracking",
-            "id": "tracking_1763818140999_0.7195800735917753",
-            "title": "e",
-            "chapter": 2,
-            "status": "en-cours",
-            "notes": "ee",
-            "season": "4",
-            "date_added": "2025-11-22T13:29:00.999Z",
-            "date_updated": "2025-11-22T13:45:35.128Z"
-        },
-        "deleted_at": "2025-11-22T13:48:22.939Z",
-        "id": "trash_1763819302939_0.5702718214908635"
-    },
-    {
-        "type": "trash",
-        "trash_type": "tracking",
-        "original_data": {
-            "type": "tracking",
             "id": "tracking_1763819440081_0.9806807793339639",
             "title": "s",
             "chapter": 5,
@@ -112,21 +95,163 @@
         "is_favorite": false
     },
     {
-        "manhwa_id": "manhwa_1763826401861",
-        "manhwa_title": "ee",
-        "manhwa_cover": ".\/Image\/passion.jpg",
-        "manhwa_description": "ee",
-        "manhwa_season": "4",
-        "date_added": "2025-11-22T15:46:41.861Z",
-        "__backendId": "local_1763826401862_0.6926499735272631"
+        "manhwa_id": "manhwa_1763826414996",
+        "chapter_number": 4,
+        "chapter_title": "ss",
+        "chapter_description": "s",
+        "chapter_season": "5",
+        "chapter_pages": ".\/chapitres\/qqq\/6.mhtml",
+        "chapter_cover": null,
+        "date_added": "2025-11-22T15:55:49.849Z",
+        "__backendId": "local_1763826949849_0.2449170813476903",
+        "is_favorite": false,
+        "chapter_audio": null
     },
     {
-        "manhwa_id": "manhwa_1763826414996",
-        "manhwa_title": "tyh",
+        "manhwa_id": "manhwa_1763828989762",
+        "manhwa_title": "passion",
         "manhwa_cover": ".\/Image\/passion.jpg",
-        "manhwa_description": "ee",
-        "manhwa_season": "4",
-        "date_added": "2025-11-22T15:46:54.996Z",
-        "__backendId": "local_1763826414996_0.7169633317158451"
+        "manhwa_description": "qq",
+        "manhwa_season": "2",
+        "date_added": "2025-11-22T16:29:49.762Z",
+        "__backendId": "local_1763828989762_0.08603396522956863"
+    },
+    {
+        "manhwa_id": "manhwa_1763828989762",
+        "chapter_number": 44,
+        "chapter_title": "qqq",
+        "chapter_description": "qq",
+        "chapter_season": "5",
+        "chapter_pages": ".\/chapitres\/qqq\/6.mhtml",
+        "chapter_cover": null,
+        "date_added": "2025-11-22T16:30:06.452Z",
+        "__backendId": "local_1763829006453_0.7675598271678958",
+        "is_favorite": true
+    },
+    {
+        "type": "trash",
+        "trash_type": "chapter",
+        "original_data": {
+            "manhwa_id": "manhwa_1763828989762",
+            "chapter_number": 44,
+            "chapter_title": "qqq",
+            "chapter_description": "qq",
+            "chapter_season": "5",
+            "chapter_pages": ".\/chapitres\/qqq\/6.mhtml",
+            "chapter_cover": null,
+            "date_added": "2025-11-22T16:30:06.452Z",
+            "__backendId": "local_1763829006453_0.7675598271678958",
+            "is_favorite": true
+        },
+        "deleted_at": "2025-11-22T16:32:58.113Z",
+        "id": "trash_1763829178113_0.7363574722195793"
+    },
+    {
+        "type": "trash",
+        "trash_type": "chapter",
+        "original_data": {
+            "manhwa_id": "manhwa_1763828989762",
+            "chapter_number": 44,
+            "chapter_title": "qqq",
+            "chapter_description": "qq",
+            "chapter_season": "5",
+            "chapter_pages": ".\/chapitres\/qqq\/6.mhtml",
+            "chapter_cover": null,
+            "date_added": "2025-11-22T16:30:06.452Z",
+            "__backendId": "local_1763829006453_0.7675598271678958",
+            "is_favorite": true
+        },
+        "deleted_at": "2025-11-22T16:33:05.774Z",
+        "id": "trash_1763829185774_0.41900810437014957"
+    },
+    {
+        "type": "trash",
+        "trash_type": "manhwa",
+        "original_data": {
+            "manhwa_id": "manhwa_1763828989762",
+            "manhwa_title": "passion",
+            "manhwa_cover": ".\/Image\/passion.jpg",
+            "manhwa_description": "qq",
+            "manhwa_season": "2",
+            "date_added": "2025-11-22T16:29:49.762Z",
+            "__backendId": "local_1763828989762_0.08603396522956863"
+        },
+        "deleted_at": "2025-11-22T16:34:22.770Z",
+        "id": "trash_1763829262770_0.9296484151304683"
+    },
+    {
+        "type": "trash",
+        "trash_type": "chapter",
+        "original_data": {
+            "manhwa_id": "manhwa_1763828989762",
+            "chapter_number": 44,
+            "chapter_title": "qqq",
+            "chapter_description": "qq",
+            "chapter_season": "5",
+            "chapter_pages": ".\/chapitres\/qqq\/6.mhtml",
+            "chapter_cover": null,
+            "date_added": "2025-11-22T16:30:06.452Z",
+            "__backendId": "local_1763829006453_0.7675598271678958",
+            "is_favorite": true
+        },
+        "deleted_at": "2025-11-22T16:34:22.770Z",
+        "id": "trash_1763829262770_0.863768918239303"
+    },
+    {
+        "type": "trash",
+        "trash_type": "chapter",
+        "original_data": {
+            "manhwa_id": "manhwa_1763828989762",
+            "chapter_number": 44,
+            "chapter_title": "qqq",
+            "chapter_description": "qq",
+            "chapter_season": "5",
+            "chapter_pages": ".\/chapitres\/qqq\/6.mhtml",
+            "chapter_cover": null,
+            "date_added": "2025-11-22T16:30:06.452Z",
+            "__backendId": "local_1763829006453_0.7675598271678958",
+            "is_favorite": true
+        },
+        "deleted_at": "2025-11-22T16:45:09.976Z",
+        "id": "trash_1763829909976_0.2711792409257283"
+    },
+    {
+        "type": "trash",
+        "trash_type": "chapter",
+        "original_data": {
+            "manhwa_id": "manhwa_1763828989762",
+            "chapter_number": 44,
+            "chapter_title": "qqq",
+            "chapter_description": "qq",
+            "chapter_season": "5",
+            "chapter_pages": ".\/chapitres\/qqq\/6.mhtml",
+            "chapter_cover": null,
+            "date_added": "2025-11-22T16:30:06.452Z",
+            "__backendId": "local_1763829006453_0.7675598271678958",
+            "is_favorite": true
+        },
+        "deleted_at": "2025-11-22T16:45:55.566Z",
+        "id": "trash_1763829955566_0.8949603184727868"
+    },
+    {
+        "manhwa_id": "manhwa_1763830008845",
+        "manhwa_title": "llll",
+        "manhwa_cover": ".\/Image\/passion.jpg",
+        "manhwa_description": "lll",
+        "manhwa_season": "1",
+        "date_added": "2025-11-22T16:46:48.845Z",
+        "__backendId": "local_1763830008845_0.9735590182764376"
+    },
+    {
+        "manhwa_id": "manhwa_1763830008845",
+        "chapter_number": 2,
+        "chapter_title": "kk",
+        "chapter_description": "nn",
+        "chapter_season": "7",
+        "chapter_pages": ".\/chapitres\/qqq\/12.mhtml",
+        "chapter_cover": null,
+        "date_added": "2025-11-22T16:47:32.174Z",
+        "__backendId": "local_1763830052174_0.4429264427938895",
+        "is_favorite": true
     }
 ]

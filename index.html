@@ -498,12 +498,6 @@
        </svg></button>
      </div>
     </div>
-    <div id="chapter-audio-player" class="mb-4 hidden">
-     <audio id="chapter-audio" controls class="w-full">
-      <source id="chapter-audio-source" src="" type="audio/mpeg">
-      Votre navigateur ne supporte pas l'élément audio.
-     </audio>
-    </div>
     <div class="bg-black rounded-lg overflow-hidden">
      <div id="reading-progress" class="progress-bar"></div>
      <div id="reader-content" class="reading-page py-4"><!-- Les pages du chapitre seront ajoutées ici -->
@@ -521,10 +515,10 @@
       </div>
       <div id="comments-list" class="space-y-4 mb-6"><!-- Les commentaires seront ajoutés ici -->
       </div>
-      <div class="bg-gray-50 dark-mode:bg-gray-800 rounded-lg p-4">
+      <div class="bg-gray-50 dark-mode:bg-gray-900 rounded-lg p-4 border border-gray-300 dark-mode:border-gray-600">
        <h4 class="font-semibold mb-3 text-gray-900 dark-mode:text-gray-100">Ajouter un commentaire</h4>
        <div class="flex items-start space-x-2 mb-3">
-       <textarea id="comment-text" rows="3" class="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600 input-field" placeholder="Votre commentaire..."></textarea>
+       <textarea id="comment-text" rows="3" class="flex-1 px-4 py-2 border border-gray-300 dark-mode:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-600 bg-white dark-mode:bg-gray-800 text-gray-900 dark-mode:text-gray-100 placeholder-gray-500 dark-mode:placeholder-gray-400" placeholder="Votre commentaire..."></textarea>
        <button onclick="openEmojiPicker()" class="px-3 py-2 bg-gray-200 dark-mode:bg-gray-700 text-gray-700 dark-mode:text-gray-200 rounded-lg hover:bg-gray-300 dark-mode:hover:bg-gray-600 transition-colors text-2xl" title="Ajouter un emoji">
         😊
        </button>
@@ -660,9 +654,6 @@
      <div class="mb-4"><label for="edit-chapter-description" class="block text-sm font-medium mb-2">Description (optionnel)</label> <textarea id="edit-chapter-description" rows="2" class="input-field w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600"></textarea>
      </div>
      <div class="mb-4"><label for="edit-chapter-season" class="block text-sm font-medium mb-2">Saison (optionnel)</label> <input type="text" id="edit-chapter-season" class="input-field w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600" placeholder="Ex: Saison 1, Saison 2...">
-     </div>
-     <div class="mb-4"><label for="edit-chapter-audio" class="block text-sm font-medium mb-2">🎵 Fichier audio (optionnel)</label> <input type="text" id="edit-chapter-audio" class="input-field w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600" placeholder="audio/chapitre1.mp3">
-      <p class="text-xs text-gray-500 mt-1">💡 Chemin du fichier audio (mp3, wav, etc.)</p>
      </div>
      <div class="mb-4"><label for="edit-chapter-cover" class="block text-sm font-medium mb-2">📷 Image de couverture (optionnel)</label> <input type="text" id="edit-chapter-cover" class="input-field w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600" placeholder="Image/chapitre-special.jpg">
       <p class="text-xs text-gray-500 mt-1">💡 Laissez vide pour utiliser l'image de couverture du manhwa par défaut. Sinon, entrez le chemin (ex: Image/chapitre-special.jpg)</p>
@@ -846,10 +837,10 @@
                 clearTimeout(saveTimeout);
             }
             
-            // Programmer la sauvegarde après 500ms d'inactivité
+            // Programmer la sauvegarde après 300ms d'inactivité (réduit pour plus de réactivité)
             saveTimeout = setTimeout(async () => {
                 await saveDataToFileAuto(data);
-            }, 500);
+            }, 300);
         }
         
         // Fonction pour sauvegarder automatiquement dans data.json via PHP
@@ -924,10 +915,14 @@
                     
                     // Toujours synchroniser globalData avec localData
                     globalData = JSON.parse(JSON.stringify(localData));
+                    console.log('✅ Données chargées et synchronisées:', globalData.length, 'éléments');
                     
                     // Notifier le handler avec les données chargées IMMÉDIATEMENT
                     if (dataHandler) {
-                        dataHandler.onDataChanged(localData);
+                        // Utiliser requestAnimationFrame pour s'assurer que le DOM est prêt
+                        requestAnimationFrame(() => {
+                            dataHandler.onDataChanged(localData);
+                        });
                     }
                     
                     return { isOk: true };
@@ -941,12 +936,18 @@
                     localData.push(data);
                     globalData = JSON.parse(JSON.stringify(localData));
                     
-                    scheduleAutoSave(globalData);
+                    console.log('➕ Élément créé:', data);
                     
-                    // Mettre à jour immédiatement
+                    // Mettre à jour immédiatement AVANT la sauvegarde
                     if (dataHandler) {
                         dataHandler.onDataChanged(localData);
                     }
+                    
+                    // Sauvegarder en arrière-plan (ne pas attendre)
+                    saveDataToFileAuto(globalData).catch(err => {
+                        console.error('Erreur sauvegarde:', err);
+                    });
+                    
                     return { isOk: true };
                 },
                 update: async (record) => {
@@ -960,12 +961,17 @@
                         localData[index] = record;
                         globalData = JSON.parse(JSON.stringify(localData));
                         
-                        scheduleAutoSave(globalData);
+                        console.log('✏️ Élément mis à jour:', record);
                         
-                        // Mettre à jour immédiatement
+                        // Mettre à jour immédiatement AVANT la sauvegarde
                         if (dataHandler) {
                             dataHandler.onDataChanged(localData);
                         }
+                        
+                        // Sauvegarder en arrière-plan (ne pas attendre)
+                        saveDataToFileAuto(globalData).catch(err => {
+                            console.error('Erreur sauvegarde:', err);
+                        });
                     }
                     return { isOk: true };
                 },
@@ -977,12 +983,18 @@
                     localData = localData.filter(item => item.__backendId !== record.__backendId);
                     globalData = JSON.parse(JSON.stringify(localData));
                     
-                    scheduleAutoSave(globalData);
+                    console.log('🗑️ Élément supprimé:', record.__backendId);
                     
-                    // Mettre à jour immédiatement
+                    // Mettre à jour immédiatement AVANT la sauvegarde
                     if (dataHandler) {
                         dataHandler.onDataChanged(localData);
                     }
+                    
+                    // Sauvegarder en arrière-plan (ne pas attendre)
+                    saveDataToFileAuto(globalData).catch(err => {
+                        console.error('Erreur sauvegarde:', err);
+                    });
+                    
                     return { isOk: true };
                 }
             };
@@ -991,19 +1003,29 @@
         // Initialisation du Data SDK
         const dataHandler = {
             onDataChanged(data) {
-                const manhwas = data.filter(item => 
-                    item.manhwa_id && 
-                    !item.chapter_number && 
-                    item.type !== 'tracking' && 
-                    item.type !== 'trash' &&
-                    item.manhwa_title // S'assurer que c'est bien un manhwa
-                );
-                const chapters = data.filter(item => 
-                    item.chapter_number && 
-                    item.type !== 'tracking' && 
-                    item.type !== 'trash' &&
-                    !item.manhwa_title // S'assurer que ce n'est pas un manhwa
-                );
+                console.log('📊 onDataChanged appelé avec', data.length, 'éléments');
+                
+                // Filtrer les manhwas (ont manhwa_id ET manhwa_title MAIS PAS chapter_number)
+                const manhwas = data.filter(item => {
+                    // Un manhwa a manhwa_id, manhwa_title, mais PAS chapter_number
+                    return item.manhwa_id && 
+                           item.manhwa_title && 
+                           (item.chapter_number === undefined || item.chapter_number === null) &&
+                           item.type !== 'tracking' && 
+                           item.type !== 'trash';
+                });
+                
+                // Filtrer les chapitres (ont chapter_number MAIS PAS manhwa_title)
+                const chapters = data.filter(item => {
+                    // Un chapitre a chapter_number mais PAS manhwa_title
+                    return (item.chapter_number !== undefined && item.chapter_number !== null) &&
+                           !item.manhwa_title &&
+                           item.type !== 'tracking' && 
+                           item.type !== 'trash';
+                });
+                
+                console.log('📚 Manhwas trouvés:', manhwas.length);
+                console.log('📖 Chapitres trouvés:', chapters.length);
                 
                 allManhwas = manhwas;
                 allChapters = chapters;
@@ -1011,6 +1033,7 @@
                 // Charger les suivis depuis data.json
                 loadTrackingList();
                 
+                // Mettre à jour TOUTES les pages IMMÉDIATEMENT
                 updateAllPages();
             }
         };
@@ -1123,13 +1146,27 @@
         // Restaurer la page actuelle
         function restoreCurrentPage() {
             const savedPage = localStorage.getItem('currentPage');
-            if (savedPage) {
+            console.log('🔄 Tentative de restauration de la page:', savedPage);
+            if (savedPage && savedPage !== 'home' && savedPage !== '' && savedPage !== null) {
+                // Attendre que les pages soient chargées
                 setTimeout(() => {
-                    showPage(savedPage);
-                }, 100);
+                    const pageElement = document.getElementById(`${savedPage}-page`);
+                    if (pageElement) {
+                        console.log('✅ Restauration de la page:', savedPage);
+                        // Ne pas sauvegarder à nouveau lors de la restauration
+                        document.querySelectorAll('.page-content').forEach(page => {
+                            page.classList.add('hidden');
+                        });
+                        pageElement.classList.remove('hidden');
+                    } else {
+                        console.log('⚠️ Page non trouvée:', savedPage);
+                    }
+                }, 500);
+            } else {
+                console.log('ℹ️ Pas de page à restaurer ou page d\'accueil');
             }
         }
-        
+
         async function initializeApp() {
             // Masquer les boutons d'ajout si on n'est pas en mode développeur
             if (!isDeveloperMode()) {
@@ -1157,10 +1194,10 @@
             // Charger la galerie
             loadGalleryImages();
             
-            // Restaurer la page après chargement
+            // Restaurer la page après chargement (attendre que tout soit prêt)
             setTimeout(() => {
                 restoreCurrentPage();
-            }, 500);
+            }, 800);
             if (!result.isOk) {
                 showNotification('Erreur lors de l\'initialisation', 'error');
                 console.error('Erreur SDK:', result.error);
@@ -1276,6 +1313,7 @@
         });
 
         function showPage(pageName) {
+            console.log('📄 Affichage de la page:', pageName);
             document.querySelectorAll('.page-content').forEach(page => {
                 page.classList.add('hidden');
             });
@@ -1283,8 +1321,17 @@
             const pageElement = document.getElementById(`${pageName}-page`);
             if (pageElement) {
                 pageElement.classList.remove('hidden');
-                // Sauvegarder la page actuelle immédiatement
-                localStorage.setItem('currentPage', pageName);
+                // Sauvegarder la page actuelle immédiatement (SAUF home)
+                if (pageName !== 'home') {
+                    localStorage.setItem('currentPage', pageName);
+                    console.log('💾 Page sauvegardée:', pageName);
+                } else {
+                    // Si on va sur home, ne pas sauvegarder (ou supprimer la sauvegarde)
+                    localStorage.removeItem('currentPage');
+                    console.log('🏠 Page home - sauvegarde supprimée');
+                }
+            } else {
+                console.error('❌ Page non trouvée:', pageName);
             }
         }
 
@@ -1616,6 +1663,13 @@
                 addChapterForm.reset();
                 document.getElementById('mhtml-preview').classList.add('hidden');
                 document.getElementById('mhtml-status').classList.add('hidden');
+                
+                // La mise à jour a déjà été faite par onDataChanged, mais on force le refresh de la page détail
+                setTimeout(() => {
+                    if (currentManhwaId) {
+                        showManhwaDetail(currentManhwaId);
+                    }
+                }, 300);
             } else {
                 showNotification('Erreur lors de l\'ajout du chapitre', 'error');
             }
@@ -1828,7 +1882,6 @@
             const chapterTitle = document.getElementById('edit-chapter-title').value.trim();
             const chapterDescription = document.getElementById('edit-chapter-description').value.trim();
             const chapterSeason = document.getElementById('edit-chapter-season').value.trim();
-            let chapterAudio = document.getElementById('edit-chapter-audio').value.trim();
             let chapterCover = document.getElementById('edit-chapter-cover').value.trim();
 
             // Nettoyer le chemin de l'image de couverture (vide = utiliser celle du manhwa)
@@ -1866,26 +1919,12 @@
             }
 
             // Mettre à jour le chapitre
-            // Nettoyer le chemin audio
-            if (chapterAudio) {
-                chapterAudio = chapterAudio.replace(/\\/g, '/');
-                if (chapterAudio.includes('Site/')) {
-                    chapterAudio = chapterAudio.split('Site/')[1];
-                }
-                if (!chapterAudio.startsWith('./') && !chapterAudio.startsWith('/') && !chapterAudio.startsWith('http')) {
-                    chapterAudio = './' + chapterAudio;
-                }
-            } else {
-                chapterAudio = null;
-            }
-            
             const updatedChapter = {
                 ...chapter,
                 chapter_number: chapterNumber,
                 chapter_title: chapterTitle,
                 chapter_description: chapterDescription,
                 chapter_season: chapterSeason || null,
-                chapter_audio: chapterAudio || null,
                 chapter_cover: chapterCover, // null ou chemin personnalisé
                 chapter_pages: mhtmlPath // Chemin MHTML (modifiable seulement en mode développeur)
             };
@@ -1917,7 +1956,6 @@
             document.getElementById('edit-chapter-title').value = chapter.chapter_title;
             document.getElementById('edit-chapter-description').value = chapter.chapter_description || '';
             document.getElementById('edit-chapter-season').value = chapter.chapter_season || '';
-            document.getElementById('edit-chapter-audio').value = chapter.chapter_audio ? chapter.chapter_audio.replace('./', '') : '';
             document.getElementById('edit-chapter-cover').value = chapter.chapter_cover ? chapter.chapter_cover.replace('./', '') : '';
             
             // Afficher le champ MHTML seulement en mode développeur
@@ -2455,6 +2493,7 @@
                     <div class="flex-grow">
                         <h4 class="font-semibold text-gray-900 dark-mode:text-gray-100">${manhwa.manhwa_title}</h4>
                         <p class="text-sm text-gray-600 dark-mode:text-gray-300">Chapitre ${chapter.chapter_number}: ${chapter.chapter_title}</p>
+                        ${chapter.chapter_season ? `<span class="inline-block mt-1 px-2 py-1 text-xs bg-purple-100 text-purple-700 dark-mode:bg-purple-600 dark-mode:text-purple-100 rounded">S. ${chapter.chapter_season}</span>` : ''}
                         <p class="text-xs text-gray-500 dark-mode:text-gray-400 mt-1">${formatDate(chapter.date_added)}</p>
                     </div>
                     <div class="flex items-center space-x-2 ml-4">
@@ -2471,7 +2510,7 @@
                         </button>
                         ` : ''}
                         <button onclick="event.stopPropagation(); toggleFavorite('${chapter.__backendId}')" class="p-2 ${chapter.is_favorite ? 'text-red-500' : 'text-gray-400'} hover:bg-gray-50 dark-mode:hover:bg-gray-700 rounded-lg transition-colors" title="${chapter.is_favorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}">
-                            <svg class="w-5 h-5" fill="${chapter.is_favorite ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="${chapter.is_favorite ? '0' : '2'}" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5" fill="${chapter.is_favorite ? 'currentColor' : 'none'}" stroke="${chapter.is_favorite ? 'none' : 'currentColor'}" stroke-width="${chapter.is_favorite ? '0' : '2'}" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                             </svg>
                         </button>
@@ -2483,40 +2522,29 @@
         
         // Fonction pour ajouter/retirer un chapitre des favoris
         async function toggleFavorite(chapterId) {
+            console.log('❤️ Toggle favorite pour chapitre:', chapterId);
             const chapter = allChapters.find(ch => ch.__backendId === chapterId);
-            if (!chapter) return;
+            if (!chapter) {
+                console.error('❌ Chapitre non trouvé:', chapterId);
+                return;
+            }
             
             const updatedChapter = {
                 ...chapter,
                 is_favorite: !chapter.is_favorite
             };
             
-            // Mettre à jour immédiatement dans allChapters
-            const chapterIndex = allChapters.findIndex(ch => ch.__backendId === chapterId);
-            if (chapterIndex !== -1) {
-                allChapters[chapterIndex] = updatedChapter;
-            }
+            console.log('💾 Mise à jour du favori:', updatedChapter.is_favorite);
             
-            // Mettre à jour dans globalData
-            const globalIndex = globalData.findIndex(item => item.__backendId === chapterId);
-            if (globalIndex !== -1) {
-                globalData[globalIndex] = updatedChapter;
-            }
+            // Mettre à jour via le SDK pour que ça soit sauvegardé
+            const result = await window.dataSdk.update(updatedChapter);
             
-            // Mettre à jour dans localData aussi
-            const localIndex = localData.findIndex(item => item.__backendId === chapterId);
-            if (localIndex !== -1) {
-                localData[localIndex] = updatedChapter;
+            if (result.isOk) {
+                showNotification(updatedChapter.is_favorite ? 'Ajouté aux favoris ❤️' : 'Retiré des favoris', 'success');
+            } else {
+                console.error('❌ Erreur lors de la mise à jour:', result.error);
+                showNotification('Erreur lors de la mise à jour', 'error');
             }
-            
-            // Sauvegarder
-            if (isDeveloperMode()) {
-                scheduleAutoSave(globalData);
-            }
-            
-            showNotification(updatedChapter.is_favorite ? 'Ajouté aux favoris ❤️' : 'Retiré des favoris', 'success');
-            // Mettre à jour immédiatement toutes les pages
-            updateAllPages();
         }
         
         window.toggleFavorite = toggleFavorite;
@@ -2726,7 +2754,7 @@
             showNotification(`${trashItems.length} élément(s) supprimé(s) définitivement`, 'success');
             updateTrashPage();
         };
-        
+
         // Mise à jour de toutes les pages
         function updateAllPages() {
             updateHomePage();
@@ -2737,8 +2765,21 @@
             updateTrashPage();
             updateGalleryPage();
             updateStatistics();
-            // Sauvegarder la page actuelle
-            saveCurrentPage();
+            
+            // Si on est sur la page de détail d'un manhwa, la mettre à jour aussi
+            const manhwaDetailPage = document.getElementById('manhwa-detail-page');
+            if (manhwaDetailPage && !manhwaDetailPage.classList.contains('hidden') && currentManhwaId) {
+                showManhwaDetail(currentManhwaId);
+            }
+            
+            // Sauvegarder la page actuelle (sauf si c'est home)
+            const currentPage = document.querySelector('.page-content:not(.hidden)')?.id;
+            if (currentPage) {
+                const pageName = currentPage.replace('-page', '').replace('page-', '');
+                if (pageName !== 'home') {
+                    localStorage.setItem('currentPage', pageName);
+                }
+            }
         }
         
         // Page Galerie
@@ -2751,6 +2792,13 @@
                 if (response.ok) {
                     const data = await response.json();
                     galleryImages = data.images || [];
+                    // Shuffle automatique à chaque chargement
+                    if (galleryImages.length > 0) {
+                        for (let i = galleryImages.length - 1; i > 0; i--) {
+                            const j = Math.floor(Math.random() * (i + 1));
+                            [galleryImages[i], galleryImages[j]] = [galleryImages[j], galleryImages[i]];
+                        }
+                    }
                 } else {
                     galleryImages = [];
                 }
@@ -2818,7 +2866,7 @@
                 });
                 
                 item.innerHTML = `
-                    <img src="${image.path}" alt="${image.name}" class="w-full h-auto object-cover rounded-lg" loading="lazy">
+                    <img src="${image.path}" alt="${image.name}" class="w-full h-auto object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity" loading="lazy" onclick="window.open('${image.path}', '_blank')">
                 `;
                 
                 galleryGrid.appendChild(item);
@@ -2885,7 +2933,7 @@
                             <p class="text-sm text-gray-600 mb-2">Dernier chapitre: ${lastChapter.chapter_number}</p>
                             <span class="badge bg-indigo-100 text-indigo-600">${totalChapters} chapitres</span>
                         ` : `
-                            <p class="text-sm text-gray-500">Aucun chapitre disponible</p>
+                            <p class="text-sm text-gray-600 dark-mode:text-blue-200">Aucun chapitre disponible</p>
                         `}
                     </div>
                 `;
@@ -3006,6 +3054,7 @@
                 card.draggable = true;
                 card.dataset.manhwaId = manhwa.__backendId;
                 card.dataset.index = index;
+                // Toujours activer le drag & drop, même en ligne
                 
                 // Drag & Drop (cliquer-déplacer)
                 let clickTimeout = null;
@@ -3260,12 +3309,8 @@
                 <h2 class="text-2xl font-bold mb-4">Liste des Chapitres</h2>
                 <div class="space-y-3">
                     ${chapters.length === 0 ? `
-                        <div class="bg-gray-100 rounded-lg p-8 text-center">
-                            <p class="text-gray-500 dark-mode:text-gray-300">Aucun chapitre disponible. Ajoutez-en un!</p>
-                        </div>
-                    ` : chapters.length === 0 ? `
-                        <div class="bg-gray-100 dark-mode:bg-gray-800 rounded-lg p-8 text-center">
-                            <p class="text-gray-500 dark-mode:text-gray-300">Aucun chapitre disponible. Ajoutez-en un!</p>
+                        <div class="bg-gray-100 dark-mode:bg-gray-900 rounded-lg p-8 text-center border border-gray-300 dark-mode:border-gray-700">
+                            <p class="text-gray-800 dark-mode:text-blue-200 text-lg font-medium">Aucun chapitre disponible. Ajoutez-en un!</p>
                         </div>
                     ` : chapters.map(chapter => {
                         // Utiliser l'image de couverture du chapitre si elle existe, sinon celle du manhwa
@@ -3278,8 +3323,9 @@
                             </div>
                             <div class="flex-grow cursor-pointer" onclick="readChapter('${manhwaId}', ${chapter.chapter_number})">
                                 <h3 class="font-semibold">Chapitre ${chapter.chapter_number}: ${chapter.chapter_title}</h3>
-                                ${chapter.chapter_description ? `<p class="text-sm text-gray-600">${chapter.chapter_description}</p>` : ''}
-                                <p class="text-xs text-gray-500 mt-1">${formatDate(chapter.date_added)}</p>
+                                ${chapter.chapter_description ? `<p class="text-sm text-gray-600 dark-mode:text-gray-300">${chapter.chapter_description}</p>` : ''}
+                                ${chapter.chapter_season ? `<span class="inline-block mt-1 px-2 py-1 text-xs bg-purple-100 text-purple-700 dark-mode:bg-purple-600 dark-mode:text-purple-100 rounded">S. ${chapter.chapter_season}</span>` : ''}
+                                <p class="text-xs text-gray-500 dark-mode:text-gray-400 mt-1">${formatDate(chapter.date_added)}</p>
                             </div>
                             ${isDeveloperMode() ? `
                             <button onclick="event.stopPropagation(); openEditChapterModal('${chapter.__backendId}')" class="ml-4 p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors" title="Modifier ce chapitre">
@@ -3296,7 +3342,7 @@
                             </button>
                             ` : ''}
                             <button onclick="event.stopPropagation(); toggleFavorite('${chapter.__backendId}')" class="ml-2 p-2 ${chapter.is_favorite ? 'text-red-500' : 'text-gray-400'} hover:bg-gray-50 dark-mode:hover:bg-gray-700 rounded-lg transition-colors" title="${chapter.is_favorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}">
-                                <svg class="w-5 h-5" fill="${chapter.is_favorite ? 'currentColor' : 'none'}" stroke="${chapter.is_favorite ? 'currentColor' : 'currentColor'}" stroke-width="${chapter.is_favorite ? '0' : '2'}" viewBox="0 0 24 24">
+                                <svg class="w-5 h-5" fill="${chapter.is_favorite ? 'currentColor' : 'none'}" stroke="${chapter.is_favorite ? 'none' : 'currentColor'}" stroke-width="${chapter.is_favorite ? '0' : '2'}" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                                 </svg>
                             </button>
@@ -3347,22 +3393,6 @@
             // Mettre à jour l'info du chapitre
             document.getElementById('chapter-info').textContent = 
                 `${manhwa.manhwa_title} - Chapitre ${chapterNumber}`;
-            
-            // Afficher le lecteur audio si disponible
-            const audioPlayer = document.getElementById('chapter-audio-player');
-            const audioSource = document.getElementById('chapter-audio-source');
-            const audioElement = document.getElementById('chapter-audio');
-            if (chapter.chapter_audio) {
-                let audioPath = chapter.chapter_audio;
-                if (!audioPath.startsWith('./') && !audioPath.startsWith('/') && !audioPath.startsWith('http')) {
-                    audioPath = './' + audioPath;
-                }
-                audioSource.src = audioPath;
-                audioElement.load();
-                audioPlayer.classList.remove('hidden');
-            } else {
-                audioPlayer.classList.add('hidden');
-            }
 
             const readerContent = document.getElementById('reader-content');
             
@@ -3802,7 +3832,7 @@
             
             if (filtered.length === 0) {
                 commentsList.innerHTML = `
-                    <div class="text-center py-8 text-gray-500 dark-mode:text-gray-400">
+                    <div class="text-center py-8 text-gray-600 dark-mode:text-gray-300">
                         ${currentChapterComments.length === 0 ? 'Aucun commentaire pour le moment' : 'Aucun résultat trouvé'}
                     </div>
                 `;
@@ -3811,7 +3841,7 @@
             
             filtered.forEach(comment => {
                 const item = document.createElement('div');
-                item.className = 'bg-white dark-mode:bg-gray-800 rounded-lg p-4 shadow-md';
+                item.className = 'bg-white dark-mode:bg-gray-900 rounded-lg p-4 shadow-md border border-gray-200 dark-mode:border-gray-700';
                 item.innerHTML = `
                     <div class="flex items-start justify-between mb-2">
                         <div>
@@ -3820,7 +3850,7 @@
                         </div>
                         <button onclick="deleteComment('${comment.id}')" class="text-red-500 hover:text-red-700 text-sm">Supprimer</button>
                     </div>
-                    <p class="text-gray-700 dark-mode:text-gray-100 mb-3 whitespace-pre-wrap">${comment.text}</p>
+                    <p class="text-gray-800 dark-mode:text-gray-100 mb-3 whitespace-pre-wrap">${comment.text}</p>
                     ${comment.images && comment.images.length > 0 ? `
                         <div class="flex flex-wrap gap-2 mb-2">
                             ${comment.images.map(img => `
@@ -3952,7 +3982,7 @@
         if (commentFilter) {
             commentFilter.addEventListener('change', () => updateCommentsDisplay());
         }
-        
+
         // Mise à jour de la progression de lecture
         function updateProgress() {
             const readerContent = document.getElementById('reader-content');
@@ -3972,7 +4002,7 @@
         // Supprimer un chapitre
         // Fonction pour réorganiser les manhwas (drag & drop)
         async function reorderManhwas(draggedId, targetId) {
-            if (!isDeveloperMode()) return;
+            // Permettre le réordonnancement même en ligne (pour l'affichage seulement)
             
             const draggedIndex = allManhwas.findIndex(m => m.__backendId === draggedId);
             const targetIndex = allManhwas.findIndex(m => m.__backendId === targetId);
@@ -3983,20 +4013,22 @@
             const [draggedItem] = allManhwas.splice(draggedIndex, 1);
             allManhwas.splice(targetIndex, 0, draggedItem);
             
-            // Mettre à jour l'ordre dans globalData
-            globalData = globalData.filter(item => 
-                !item.manhwa_id || item.chapter_number || item.type === 'tracking' || item.type === 'trash'
-            );
-            
-            allManhwas.forEach(manhwa => {
-                const existing = globalData.find(item => item.__backendId === manhwa.__backendId);
-                if (existing) {
-                    globalData.push(existing);
-                }
-            });
-            
-            // Sauvegarder
-            scheduleAutoSave(globalData);
+            // Mettre à jour l'ordre dans globalData seulement en mode développeur
+            if (isDeveloperMode()) {
+                globalData = globalData.filter(item => 
+                    !item.manhwa_id || item.chapter_number || item.type === 'tracking' || item.type === 'trash'
+                );
+                
+                allManhwas.forEach(manhwa => {
+                    const existing = globalData.find(item => item.__backendId === manhwa.__backendId);
+                    if (existing) {
+                        globalData.push(existing);
+                    }
+                });
+                
+                // Sauvegarder
+                scheduleAutoSave(globalData);
+            }
             updateLibraryPage();
             showNotification('Ordre mis à jour', 'success');
         }
@@ -4057,13 +4089,20 @@
             // Ajouter à la corbeille
             await addToTrash(chapter, 'chapter');
 
+            // Supprimer immédiatement de la liste locale pour mise à jour instantanée
+            allChapters = allChapters.filter(ch => ch.__backendId !== chapterId);
+            
             const result = await window.dataSdk.delete(chapter);
             
             if (result.isOk) {
                 showNotification('Chapitre déplacé dans la corbeille', 'success');
+                // Mettre à jour IMMÉDIATEMENT toutes les pages
                 updateAllPages();
             } else {
+                // Restaurer si erreur
+                allChapters.push(chapter);
                 showNotification('Erreur lors de la suppression', 'error');
+                updateAllPages();
             }
         }
 
