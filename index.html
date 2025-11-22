@@ -217,8 +217,8 @@
     <form id="add-manhwa-form" class="p-6">
      <div class="mb-4"><label for="manhwa-title" class="block text-sm font-medium mb-2">Titre du Manhwa</label> <input type="text" id="manhwa-title" class="input-field w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600" placeholder="Ex: Solo Leveling" required>
      </div>
-     <div class="mb-4"><label for="manhwa-cover-url" class="block text-sm font-medium mb-2">URL de l'image de couverture</label> <input type="text" id="manhwa-cover-url" class="input-field w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600" placeholder="https://exemple.com/cover.jpg" required>
-      <p class="text-xs text-gray-500 mt-1">💡 Colle le lien direct de ton image (Imgur, Google Drive, etc.)</p>
+     <div class="mb-4"><label for="manhwa-cover-url" class="block text-sm font-medium mb-2">📷 Chemin de l'image de couverture</label> <input type="text" id="manhwa-cover-url" class="input-field w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600" placeholder="Image/passion.jpg" required>
+      <p class="text-xs text-gray-500 mt-1">💡 Entrez le chemin du fichier image (ex: Image/passion.jpg ou Image/mon-manhwa.png)</p>
       <div id="image-preview" class="mt-2 hidden"><img id="preview-img" class="w-32 h-40 object-cover rounded-lg shadow-md" alt="Aperçu">
       </div>
      </div>
@@ -393,129 +393,36 @@
         const addChapterForm = document.getElementById('add-chapter-form');
         const navItems = document.querySelectorAll('.nav-item');
 
-        // Variable globale pour stocker les données
-        let globalData = [];
-        let saveTimeout = null; // Timeout pour debounce de la sauvegarde
-        
-        // Fonction pour sauvegarder automatiquement dans data.json (avec debounce)
-        function scheduleAutoSave(data) {
-            if (!isDeveloperMode()) {
-                return;
-            }
-            
-            // Annuler la sauvegarde précédente si elle n'a pas encore été exécutée
-            if (saveTimeout) {
-                clearTimeout(saveTimeout);
-            }
-            
-            // Programmer la sauvegarde après 500ms d'inactivité
-            saveTimeout = setTimeout(async () => {
-                await saveDataToFileAuto(data);
-            }, 500);
-        }
-        
-        // Fonction pour sauvegarder automatiquement dans data.json via PHP (SANS POPUP!)
-        async function saveDataToFileAuto(data) {
-            if (!isDeveloperMode()) {
-                return;
-            }
-            
-            try {
-                const response = await fetch('save-data.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
-                
-                const result = await response.json();
-                if (result.success) {
-                    console.log('✅ data.json sauvegardé automatiquement');
-                } else {
-                    console.error('Erreur lors de la sauvegarde:', result.message);
-                }
-            } catch (error) {
-                console.error('Erreur lors de la sauvegarde automatique:', error);
-            }
-        }
-        
-        // Simulateur SDK pour test en local et production
+        // Simulateur SDK pour test en local
         function createLocalSDK() {
-            let localData = [];
+            let localData = JSON.parse(localStorage.getItem('manhwaData') || '[]');
             let dataHandler = null;
 
             return {
                 init: async (handler) => {
                     dataHandler = handler;
-                    
-                    // TOUJOURS recharger depuis data.json au démarrage (même après rafraîchissement)
-                    try {
-                        // Ajouter un timestamp pour éviter le cache
-                        const response = await fetch('./data.json?t=' + Date.now());
-                        if (response.ok) {
-                            const loadedData = await response.json();
-                            if (Array.isArray(loadedData)) {
-                                localData = loadedData;
-                                console.log('✅ Données chargées depuis data.json:', localData.length, 'éléments');
-                            } else {
-                                console.log('⚠️ data.json n\'est pas un tableau, utilisation d\'un tableau vide');
-                                localData = [];
-                            }
-                        } else {
-                            console.log('⚠️ Fichier data.json non trouvé, utilisation d\'un tableau vide');
-                            localData = [];
-                        }
-                    } catch (error) {
-                        console.error('⚠️ Erreur lors du chargement de data.json:', error);
-                        localData = [];
-                    }
-                    
-                    // Toujours mettre à jour globalData avec les données chargées
-                    globalData = [...localData];
-                    
-                    // Notifier le handler avec les données chargées
                     setTimeout(() => {
                         if (dataHandler) {
                             dataHandler.onDataChanged(localData);
                         }
                     }, 100);
-                    
                     return { isOk: true };
                 },
                 create: async (data) => {
-                    if (!isDeveloperMode()) {
-                        return { isOk: false, error: 'Mode développeur requis' };
-                    }
-                    
                     data.__backendId = 'local_' + Date.now() + '_' + Math.random();
                     localData.push(data);
-                    // Créer une nouvelle copie pour éviter les références
-                    globalData = JSON.parse(JSON.stringify(localData));
-                    
-                    // Sauvegarder automatiquement (avec debounce)
-                    scheduleAutoSave(globalData);
+                    localStorage.setItem('manhwaData', JSON.stringify(localData));
                     
                     if (dataHandler) {
                         setTimeout(() => dataHandler.onDataChanged(localData), 100);
                     }
-                    
                     return { isOk: true };
                 },
                 update: async (record) => {
-                    if (!isDeveloperMode()) {
-                        return { isOk: false, error: 'Mode développeur requis' };
-                    }
-                    
                     const index = localData.findIndex(item => item.__backendId === record.__backendId);
                     if (index !== -1) {
                         localData[index] = record;
-                        // Créer une nouvelle copie pour éviter les références
-                        globalData = JSON.parse(JSON.stringify(localData));
-                        
-                        // Sauvegarder automatiquement (avec debounce)
-                        scheduleAutoSave(globalData);
-                        
+                        localStorage.setItem('manhwaData', JSON.stringify(localData));
                         if (dataHandler) {
                             setTimeout(() => dataHandler.onDataChanged(localData), 100);
                         }
@@ -523,21 +430,11 @@
                     return { isOk: true };
                 },
                 delete: async (record) => {
-                    if (!isDeveloperMode()) {
-                        return { isOk: false, error: 'Mode développeur requis' };
-                    }
-                    
                     localData = localData.filter(item => item.__backendId !== record.__backendId);
-                    // Créer une nouvelle copie pour éviter les références
-                    globalData = JSON.parse(JSON.stringify(localData));
-                    
-                    // Sauvegarder automatiquement (avec debounce)
-                    scheduleAutoSave(globalData);
-                    
+                    localStorage.setItem('manhwaData', JSON.stringify(localData));
                     if (dataHandler) {
                         setTimeout(() => dataHandler.onDataChanged(localData), 100);
                     }
-                    
                     return { isOk: true };
                 }
             };
@@ -567,9 +464,10 @@
             
             // Détection automatique: local ou Canva
             if (!window.dataSdk) {
-                console.log('🔧 Mode LOCAL détecté - Utilisation de data.json');
+                console.log('🔧 Mode LOCAL détecté - Utilisation de localStorage');
                 isLocalMode = true;
                 window.dataSdk = createLocalSDK();
+                showNotification('Mode test local activé 🔧', 'info');
             } else {
                 console.log('☁️ Mode CANVA détecté - Utilisation du Data SDK');
                 isLocalMode = false;
@@ -698,11 +596,23 @@
         const imagePreview = document.getElementById('image-preview');
         const previewImg = document.getElementById('preview-img');
 
-        // Prévisualisation de l'image URL
+        // Prévisualisation de l'image depuis le chemin local
         coverUrl.addEventListener('input', (e) => {
-            const url = e.target.value.trim();
-            if (url) {
-                previewImg.src = url;
+            let path = e.target.value.trim();
+            if (path) {
+                // Nettoyer le chemin comme pour les chapitres MHTML
+                path = path.replace(/\\/g, '/');
+                if (path.includes('Site/')) {
+                    path = path.split('Site/')[1];
+                }
+                if (path.includes('Image/') && !path.startsWith('Image/')) {
+                    path = path.substring(path.indexOf('Image/'));
+                }
+                if (!path.startsWith('./') && !path.startsWith('/') && !path.startsWith('http')) {
+                    path = './' + path;
+                }
+                
+                previewImg.src = path;
                 imagePreview.classList.remove('hidden');
                 previewImg.onerror = () => {
                     imagePreview.classList.add('hidden');
@@ -742,15 +652,27 @@
             submitBtn.disabled = true;
 
             const title = document.getElementById('manhwa-title').value.trim();
-            const coverImageUrl = document.getElementById('manhwa-cover-url').value.trim();
+            let coverImagePath = document.getElementById('manhwa-cover-url').value.trim();
             const description = document.getElementById('manhwa-description').value.trim();
+
+            // Nettoyer le chemin pour le stockage (comme pour les chapitres MHTML)
+            coverImagePath = coverImagePath.replace(/\\/g, '/');
+            if (coverImagePath.includes('Site/')) {
+                coverImagePath = coverImagePath.split('Site/')[1];
+            }
+            if (coverImagePath.includes('Image/') && !coverImagePath.startsWith('Image/')) {
+                coverImagePath = coverImagePath.substring(coverImagePath.indexOf('Image/'));
+            }
+            if (!coverImagePath.startsWith('./') && !coverImagePath.startsWith('/') && !coverImagePath.startsWith('http')) {
+                coverImagePath = './' + coverImagePath;
+            }
 
             const manhwaId = 'manhwa_' + Date.now();
 
             const result = await window.dataSdk.create({
                 manhwa_id: manhwaId,
                 manhwa_title: title,
-                manhwa_cover: coverImageUrl,
+                manhwa_cover: coverImagePath,
                 manhwa_description: description,
                 date_added: new Date().toISOString()
             });
