@@ -56,6 +56,169 @@
             color: #e2e8f0 !important;
         }
         
+        /* Amélioration de la visibilité des textes en mode sombre */
+        .dark-mode .text-gray-500 {
+            color: #cbd5e1 !important;
+        }
+        
+        .dark-mode .text-gray-600 {
+            color: #e2e8f0 !important;
+        }
+        
+        .dark-mode .text-gray-700 {
+            color: #f1f5f9 !important;
+        }
+        
+        .dark-mode .text-gray-400 {
+            color: #94a3b8 !important;
+        }
+        
+        .dark-mode .text-gray-300 {
+            color: #cbd5e1 !important;
+        }
+        
+        /* Panneau de paramètres en mode sombre */
+        .dark-mode #settings-panel {
+            background-color: #2d2d2d !important;
+            color: #e2e8f0 !important;
+        }
+        
+        .dark-mode #settings-panel h2,
+        .dark-mode #settings-panel h3 {
+            color: #f1f5f9 !important;
+        }
+        
+        .dark-mode #settings-panel .text-indigo-900 {
+            color: #c7d2fe !important;
+        }
+        
+        .dark-mode #settings-panel .text-indigo-600 {
+            color: #818cf8 !important;
+        }
+        
+        .dark-mode #settings-panel .bg-indigo-50 {
+            background-color: #312e81 !important;
+        }
+        
+        .dark-mode #settings-panel .bg-indigo-100 {
+            background-color: #3730a3 !important;
+        }
+        
+        .dark-mode #settings-panel .bg-gray-50 {
+            background-color: #374151 !important;
+        }
+        
+        /* Section Suivi en mode sombre */
+        .dark-mode #tracking-page .bg-white {
+            background-color: #2d2d2d !important;
+            color: #e2e8f0 !important;
+        }
+        
+        .dark-mode #tracking-page .text-gray-600 {
+            color: #cbd5e1 !important;
+        }
+        
+        .dark-mode #tracking-page .bg-gray-50 {
+            background-color: #374151 !important;
+        }
+        
+        .dark-mode #tracking-page .bg-gray-100 {
+            background-color: #4b5563 !important;
+        }
+        
+        .dark-mode #tracking-page .bg-gray-200 {
+            background-color: #6b7280 !important;
+        }
+        
+        .dark-mode #tracking-page .border-t {
+            border-color: #404040 !important;
+        }
+        
+        .dark-mode #tracking-page .text-gray-900 {
+            color: #f1f5f9 !important;
+        }
+        
+        .dark-mode #tracking-page .text-indigo-600 {
+            color: #818cf8 !important;
+        }
+        
+        .dark-mode #tracking-page .text-gray-700 {
+            color: #cbd5e1 !important;
+        }
+        
+        .dark-mode #tracking-page .border-gray-200 {
+            border-color: #404040 !important;
+        }
+        
+        .dark-mode #tracking-page .bg-gray-100 {
+            background-color: #4b5563 !important;
+            color: #e2e8f0 !important;
+        }
+        
+        .dark-mode #tracking-page .bg-gray-100:hover {
+            background-color: #6b7280 !important;
+        }
+        
+        .dark-mode #tracking-page .hover\:bg-blue-50:hover {
+            background-color: #1e3a8a !important;
+        }
+        
+        .dark-mode #tracking-page .hover\:bg-red-50:hover {
+            background-color: #7f1d1d !important;
+        }
+        
+        /* Modals en mode sombre */
+        .dark-mode .fixed.inset-0 > div.bg-white,
+        .dark-mode #add-manhwa-modal > div,
+        .dark-mode #add-chapter-modal > div,
+        .dark-mode #edit-manhwa-modal > div,
+        .dark-mode #edit-chapter-modal > div,
+        .dark-mode #tracking-modal > div {
+            background-color: #2d2d2d !important;
+            color: #e2e8f0 !important;
+        }
+        
+        .dark-mode .fixed.inset-0 > div.bg-white h2,
+        .dark-mode #add-manhwa-modal h2,
+        .dark-mode #add-chapter-modal h2,
+        .dark-mode #edit-manhwa-modal h2,
+        .dark-mode #edit-chapter-modal h2,
+        .dark-mode #tracking-modal h2 {
+            color: #f1f5f9 !important;
+        }
+        
+        .dark-mode .fixed.inset-0 > div.bg-white label,
+        .dark-mode #add-manhwa-modal label,
+        .dark-mode #add-chapter-modal label,
+        .dark-mode #edit-manhwa-modal label,
+        .dark-mode #edit-chapter-modal label,
+        .dark-mode #tracking-modal label {
+            color: #e2e8f0 !important;
+        }
+        
+        .dark-mode .fixed.inset-0 > div.bg-white .border-b,
+        .dark-mode #add-manhwa-modal .border-b,
+        .dark-mode #add-chapter-modal .border-b,
+        .dark-mode #edit-manhwa-modal .border-b,
+        .dark-mode #edit-chapter-modal .border-b,
+        .dark-mode #tracking-modal .border-b {
+            border-color: #404040 !important;
+        }
+        
+        /* Sidebar en mode sombre */
+        .dark-mode #sidebar {
+            background-color: #2d2d2d !important;
+            color: #e2e8f0 !important;
+        }
+        
+        .dark-mode #sidebar .nav-item {
+            color: #e2e8f0 !important;
+        }
+        
+        .dark-mode #sidebar h2 {
+            color: #f1f5f9 !important;
+        }
+        
         .card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -545,27 +708,45 @@
                 init: async (handler) => {
                     dataHandler = handler;
                     
-                    // TOUJOURS recharger depuis data.json au démarrage
+                    // TOUJOURS recharger depuis data.json au démarrage (localhost ET production)
                     try {
-                        const response = await fetch('./data.json?t=' + Date.now());
+                        // Essayer de charger depuis data.json avec cache-busting
+                        const response = await fetch('./data.json?t=' + Date.now(), {
+                            cache: 'no-cache',
+                            headers: {
+                                'Cache-Control': 'no-cache'
+                            }
+                        });
+                        
                         if (response.ok) {
                             const loadedData = await response.json();
-                            if (Array.isArray(loadedData)) {
+                            if (Array.isArray(loadedData) && loadedData.length > 0) {
                                 localData = loadedData;
                                 console.log('✅ Données chargées depuis data.json:', localData.length, 'éléments');
+                            } else if (Array.isArray(loadedData)) {
+                                localData = [];
+                                console.log('ℹ️ data.json est vide');
                             } else {
+                                console.warn('⚠️ data.json n\'est pas un tableau valide');
                                 localData = [];
                             }
+                        } else if (response.status === 404) {
+                            console.log('ℹ️ Fichier data.json non trouvé, utilisation d\'un tableau vide');
+                            localData = [];
                         } else {
+                            console.warn('⚠️ Erreur HTTP lors du chargement:', response.status);
                             localData = [];
                         }
                     } catch (error) {
                         console.error('⚠️ Erreur lors du chargement de data.json:', error);
+                        // En cas d'erreur, continuer avec un tableau vide plutôt que de bloquer
                         localData = [];
                     }
                     
-                    globalData = [...localData];
+                    // Toujours synchroniser globalData avec localData
+                    globalData = JSON.parse(JSON.stringify(localData));
                     
+                    // Notifier le handler avec les données chargées
                     setTimeout(() => {
                         if (dataHandler) {
                             dataHandler.onDataChanged(localData);
@@ -651,10 +832,12 @@
             
             // Détection automatique: local ou Canva
             if (!window.dataSdk) {
-                console.log('🔧 Mode LOCAL détecté - Utilisation de localStorage');
+                console.log('🔧 Mode LOCAL détecté - Utilisation de data.json');
                 isLocalMode = true;
                 window.dataSdk = createLocalSDK();
-                showNotification('Mode test local activé 🔧', 'info');
+                if (isDeveloperMode()) {
+                    showNotification('Mode développeur activé 🔧', 'info');
+                }
             } else {
                 console.log('☁️ Mode CANVA détecté - Utilisation du Data SDK');
                 isLocalMode = false;
@@ -664,6 +847,9 @@
             if (!result.isOk) {
                 showNotification('Erreur lors de l\'initialisation', 'error');
                 console.error('Erreur SDK:', result.error);
+            } else {
+                console.log('✅ Application initialisée avec succès');
+                console.log(`📊 ${allManhwas.length} manhwas et ${allChapters.length} chapitres chargés`);
             }
         }
 
@@ -681,7 +867,7 @@
             });
             
             // Mettre à jour tous les modals
-            document.querySelectorAll('#add-manhwa-modal > div, #add-chapter-modal > div').forEach(modal => {
+            document.querySelectorAll('#add-manhwa-modal > div, #add-chapter-modal > div, #edit-manhwa-modal > div, #edit-chapter-modal > div, #tracking-modal > div').forEach(modal => {
                 modal.classList.toggle('dark-mode');
             });
             
@@ -701,6 +887,11 @@
             }
             
             localStorage.setItem('darkMode', isDarkMode);
+            
+            // Rafraîchir la page de suivi pour appliquer les nouvelles couleurs
+            if (document.getElementById('tracking-page') && !document.getElementById('tracking-page').classList.contains('hidden')) {
+                updateTrackingPage();
+            }
         }
 
         themeToggle.addEventListener('click', toggleTheme);
@@ -1455,19 +1646,24 @@
             
             if (trackingList.length === 0) {
                 trackingListContainer.innerHTML = `
-                    <div class="text-center py-12 bg-gray-50 rounded-lg">
-                        <svg class="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="text-center py-12 bg-gray-50 dark-mode:bg-gray-800 rounded-lg">
+                        <svg class="w-24 h-24 mx-auto text-gray-300 dark-mode:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                         </svg>
-                        <h3 class="text-xl font-semibold text-gray-600 mb-2">Aucun suivi</h3>
-                        <p class="text-gray-500 mb-4">Commencez par ajouter un suivi de lecture!</p>
+                        <h3 class="text-xl font-semibold text-gray-600 dark-mode:text-gray-300 mb-2">Aucun suivi</h3>
+                        <p class="text-gray-500 dark-mode:text-gray-400 mb-4">Commencez par ajouter un suivi de lecture!</p>
                     </div>
                 `;
                 return;
             }
             
             trackingList.forEach(tracking => {
-                const statusColors = {
+                // Couleurs adaptées au mode sombre
+                const statusColors = isDarkMode ? {
+                    'en-cours': 'bg-blue-600 text-blue-100',
+                    'fini': 'bg-green-600 text-green-100',
+                    'en-pause': 'bg-yellow-600 text-yellow-100'
+                } : {
                     'en-cours': 'bg-blue-100 text-blue-700',
                     'fini': 'bg-green-100 text-green-700',
                     'en-pause': 'bg-yellow-100 text-yellow-700'
@@ -1479,32 +1675,32 @@
                 };
                 
                 const item = document.createElement('div');
-                item.className = 'bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow';
+                item.className = 'bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow card';
                 item.innerHTML = `
                     <div class="flex items-start justify-between mb-4">
                         <div class="flex-grow">
-                            <h3 class="text-xl font-bold mb-2">${tracking.title}</h3>
+                            <h3 class="text-xl font-bold mb-2 text-gray-900 dark-mode:text-gray-100">${tracking.title}</h3>
                             <div class="flex items-center space-x-4 mb-2">
-                                <span class="text-2xl font-bold text-indigo-600">Ch. ${tracking.chapter}</span>
+                                <span class="text-2xl font-bold text-indigo-600 dark-mode:text-indigo-400">Ch. ${tracking.chapter}</span>
                                 <span class="badge ${statusColors[tracking.status] || statusColors['en-cours']}">${statusLabels[tracking.status] || 'En cours'}</span>
                             </div>
-                            ${tracking.notes ? `<p class="text-sm text-gray-600 mt-2">${tracking.notes}</p>` : ''}
+                            ${tracking.notes ? `<p class="text-sm text-gray-600 dark-mode:text-gray-300 mt-2">${tracking.notes}</p>` : ''}
                         </div>
                         <div class="flex space-x-2">
-                            <button onclick="openEditTrackingModal('${tracking.id}')" class="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors" title="Modifier">
+                            <button onclick="openEditTrackingModal('${tracking.id}')" class="p-2 text-blue-500 hover:bg-blue-50 dark-mode:hover:bg-blue-900 rounded-lg transition-colors" title="Modifier">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                 </svg>
                             </button>
-                            <button onclick="deleteTrackingItem('${tracking.id}')" class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Supprimer">
+                            <button onclick="deleteTrackingItem('${tracking.id}')" class="p-2 text-red-500 hover:bg-red-50 dark-mode:hover:bg-red-900 rounded-lg transition-colors" title="Supprimer">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                 </svg>
                             </button>
                         </div>
                     </div>
-                    <div class="flex items-center space-x-2 pt-4 border-t">
-                        <button onclick="decrementChapterTracking('${tracking.id}')" class="flex-1 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg font-semibold transition-colors">
+                    <div class="flex items-center space-x-2 pt-4 border-t border-gray-200 dark-mode:border-gray-600">
+                        <button onclick="decrementChapterTracking('${tracking.id}')" class="flex-1 bg-gray-100 hover:bg-gray-200 dark-mode:bg-gray-700 dark-mode:hover:bg-gray-600 px-4 py-2 rounded-lg font-semibold transition-colors text-gray-700 dark-mode:text-gray-200">
                             <svg class="w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
                             </svg>
