@@ -745,8 +745,11 @@
     <p class="text-gray-700 font-medium">Chargement...</p>
    </div>
   </div>
-  <script>
+ 
+
+  <script type="module">
         // Configuration et état global
+        let galleryImages = [];
         let currentManhwaId = null;
         let currentChapterNumber = null;
         let allManhwas = [];
@@ -2706,7 +2709,7 @@ window.deleteTrackingItem = async function(id) {
                         </button>
                         ` : ''}
                         <button onclick="event.stopPropagation(); toggleFavorite('${chapter.__backendId}')" class="p-2 ${chapter.is_favorite ? 'text-red-500' : 'text-gray-400'} hover:bg-gray-50 dark-mode:hover:bg-gray-700 rounded-lg transition-colors" title="${chapter.is_favorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}">
-                            <svg class="w-5 h-5" fill="${chapter.is_favorite ? 'currentColor' : 'none'}" stroke="${chapter.is_favorite ? 'none' : 'currentColor'}" stroke-width="${chapter.is_favorite ? '0' : '2'}" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5" fill="${chapter.is_favorite ? '#ef4444' : 'none'}" stroke="${chapter.is_favorite ? 'none' : 'currentColor'}" stroke-width="${chapter.is_favorite ? '0' : '2'}" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                             </svg>
                         </button>
@@ -2879,110 +2882,90 @@ window.deleteTrackingItem = async function(id) {
             });
         }
         
-        // Restaurer depuis la corbeille
-        window.restoreFromTrash = async function(trashId) {
-            const trashItem = globalData.find(item => item.type === 'trash' && item.id === trashId);
-            if (!trashItem) return;
-            
-            const confirmed = await showConfirmDialog(
-                'Restaurer cet élément?',
-                'L\'élément sera restauré à sa place d\'origine.'
-            );
-            
-            if (!confirmed) return;
-            
-            // Retirer de la corbeille IMMÉDIATEMENT
-            globalData = globalData.filter(item => item.id !== trashId);
-            
-            // Mettre à jour l'UI immédiatement
-            updateAllPages();
-            
-            // Restaurer l'élément original
-            const originalData = trashItem.original_data;
-            delete originalData.type; // Retirer le type trash si présent
-            
-            if (trashItem.trash_type === 'tracking') {
-                originalData.type = 'tracking';
-                trackingList.push(originalData);
-                await saveTrackingList();
-            } else {
-                const result = await window.dataSdk.create(originalData);
-                if (!result.isOk) {
-                    showNotification('Erreur lors de la restauration', 'error');
-                    return;
-                }
+ // ...existing code...
+window.restoreFromTrash = async function(trashId) {
+    const confirmed = await showConfirmDialog(
+        'Restaurer cet élément ?',
+        'L\'élément sera remis dans vos suivis.'
+    );
+    if (!confirmed) return;
+
+    if (!trashId) {
+        showNotification('Erreur : ID manquant pour la restauration', 'error');
+        return;
+    }
+
+    try {
+        const response = await fetch('save-data.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: 'restore',
+                item: { id: trashId, trash_type: 'tracking' }
+            })
+        });
+
+        // Parser la réponse JSON en toute sécurité
+        const result = await response.json();
+
+        if (result.success) {
+            showNotification('Élément restauré avec succès !', 'success');
+
+            // Retirer de la corbeille localement et ajouter aux suivis
+            const restoredItemIndex = globalData.findIndex(item => item.id === trashId);
+            if (restoredItemIndex !== -1) {
+                const restored = globalData[restoredItemIndex];
+                restored.type = 'tracking';
+                trackingList.push(restored);
+                globalData.splice(restoredItemIndex, 1);
             }
-            
-            // Sauvegarder
+
+            updateAllPages();
+            updateTrashPage();
+
             if (isDeveloperMode()) {
                 scheduleAutoSave(globalData);
             } else {
                 await saveDataToFileAuto(globalData);
             }
-            
-            showNotification('Élément restauré avec succès', 'success');
-            updateAllPages();
-            updateTrashPage();
-        };
-        
-        // Supprimer définitivement de la corbeille
-        window.deletePermanentlyFromTrash = async function(trashId) {
-            const trashItem = globalData.find(item => item.type === 'trash' && item.id === trashId);
-            if (!trashItem) return;
-            
-            const confirmed = await showConfirmDialog(
-                'Supprimer définitivement?',
-                'Cette action est irréversible et l\'élément sera perdu à jamais.'
-            );
-            
-            if (!confirmed) return;
-            
-            // Retirer définitivement IMMÉDIATEMENT
-            globalData = globalData.filter(item => item.id !== trashId);
-            
-            // Mettre à jour l'UI immédiatement
-            updateAllPages();
-            
-            // Sauvegarder en arrière-plan
-            if (isDeveloperMode()) {
-                scheduleAutoSave(globalData);
-            } else {
-                saveDataToFileAuto(globalData).catch(err => {
-                    console.error('Erreur sauvegarde:', err);
-                });
-            }
-            
+        } else {
+            showNotification(`Erreur : ${result.message}`, 'error');
+        }
+    } catch (err) {
+        console.error(err);
+        showNotification('Erreur réseau ou serveur', 'error');
+    }
+};
+// ...existing code...
+
+
+      window.deletePermanentlyFromTrash = async function(trashId) {
+    const confirmed = await showConfirmDialog(
+        'Supprimer définitivement ?',
+        'Cette action est irréversible.'
+    );
+    if (!confirmed) return;
+
+    try {
+        const response = await fetch(`save-tracking.php?action=delete_permanent&id=${trashId}`);
+        const result = await response.json();
+        if (result.success) {
             showNotification('Élément supprimé définitivement', 'success');
-        };
-        
-        // Tout supprimer définitivement de la corbeille
-        window.deleteAllPermanentlyFromTrash = async function() {
-            const trashItems = globalData.filter(item => item.type === 'trash');
-            if (trashItems.length === 0) {
-                showNotification('La corbeille est déjà vide', 'info');
-                return;
-            }
-            
-            const confirmed = await showConfirmDialog(
-                `Supprimer définitivement ${trashItems.length} élément(s)?`,
-                'Cette action est irréversible et tous les éléments seront perdus à jamais.'
-            );
-            
-            if (!confirmed) return;
-            
-            // Retirer tous les éléments de la corbeille
-            globalData = globalData.filter(item => item.type !== 'trash');
-            
-            // Sauvegarder
-            if (isDeveloperMode()) {
-                scheduleAutoSave(globalData);
-            } else {
-                await saveDataToFileAuto(globalData);
-            }
-            
-            showNotification(`${trashItems.length} élément(s) supprimé(s) définitivement`, 'success');
-            updateTrashPage();
-        };
+
+            // Retirer localement pour mettre à jour l'affichage
+            globalData = globalData.filter(item => item.id !== trashId);
+
+            // Mettre à jour l'affichage
+            updateAllPages();
+
+        } else {
+            showNotification(`Erreur : ${result.message}`, 'error');
+        }
+    } catch (err) {
+        console.error(err);
+        showNotification('Erreur réseau ou serveur', 'error');
+    }
+};
 
         // Mise à jour de toutes les pages
         function updateAllPages() {
@@ -3012,7 +2995,7 @@ window.deleteTrackingItem = async function(id) {
         }
         
         // Page Galerie
-        let galleryImages = [];
+       
         
         async function loadGalleryImages() {
             try {
@@ -3495,7 +3478,7 @@ window.deleteTrackingItem = async function(id) {
                     toggleFavorite(chapter.__backendId);
                 };
                 favoriteBtn.innerHTML = `
-                    <svg class="w-5 h-5" fill="${chapter.is_favorite ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="${chapter.is_favorite ? '0' : '2'}" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5" fill="${chapter.is_favorite ? '#ef4444' : 'none'}" stroke="currentColor" stroke-width="${chapter.is_favorite ? '0' : '2'}" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                     </svg>
                 `;
@@ -3532,7 +3515,7 @@ window.deleteTrackingItem = async function(id) {
                         </div>
                         <div class="flex space-x-3">
                             ${isDeveloperMode() ? `
-                            <button onclick="openEditManhwaModal('${manhwa.__backendId}')" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 flex items-center">
+                            <button type="button" onclick="event.stopPropagation(); openEditManhwaModal('${manhwa.__backendId}')" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 flex items-center">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                 </svg>
@@ -3540,13 +3523,13 @@ window.deleteTrackingItem = async function(id) {
                             </button>
                             ` : ''}
                             ${isDeveloperMode() ? `
-                            <button onclick="openAddChapterModal()" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 flex items-center">
+                            <button type="button" onclick="event.stopPropagation(); openAddChapterModal()" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 flex items-center">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                 </svg>
                                 Ajouter un Chapitre
                             </button>
-                            <button onclick="deleteManhwa('${manhwa.__backendId}')" class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 flex items-center">
+                            <button type="button" onclick="event.stopPropagation(); deleteManhwa('${manhwa.__backendId}')" class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 flex items-center">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                 </svg>
@@ -3593,7 +3576,7 @@ window.deleteTrackingItem = async function(id) {
                             </button>
                             ` : ''}
                             <button onclick="event.stopPropagation(); toggleFavorite('${chapter.__backendId}')" class="ml-2 p-2 ${chapter.is_favorite ? 'text-red-500' : 'text-gray-400'} hover:bg-gray-50 dark-mode:hover:bg-gray-700 rounded-lg transition-colors" title="${chapter.is_favorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}">
-                                <svg class="w-5 h-5" fill="${chapter.is_favorite ? 'currentColor' : 'none'}" stroke="${chapter.is_favorite ? 'none' : 'currentColor'}" stroke-width="${chapter.is_favorite ? '0' : '2'}" viewBox="0 0 24 24">
+                                <svg class="w-5 h-5" fill="${chapter.is_favorite ? '#ef4444' : 'none'}" stroke="${chapter.is_favorite ? 'none' : 'currentColor'}" stroke-width="${chapter.is_favorite ? '0' : '2'}" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                                 </svg>
                             </button>
@@ -4401,6 +4384,14 @@ window.deleteTrackingItem = async function(id) {
                 showNotification('Erreur lors de la suppression', 'error');
             }
         }
+
+        // Exposer certaines fonctions au scope global pour les handlers inline (script type="module")
+        window.openEditManhwaModal = openEditManhwaModal;
+        window.openEditChapterModal = openEditChapterModal;
+        window.openAddManhwaModal = openAddManhwaModal;
+        window.openAddChapterModal = openAddChapterModal;
+        window.deleteManhwa = deleteManhwa;
+        window.deleteChapter = deleteChapter;
 
         // Dialog de confirmation (sans alert!)
         function showConfirmDialog(title, message) {

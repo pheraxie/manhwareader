@@ -1,4 +1,6 @@
 <?php
+error_reporting(0); // désactive les warnings qui cassent le JSON
+header('Content-Type: application/json'); // forcer PHP à toujours renvoyer JSON
 require_once 'config.php';
 $conn = getDBConnection();
 
@@ -70,31 +72,33 @@ switch ($action) {
         }
     break;
 
-    // Restaurer depuis la corbeille
-    case 'restore':
-        $res = $conn->query("SELECT * FROM trash WHERE id='".$conn->real_escape_string($id)."' AND trash_type='tracking'");
-        if ($res->num_rows > 0) {
-            $row = $res->fetch_assoc();
-            $tracking = json_decode($row['original_data'], true);
-            $stmt = $conn->prepare("INSERT INTO tracking (id,title,chapter,status,notes,season,date_added,date_updated) VALUES (?,?,?,?,?,?,?,?)");
-            $stmt->bind_param("ssisssss",
-                $tracking['id'],
-                $tracking['title'],
-                $tracking['chapter'],
-                $tracking['status'],
-                $tracking['notes'],
-                $tracking['season'],
-                $tracking['date_added'],
-                $tracking['date_updated']
-            );
-            $stmt->execute();
-            $stmt->close();
-            $conn->query("DELETE FROM trash WHERE id='".$conn->real_escape_string($id)."'");
-            echo json_encode(['success'=>true,'message'=>'Suivi restauré depuis la corbeille']);
-        } else {
-            echo json_encode(['success'=>false,'message'=>'Élément introuvable dans la corbeille']);
-        }
-    break;
+  // Restaurer depuis la corbeille
+case 'restore':
+    header('Content-Type: application/json'); // <-- AJOUTE cette ligne en tout début du case
+    $res = $conn->query("SELECT * FROM trash WHERE id='".$conn->real_escape_string($id)."' AND trash_type='tracking'");
+    if ($res->num_rows > 0) {
+        $row = $res->fetch_assoc();
+        $tracking = json_decode($row['original_data'], true);
+        $stmt = $conn->prepare("INSERT INTO tracking (id,title,chapter,status,notes,season,date_added,date_updated) VALUES (?,?,?,?,?,?,?,?)");
+        $stmt->bind_param("ssisssss",
+            $tracking['id'],
+            $tracking['title'],
+            $tracking['chapter'],
+            $tracking['status'],
+            $tracking['notes'],
+            $tracking['season'],
+            $tracking['date_added'],
+            $tracking['date_updated']
+        );
+        $stmt->execute();
+        $stmt->close();
+        $conn->query("DELETE FROM trash WHERE id='".$conn->real_escape_string($id)."'");
+
+        echo json_encode(['success'=>true,'message'=>'Suivi restauré depuis la corbeille']);
+    } else {
+        echo json_encode(['success'=>false,'message'=>'Élément introuvable dans la corbeille']);
+    }
+break;
 
     // Supprimer définitivement
     case 'delete_permanent':
