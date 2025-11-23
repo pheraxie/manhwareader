@@ -756,6 +756,24 @@
         let allChapters = [];
         let isDarkMode = false;
         let isLocalMode = false;
+        let currentUserId = null; // Identifiant utilisateur pour données propres (mode en ligne)
+
+        function getCurrentUserId() {
+            if (currentUserId) return currentUserId;
+            try {
+                let id = localStorage.getItem('user_id');
+                if (!id) {
+                    id = 'user_' + Date.now() + '_' + Math.random().toString(36).substring(2,10);
+                    localStorage.setItem('user_id', id);
+                }
+                currentUserId = id;
+                return currentUserId;
+            } catch (e) {
+                // En cas d'erreur (storage bloqué), générer un id en session
+                currentUserId = 'user_session_' + Date.now();
+                return currentUserId;
+            }
+        }
         
         // Détection du mode développeur (localhost)
         function isDeveloperMode() {
@@ -2175,45 +2193,76 @@
         
       // Sauvegarder les suivis via PHP
 async function saveTrackingList() {
-    for(const t of trackingList){
-        await fetch(`save-tracking.php?action=save&id=${t.id}`, { // <-- changer update -> save
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body:JSON.stringify(t)
-        });
+    // Sauvegarde chaque suivi et vérifie la réponse; retourne true si toutes réussissent
+    for (const t of trackingList) {
+        try {
+            const resp = await fetch(`save-tracking.php?action=save&id=${encodeURIComponent(t.id)}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(t)
+            });
+
+            // Défensive parsing: certains environnements peuvent renvoyer body vide.
+            const text = await resp.text();
+            let json = null;
+            if (text && text.trim().length > 0) {
+                try {
+                    json = JSON.parse(text);
+                } catch (e) {
+                    console.error('saveTrackingList: réponse JSON invalide', text, e);
+                    return false;
+                }
+            } else {
+                // pas de corps : considérer comme succès si status 200/201
+                json = { success: resp.ok };
+            }
+
+            if (!json || !json.success) {
+                console.error('saveTrackingList: échec sauvegarde', json);
+                return false;
+            }
+
+        } catch (e) {
+            console.error('saveTrackingList: erreur réseau', e);
+            return false;
+        }
     }
+    return true;
 }
 
         
        async function addTracking(title, chapter, status, notes, season) {
     const id = 'tracking_' + Date.now() + '_' + Math.random(); // <-- générer un id unique
-    const response = await fetch('save-tracking.php?action=save', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({id, title, chapter, status, notes, season})
-    });
-    const result = await response.json();
-
-    if (result.success) {
-        // Ajouter localement pour mise à jour visuelle
-        const tracking = {
-            type: 'tracking',
-            id,
-            title,
-            chapter: parseInt(chapter) || 0,
-            status: status || 'en-cours',
-            notes: notes || '',
-            season: season || null,
-            date_added: new Date().toISOString(),
-            date_updated: new Date().toISOString()
-        };
-        trackingList.push(tracking);
-        updateTrackingPage();
-        return tracking;
-    } else {
-        showNotification(`Erreur : ${result.message}`, 'error');
-        return null;
-    }
+        try {
+            const response = await fetch('save-tracking.php?action=save', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id, title, chapter, status, notes, season})
+            });
+            const result = await response.json();
+            if (result.success) {
+                const tracking = {
+                    type: 'tracking',
+                    id,
+                    title,
+                    chapter: parseInt(chapter) || 0,
+                    status: status || 'en-cours',
+                    notes: notes || '',
+                    season: season || null,
+                    date_added: new Date().toISOString(),
+                    date_updated: new Date().toISOString()
+                };
+                trackingList.push(tracking);
+                updateTrackingPage();
+                return tracking;
+            }
+            showNotification(`Erreur : ${result.message || 'sauvegarde invalide'}`, 'error');
+            return null;
+        } catch (e) {
+            console.error('addTracking error', e);
+            showNotification('Erreur réseau lors de la création du suivi', 'error');
+            return null;
+        }
 }
 
         
@@ -2239,7 +2288,7 @@ async function saveTrackingList() {
      // Fonction qui supprime un suivi via PHP/MySQL
 async function deleteTracking(id) {
     try {
-        const response = await fetch(`save-tracking.php?action=delete&id=${id}`);
+        const response = await fetch(`save-tracking.php?action=delete&id=${encodeURIComponent(id)}`);
         const result = await response.json();
 
         if (result.success) {
@@ -2273,9 +2322,17 @@ window.deleteTrackingItem = async function(id) {
         async function incrementChapter(id) {
             const tracking = trackingList.find(t => t.id === id);
             if (tracking) {
+                const old = tracking.chapter;
                 tracking.chapter = (tracking.chapter || 0) + 1;
                 tracking.date_updated = new Date().toISOString();
-                await saveTrackingList();
+                const ok = await saveTrackingList();
+                if (!ok) {
+                    // revert
+                    tracking.chapter = old;
+                    tracking.date_updated = new Date().toISOString();
+                    showNotification('Erreur lors de la sauvegarde du suivi', 'error');
+                    return false;
+                }
                 return true;
             }
             return false;
@@ -2285,9 +2342,16 @@ window.deleteTrackingItem = async function(id) {
         async function decrementChapter(id) {
             const tracking = trackingList.find(t => t.id === id);
             if (tracking && tracking.chapter > 0) {
+                const old = tracking.chapter;
                 tracking.chapter = tracking.chapter - 1;
                 tracking.date_updated = new Date().toISOString();
-                await saveTrackingList();
+                const ok = await saveTrackingList();
+                if (!ok) {
+                    tracking.chapter = old;
+                    tracking.date_updated = new Date().toISOString();
+                    showNotification('Erreur lors de la sauvegarde du suivi', 'error');
+                    return false;
+                }
                 return true;
             }
             return false;
@@ -4038,20 +4102,74 @@ window.restoreFromTrash = async function(trashId) {
         let commentImagesSelected = [];
         
         function loadComments(manhwaId, chapterNumber) {
-            const commentKey = `comments_${manhwaId}_${chapterNumber}`;
-            const saved = localStorage.getItem(commentKey);
-            if (saved) {
-                currentChapterComments = JSON.parse(saved);
-            } else {
-                currentChapterComments = [];
-            }
-            updateCommentsDisplay();
+            // Charger depuis l'API si disponible, sinon fallback local
+            (async () => {
+                try {
+                    const resp = await fetch(`api-comments.php?manhwa_id=${encodeURIComponent(manhwaId)}&chapter_number=${encodeURIComponent(chapterNumber)}`);
+                    if (resp.ok) {
+                        const json = await resp.json();
+                        if (json.success) {
+                                // Normaliser les images (stockées en DB en tant que JSON string)
+                                currentChapterComments = Array.isArray(json.data) ? json.data.map(c => {
+                                    try {
+                                        if (c.images && typeof c.images === 'string') c.images = JSON.parse(c.images);
+                                    } catch (e) { c.images = []; }
+                                    if (!c.images) c.images = [];
+                                    return c;
+                                }) : [];
+                                updateCommentsDisplay();
+                                return;
+                            }
+                    }
+                } catch (e) {
+                    console.warn('Erreur chargement commentaires API', e);
+                }
+
+                // Fallback localStorage
+                const saved = localStorage.getItem(`comments_${manhwaId}_${chapterNumber}`);
+                if (saved) currentChapterComments = JSON.parse(saved);
+                else currentChapterComments = [];
+                updateCommentsDisplay();
+            })();
         }
         
         function saveComments(manhwaId, chapterNumber) {
-            const commentKey = `comments_${manhwaId}_${chapterNumber}`;
-            localStorage.setItem(commentKey, JSON.stringify(currentChapterComments));
-            // TODO: Synchroniser avec Drive
+            // Enregistrer via API: supprimer toutes les anciennes locales et ré-POST les commentaires
+            (async () => {
+                try {
+                    // Si l'API est disponible, envoyer chaque commentaire (création ou update)
+                    for (const c of currentChapterComments) {
+                        if (c.id && c.id.startsWith('comment_')) {
+                            // nouvel id probable: POST
+                            const payload = {
+                                id: c.id,
+                                manhwa_id: manhwaId,
+                                chapter_number: chapterNumber,
+                                author: c.author || 'Anonyme',
+                                text: c.text,
+                                images: c.images || [],
+                                date: c.date || new Date().toISOString()
+                            };
+                            await fetch('api-comments.php', {
+                                method: 'POST',
+                                headers: {'Content-Type':'application/json'},
+                                body: JSON.stringify(payload)
+                            });
+                        } else if (c.id) {
+                            // existing id: PUT
+                            await fetch('api-comments.php', {
+                                method: 'PUT',
+                                headers: {'Content-Type':'application/json'},
+                                body: JSON.stringify(c)
+                            });
+                        }
+                    }
+                } catch (e) {
+                    console.warn('saveComments API error', e);
+                    // Fallback: sauvegarde locale
+                    try { localStorage.setItem(`comments_${manhwaId}_${chapterNumber}`, JSON.stringify(currentChapterComments)); } catch (e) {}
+                }
+            })();
         }
         
         function updateCommentsDisplay() {
@@ -4162,32 +4280,76 @@ window.restoreFromTrash = async function(trashId) {
                 showNotification('Veuillez entrer un commentaire ou ajouter une image', 'error');
                 return;
             }
-            
             const comment = {
                 id: 'comment_' + Date.now() + '_' + Math.random(),
                 text: text,
                 images: [...commentImagesSelected],
-                author: 'Vous', // TODO: Récupérer depuis Drive
+                author: 'Vous',
                 date: new Date().toISOString()
             };
-            
-            currentChapterComments.push(comment);
-            saveComments(currentManhwaId, currentChapterNumber);
-            updateCommentsDisplay();
-            
-            // Réinitialiser
+
+            // Envoyer au serveur si possible
+            (async () => {
+                try {
+                    const resp = await fetch('api-comments.php', {
+                        method: 'POST',
+                        headers: {'Content-Type':'application/json'},
+                        body: JSON.stringify({
+                            id: comment.id,
+                            manhwa_id: currentManhwaId,
+                            chapter_number: currentChapterNumber,
+                            author: comment.author,
+                            text: comment.text,
+                            images: comment.images,
+                            date: comment.date
+                        })
+                    });
+                    const j = await resp.json();
+                    if (j.success) {
+                        // recharger
+                        await loadComments(currentManhwaId, currentChapterNumber);
+                        showNotification('Commentaire ajouté!', 'success');
+                    } else {
+                        // fallback local
+                        currentChapterComments.push(comment);
+                        saveComments(currentManhwaId, currentChapterNumber);
+                        updateCommentsDisplay();
+                        showNotification('Commentaire sauvegardé localement (erreur serveur)', 'warning');
+                    }
+                } catch (e) {
+                    currentChapterComments.push(comment);
+                    saveComments(currentManhwaId, currentChapterNumber);
+                    updateCommentsDisplay();
+                    showNotification('Commentaire sauvegardé localement (erreur réseau)', 'warning');
+                }
+            })();
+
+            // Réinitialiser l'UI immédiatement
             document.getElementById('comment-text').value = '';
             commentImagesSelected = [];
             document.getElementById('comment-images-preview').innerHTML = '';
-            
-            showNotification('Commentaire ajouté!', 'success');
         };
         
         window.deleteComment = function(commentId) {
-            currentChapterComments = currentChapterComments.filter(c => c.id !== commentId);
-            saveComments(currentManhwaId, currentChapterNumber);
-            updateCommentsDisplay();
-            showNotification('Commentaire supprimé', 'success');
+            (async () => {
+                try {
+                    const resp = await fetch('api-comments.php?id=' + encodeURIComponent(commentId), { method: 'DELETE' });
+                    const j = await resp.json();
+                    if (j.success) {
+                        await loadComments(currentManhwaId, currentChapterNumber);
+                        showNotification('Commentaire supprimé', 'success');
+                        return;
+                    }
+                } catch (e) {
+                    console.warn('deleteComment API error', e);
+                }
+
+                // Fallback local
+                currentChapterComments = currentChapterComments.filter(c => c.id !== commentId);
+                saveComments(currentManhwaId, currentChapterNumber);
+                updateCommentsDisplay();
+                showNotification('Commentaire supprimé localement', 'success');
+            })();
         };
         
         window.openEmojiPicker = function() {
@@ -4263,13 +4425,17 @@ window.restoreFromTrash = async function(trashId) {
             const [draggedItem] = allManhwas.splice(draggedIndex, 1);
             allManhwas.splice(targetIndex, 0, draggedItem);
             
-            // Mettre à jour l'ordre dans globalData seulement en mode développeur
+            // Mettre à jour l'ordre :
+            // - en mode développeur : sauvegarde globale (data.php)
+            // - en ligne (utilisateur) : sauvegarder l'ordre dans localStorage propre à l'utilisateur
             if (isDeveloperMode()) {
                 globalData = globalData.filter(item => 
                     !item.manhwa_id || item.chapter_number || item.type === 'tracking' || item.type === 'trash'
                 );
                 
-                allManhwas.forEach(manhwa => {
+                allManhwas.forEach((manhwa, idx) => {
+                    // annoter order_index pour les sauvegardes futures
+                    manhwa.order_index = idx;
                     const existing = globalData.find(item => item.__backendId === manhwa.__backendId);
                     if (existing) {
                         globalData.push(existing);
@@ -4278,6 +4444,15 @@ window.restoreFromTrash = async function(trashId) {
                 
                 // Sauvegarder
                 scheduleAutoSave(globalData);
+            } else {
+                // Mode en ligne : sauver l'ordre par utilisateur en localStorage (prêt pour envoi serveur si besoin)
+                const userId = getCurrentUserId();
+                const order = allManhwas.map((m, idx) => ({ id: m.manhwa_id || m.__backendId, order_index: idx }));
+                try {
+                    localStorage.setItem(`manhwa_order_${userId}`, JSON.stringify(order));
+                } catch (e) {
+                    console.warn('Impossible de sauvegarder l\'ordre utilisateur dans localStorage', e);
+                }
             }
             updateLibraryPage();
             showNotification('Ordre mis à jour', 'success');
@@ -4408,6 +4583,9 @@ window.restoreFromTrash = async function(trashId) {
         window.openAddChapterModal = openAddChapterModal;
         window.deleteManhwa = deleteManhwa;
         window.deleteChapter = deleteChapter;
+        window.readChapter = readChapter; // exposer readChapter pour les onclick inline
+        // Exposer la fonction de lecture (utilisée dans les onclick inline)
+        window.readChapter = readChapter;
 
         // Dialog de confirmation (sans alert!)
         function showConfirmDialog(title, message) {

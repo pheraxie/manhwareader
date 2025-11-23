@@ -33,6 +33,9 @@ switch ($method) {
                     'manhwa_cover' => $row['manhwa_cover'],
                     'manhwa_description' => $row['manhwa_description'],
                     'manhwa_season' => $row['manhwa_season'],
+                    'read_count' => isset($row['read_count']) ? (int)$row['read_count'] : 0,
+                    'order_index' => isset($row['order_index']) ? (int)$row['order_index'] : 0,
+                    'last_read_at' => $row['last_read_at'] ?? null,
                     'date_added' => $row['date_added'],
                     '__backendId' => $row['id']
                 ];
@@ -57,6 +60,8 @@ switch ($method) {
         $cover = $conn->real_escape_string($data['manhwa_cover'] ?? '');
         $description = $conn->real_escape_string($data['manhwa_description'] ?? '');
         $season = $conn->real_escape_string($data['manhwa_season'] ?? '');
+        $order_index = isset($data['order_index']) ? (int)$data['order_index'] : 0;
+        $read_count = isset($data['read_count']) ? (int)$data['read_count'] : 0;
         $date_added = date('Y-m-d H:i:s');
         
         $sql = "INSERT INTO manhwas (id, manhwa_id, manhwa_title, manhwa_cover, manhwa_description, manhwa_season, date_added) 
@@ -83,12 +88,17 @@ switch ($method) {
         $cover = $conn->real_escape_string($data['manhwa_cover'] ?? '');
         $description = $conn->real_escape_string($data['manhwa_description'] ?? '');
         $season = $conn->real_escape_string($data['manhwa_season'] ?? '');
+            // Récupérer les champs additionnels (défaut 0)
+            $order_index = isset($data['order_index']) ? (int)$data['order_index'] : 0;
+            $read_count = isset($data['read_count']) ? (int)$data['read_count'] : 0;
         
-        $sql = "UPDATE manhwas SET 
+            $sql = "UPDATE manhwas SET 
                 manhwa_title = '$title',
                 manhwa_cover = '$cover',
                 manhwa_description = '$description',
-                manhwa_season = '$season'
+                manhwa_season = '$season',
+                order_index = $order_index,
+                read_count = $read_count
                 WHERE id = '$id'";
         
         if ($conn->query($sql)) {

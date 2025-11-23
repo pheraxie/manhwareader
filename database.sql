@@ -13,6 +13,11 @@ CREATE TABLE IF NOT EXISTS manhwas (
     manhwa_cover TEXT,
     manhwa_description TEXT,
     manhwa_season VARCHAR(100),
+    -- Nombre de fois lu (pour trier les manhwas les plus lus)
+    read_count INT DEFAULT 0,
+    -- Ordre personnalisé dans la bibliothèque (drag & drop)
+    order_index INT DEFAULT 0,
+    last_read_at DATETIME DEFAULT NULL,
     date_added DATETIME NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -30,6 +35,8 @@ CREATE TABLE IF NOT EXISTS chapters (
     chapter_season VARCHAR(100),
     chapter_pages TEXT,
     chapter_cover TEXT,
+    -- Dernière lecture du chapitre
+    last_read_at DATETIME DEFAULT NULL,
     is_favorite BOOLEAN DEFAULT FALSE,
     date_added DATETIME NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -50,11 +57,16 @@ CREATE TABLE IF NOT EXISTS tracking (
     status ENUM('en-cours', 'fini', 'en-pause') DEFAULT 'en-cours',
     notes TEXT,
     season VARCHAR(100),
+    -- Ordre personnalisé pour les suivis
+    order_index INT DEFAULT 0,
+    -- Identifier le propriétaire du suivi (pour mode en ligne multi-utilisateurs)
+    user_id VARCHAR(255) DEFAULT NULL,
     date_added DATETIME NOT NULL,
     date_updated DATETIME NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_status (status),
+    INDEX idx_user_id (user_id),
     INDEX idx_date_added (date_added)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -67,5 +79,21 @@ CREATE TABLE IF NOT EXISTS trash (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_trash_type (trash_type),
     INDEX idx_deleted_at (deleted_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Table pour les commentaires (stockés en base au lieu de localStorage)
+CREATE TABLE IF NOT EXISTS comments (
+    id VARCHAR(255) PRIMARY KEY,
+    manhwa_id VARCHAR(255) NOT NULL,
+    chapter_number INT DEFAULT NULL,
+    user_id VARCHAR(255) DEFAULT NULL,
+    author VARCHAR(255) DEFAULT 'Anonyme',
+    text TEXT NOT NULL,
+    images TEXT DEFAULT NULL,
+    date DATETIME NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_manhwa_chapter (manhwa_id, chapter_number),
+    INDEX idx_comments_user (user_id),
+    INDEX idx_date (date)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
