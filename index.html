@@ -737,6 +737,19 @@
       <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
       </svg></button>
     </div><!-- Statistiques -->
+    <!-- Reader options -->
+    <div class="mt-6 mb-6 p-4 bg-gray-50 rounded-lg">
+     <h3 class="font-semibold mb-3 text-sm text-gray-500 uppercase">Lecteur</h3>
+     <div class="flex items-center justify-between">
+      <div>
+       <p class="text-sm font-medium">Afficher boutons Zoom</p>
+       <p class="text-xs text-gray-500">Affiche des boutons Zoom In / Zoom Out dans le lecteur</p>
+      </div>
+      <div>
+       <input type="checkbox" id="reader-zoom-buttons-toggle" class="h-4 w-4">
+      </div>
+     </div>
+    </div>
     <div class="mt-8 p-4 bg-gray-50 rounded-lg">
      <h3 class="font-semibold mb-3 text-sm text-gray-500 uppercase">Statistiques</h3>
      <div class="space-y-2">
@@ -851,6 +864,97 @@
         const closeChapterModal = document.getElementById('close-chapter-modal');
         const addChapterForm = document.getElementById('add-chapter-form');
         const navItems = document.querySelectorAll('.nav-item');
+
+        // Reader zoom state
+        let readerGlobalScale = 1;
+
+        function isZoomButtonsEnabled() {
+            try { return localStorage.getItem('reader_show_zoom_buttons') === 'true'; } catch (e) { return false; }
+        }
+
+        function setZoomButtonsEnabled(v) {
+            try { localStorage.setItem('reader_show_zoom_buttons', v ? 'true' : 'false'); } catch (e) {}
+        }
+
+        function createReaderZoomControls() {
+            // remove existing controls
+            const existing = document.querySelector('.reader-zoom-controls');
+            if (existing) existing.remove();
+
+            if (!isZoomButtonsEnabled()) return;
+
+            const container = document.createElement('div');
+            container.className = 'reader-zoom-controls';
+            container.style.position = 'fixed';
+            // Place controls bottom-left so they don't cover the settings panel on the right
+            container.style.left = '20px';
+            container.style.bottom = '70px';
+            container.style.zIndex = '9999';
+            container.style.display = 'flex';
+            container.style.flexDirection = 'column';
+            container.style.gap = '6px';
+
+            const btnStyles = 'width:44px;height:44px;font-size:18px;border-radius:6px;border:1px solid rgba(0,0,0,0.1);background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);cursor:pointer';
+
+            const btnZoomIn = document.createElement('button');
+            btnZoomIn.innerHTML = '+';
+            btnZoomIn.title = 'Zoom In';
+            btnZoomIn.style.cssText = btnStyles;
+            btnZoomIn.addEventListener('click', () => {
+                readerGlobalScale = Math.min(3, Math.round((readerGlobalScale + 0.1) * 10) / 10);
+                applyReaderScale();
+            });
+
+            const btnZoomOut = document.createElement('button');
+            btnZoomOut.innerHTML = '−';
+            btnZoomOut.title = 'Zoom Out';
+            btnZoomOut.style.cssText = btnStyles;
+            btnZoomOut.addEventListener('click', () => {
+                readerGlobalScale = Math.max(0.2, Math.round((readerGlobalScale - 0.1) * 10) / 10);
+                applyReaderScale();
+            });
+
+            const btnReset = document.createElement('button');
+            btnReset.innerHTML = '⟲';
+            btnReset.title = 'Reset Zoom';
+            btnReset.style.cssText = btnStyles;
+            btnReset.addEventListener('click', () => {
+                readerGlobalScale = 1;
+                applyReaderScale();
+            });
+
+            container.appendChild(btnZoomIn);
+            container.appendChild(btnZoomOut);
+            container.appendChild(btnReset);
+
+            document.body.appendChild(container);
+        }
+
+        // Appliquer l'échelle globale du lecteur à toutes les images affichées
+        function applyReaderScale() {
+            try {
+                const readerContent = document.getElementById('reader-content');
+                if (!readerContent) return;
+                const imgs = readerContent.querySelectorAll('.reader-image-wrapper img');
+                imgs.forEach(img => {
+                    // Apply zoom by changing max-width so the layout reflows and images stay contiguous
+                    try {
+                        const wrapper = img.closest('.reader-image-wrapper');
+                        const base = parseFloat(wrapper?.dataset?.baseWidth) || 450;
+                        const newMax = Math.max(20, Math.round(base * readerGlobalScale));
+                        img.style.maxWidth = newMax + 'px';
+                        img.dataset.scale = String(readerGlobalScale);
+                    } catch (ee) {
+                        // Fallback: apply max-width directly
+                        img.style.maxWidth = (450 * readerGlobalScale) + 'px';
+                    }
+                });
+                // Update progress/visuals if necessary
+                updateProgress();
+            } catch (e) {
+                console.warn('applyReaderScale error', e);
+            }
+        }
 
         // Variable globale pour stocker les données
         let globalData = [];
@@ -1394,6 +1498,17 @@
                             // Afficher le détail si les données sont chargées
                             try { showManhwaDetail(currentManhwaId); } catch (e) { console.warn('Impossible d\'afficher manhwa detail au chargement', e); }
                         }
+                    } else if (savedPage === 'reader') {
+                        // Restaurer le lecteur si l'utilisateur était en train de lire
+                        const savedManhwaId = localStorage.getItem('currentManhwaId');
+                        const savedChapterNumber = localStorage.getItem('currentChapterNumber');
+                        if (savedManhwaId && savedChapterNumber) {
+                            try {
+                                await readChapter(savedManhwaId, parseInt(savedChapterNumber, 10));
+                            } catch (e) {
+                                console.warn('Impossible de restaurer le lecteur au chargement', e);
+                            }
+                        }
                     }
                 } else {
                     // Si la page n'existe pas, montrer home
@@ -1466,6 +1581,21 @@
 
         // Appeler loadSavedTheme() au démarrage
         loadSavedTheme();
+
+        // Initialise le toggle Zoom boutons dans les paramètres
+        (function initReaderZoomToggle() {
+            const toggle = document.getElementById('reader-zoom-buttons-toggle');
+            if (!toggle) return;
+            // Set initial state
+            toggle.checked = isZoomButtonsEnabled();
+            toggle.addEventListener('change', (e) => {
+                setZoomButtonsEnabled(e.target.checked);
+                // Update controls immediately if on reader page
+                if (document.getElementById('reader-page') && !document.getElementById('reader-page').classList.contains('hidden')) {
+                    createReaderZoomControls();
+                }
+            });
+        })();
 
         // Gestion du menu sidebar
         menuBtn.addEventListener('click', () => {
@@ -3049,19 +3179,38 @@ window.restoreFromTrash = async function(trashId) {
     if (!confirmed) return;
 
     try {
-        const response = await fetch(`save-tracking.php?action=delete_permanent&id=${trashId}`);
-        const result = await response.json();
-        if (result.success) {
+        // Use save-data.php POST delete_permanent for consistent behavior
+        const resp = await fetch('save-data.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'delete_permanent', id: trashId })
+        });
+
+        const text = await resp.text();
+        let result = null;
+        if (text && text.trim().length > 0) {
+            try { result = JSON.parse(text); } catch (e) { result = { success: resp.ok, message: text }; }
+        } else {
+            result = { success: resp.ok };
+        }
+
+        if (result && result.success) {
             showNotification('Élément supprimé définitivement', 'success');
 
             // Retirer localement pour mettre à jour l'affichage
             globalData = globalData.filter(item => item.id !== trashId);
 
+            // Persist local change depending on mode
+            if (isDeveloperMode()) {
+                scheduleAutoSave(globalData);
+            } else {
+                await saveDataToFileAuto(globalData);
+            }
+
             // Mettre à jour l'affichage
             updateAllPages();
-
         } else {
-            showNotification(`Erreur : ${result.message}`, 'error');
+            showNotification(`Erreur : ${result && result.message ? result.message : 'suppression échouée'}`, 'error');
         }
     } catch (err) {
         console.error(err);
@@ -3721,8 +3870,16 @@ window.restoreFromTrash = async function(trashId) {
 
         // Lire un chapitre
         async function readChapter(manhwaId, chapterNumber) {
+            // Ensure data is loaded (allChapters) before attempting to find chapter
+            await ensureDataLoaded();
+
             currentManhwaId = manhwaId;
             currentChapterNumber = chapterNumber;
+            // Sauvegarder pour restauration après reload
+            try {
+                localStorage.setItem('currentManhwaId', manhwaId);
+                localStorage.setItem('currentChapterNumber', String(chapterNumber));
+            } catch (e) { /* ignore */ }
 
             const chapter = allChapters.find(ch => 
                 ch.manhwa_id === manhwaId && ch.chapter_number === chapterNumber
@@ -3780,17 +3937,45 @@ window.restoreFromTrash = async function(trashId) {
                             readerContent.innerHTML = '';
                             // Insérer chaque image en ordre (top -> bottom)
                             for (const img of j.images) {
+                                // Wrapper to center the image and control max width
+                                const wrapper = document.createElement('div');
+                                wrapper.className = 'reader-image-wrapper';
+                                wrapper.style.display = 'flex';
+                                wrapper.style.justifyContent = 'center';
+                                wrapper.style.alignItems = 'center';
+                                wrapper.style.margin = '0';
+                                wrapper.style.padding = '0';
+                                wrapper.style.width = '100%';
+                                wrapper.style.overflow = 'hidden';
+
                                 const el = document.createElement('img');
                                 el.src = img.url;
                                 el.alt = img.name || '';
                                 el.loading = 'lazy';
-                                el.style.width = '100%';
                                 el.style.display = 'block';
-                                el.style.marginBottom = '12px';
+                                el.style.margin = '0 auto';
+                                el.style.padding = '0';
+                                // Default max width is taken from wrapper.dataset.baseWidth (smaller by default)
+                                el.style.maxWidth = (wrapper.dataset.baseWidth || '450') + 'px';
+                                el.style.width = '100%';
+                                el.style.height = 'auto';
                                 el.style.objectFit = 'contain';
-                                // Préserver ratio en largeur pleine
-                                readerContent.appendChild(el);
+                                el.style.transformOrigin = 'center center';
+                                // Use max-width transition so layout reflows and pages remain contiguous
+                                el.style.transition = 'max-width 120ms ease';
+                                el.dataset.scale = '1';
+
+                                // No wheel/double-click zoom: zoom controlled via buttons in settings.
+                                // Initialize base width on wrapper for default image size (smaller default)
+                                wrapper.dataset.baseWidth = wrapper.dataset.baseWidth || '450';
+                                el.style.maxWidth = (wrapper.dataset.baseWidth || '450') + 'px';
+
+                                wrapper.appendChild(el);
+                                readerContent.appendChild(wrapper);
                             }
+                            // Once images are rendered, ensure zoom controls exist and current scale applied
+                            createReaderZoomControls();
+                            applyReaderScale();
                             // Mettre à jour la progression après un court délai
                             setTimeout(updateProgress, 200);
                             return;
@@ -4467,6 +4652,25 @@ window.restoreFromTrash = async function(trashId) {
 
             const progress = (loadedImages / images.length) * 100;
             document.getElementById('reading-progress').style.width = progress + '%';
+        }
+
+        // Attendre que les données soient chargées (allChapters) - utile au démarrage
+        function ensureDataLoaded(timeoutMs = 2000) {
+            return new Promise((resolve) => {
+                const start = Date.now();
+                (function waitForData() {
+                    if (Array.isArray(allChapters) && allChapters.length >= 0) {
+                        // Consider loaded when SDK init finished (we rely on init to populate arrays)
+                        resolve(true);
+                        return;
+                    }
+                    if (Date.now() - start > timeoutMs) {
+                        resolve(false);
+                        return;
+                    }
+                    setTimeout(waitForData, 100);
+                })();
+            });
         }
 
         // Supprimer un chapitre

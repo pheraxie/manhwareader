@@ -71,6 +71,29 @@ try {
         // ...existing DB handling code (left intact) ...
     } elseif ($action === 'delete') {
         // ...existing DB handling code (left intact) ...
+    } elseif ($action === 'delete_permanent') {
+        // Supprimer un élément définitivement de la corbeille
+        // Expected payload: { action: 'delete_permanent', id: 'trash_xxx' }
+        $trashId = null;
+        if (isset($data['id'])) $trashId = $data['id'];
+        elseif (is_array($item) && isset($item['id'])) $trashId = $item['id'];
+
+        if (!$trashId) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'ID manquant pour delete_permanent']);
+            exit;
+        }
+
+        $trashIdEsc = $conn->real_escape_string($trashId);
+        $res = $conn->query("DELETE FROM trash WHERE id='" . $trashIdEsc . "'");
+        if ($res) {
+            echo json_encode(['success' => true, 'message' => 'Élément supprimé définitivement']);
+            exit;
+        } else {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Impossible de supprimer l\'élément']);
+            exit;
+        }
     } elseif ($action === 'restore') {
         // Restore an item from the trash table back into the appropriate DB table
         // Expected payload: { action: 'restore', item: { id: 'trash_xxx', trash_type: 'tracking'|'manhwa'|'chapter' } }
