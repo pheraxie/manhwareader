@@ -588,8 +588,17 @@
       <div id="chapter-cover-add-preview" class="mt-2 hidden"><img id="chapter-cover-add-preview-img" class="w-32 h-40 object-cover rounded-lg shadow-md" alt="Aperçu">
       </div>
      </div>
-     <div class="mb-6"><label for="mhtml-path" class="block text-sm font-medium mb-2">📄 Chemin du fichier MHTML</label> <input type="text" id="mhtml-path" class="input-field w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600" placeholder="chapitres/qqq/6.mhtml" required>
-      <p class="text-xs text-gray-500 mt-1">💡 Colle juste: chapitres/ton-dossier/fichier.mhtml</p>
+         <div class="mb-6">
+             <label for="chapter-folder-select" class="block text-sm font-medium mb-2">📁 Dossier du chapitre (choisir dans `chapitres/`)</label>
+             <select id="chapter-folder-select" class="input-field w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600">
+                 <option value="">-- Choisir manhwa / chapitre --</option>
+             </select>
+             <p class="text-xs text-gray-500 mt-1">💡 Sélectionnez le dossier du manhwa puis le sous-dossier du numéro de chapitre (ex: <code>passion/1</code>)</p>
+             <div id="mhtml-legacy-container" class="mt-3">
+                 <label for="mhtml-path" class="block text-sm font-medium mb-2">(Optionnel) Chemin du fichier MHTML</label>
+                 <input type="text" id="mhtml-path" class="input-field w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600" placeholder="chapitres/qqq/6.mhtml">
+                 <p class="text-xs text-gray-500 mt-1">💡 Si vous utilisez encore un fichier MHTML, collez le chemin. Sinon laissez vide.</p>
+             </div>
       <div id="mhtml-status" class="hidden mt-4">
        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <div class="flex items-center">
@@ -1744,6 +1753,33 @@
             }, 1000);
         });
 
+            // Charger la liste des dossiers / chapitres depuis le serveur
+            async function loadChapterFolders() {
+                try {
+                    const resp = await fetch('api-chapters-folders.php?t=' + Date.now());
+                    if (!resp.ok) return;
+                    const json = await resp.json();
+                    if (!json.success) return;
+                    const select = document.getElementById('chapter-folder-select');
+                    // Clear except first
+                    select.innerHTML = '<option value="">-- Choisir manhwa / chapitre --</option>';
+                    json.data.forEach(m => {
+                        if (!Array.isArray(m.chapters) || m.chapters.length === 0) return;
+                        const optgroup = document.createElement('optgroup');
+                        optgroup.label = m.name;
+                        m.chapters.forEach(ch => {
+                            const opt = document.createElement('option');
+                            opt.value = `chapitres/${m.name}/${ch}`;
+                            opt.text = `${m.name} / ${ch}`;
+                            optgroup.appendChild(opt);
+                        });
+                        select.appendChild(optgroup);
+                    });
+                } catch (e) {
+                    console.warn('Impossible de charger la liste des dossiers de chapitres', e);
+                }
+            }
+
 
 
 
@@ -1805,51 +1841,44 @@
             }
 
             // Récupérer le chemin MHTML entré par l'utilisateur
-            let mhtmlPath = document.getElementById('mhtml-path').value.trim();
-            if (!mhtmlPath) {
-                showNotification('Veuillez entrer le chemin du fichier MHTML', 'error');
-                submitText.classList.remove('hidden');
-                loading.classList.add('hidden');
-                submitBtn.disabled = false;
-                return;
-            }
-
-            // Nettoyer le chemin pour le stockage
-            mhtmlPath = mhtmlPath.replace(/\\/g, '/');
-            if (mhtmlPath.includes('Site/')) {
-                mhtmlPath = mhtmlPath.split('Site/')[1];
-            }
-            if (mhtmlPath.includes('chapitres/') && !mhtmlPath.startsWith('chapitres/')) {
-                mhtmlPath = mhtmlPath.substring(mhtmlPath.indexOf('chapitres/'));
-            }
-            if (!mhtmlPath.startsWith('./') && !mhtmlPath.startsWith('/') && !mhtmlPath.startsWith('http')) {
-                mhtmlPath = './' + mhtmlPath;
-            }
-
-            // Vérifier rapidement que le fichier existe (sans extraire les images)
-            try {
-                const testPath = mhtmlPath.startsWith('./') ? mhtmlPath : './' + mhtmlPath;
-                const response = await fetch(testPath, { method: 'HEAD' });
-                if (!response.ok) {
-                    throw new Error(`Fichier non trouvé: ${testPath}`);
+            // Priorité: dossier sélectionné via select
+            const folderSelect = document.getElementById('chapter-folder-select');
+            let chapterPages = '';
+            if (folderSelect && folderSelect.value) {
+                // Normaliser
+                chapterPages = folderSelect.value.replace(/\\/g, '/');
+                if (!chapterPages.startsWith('./') && !chapterPages.startsWith('/')) chapterPages = './' + chapterPages;
+            } else {
+                // Fallback: champ MHTML (optionnel)
+                let mhtmlPath = document.getElementById('mhtml-path').value.trim();
+                if (mhtmlPath) {
+                    mhtmlPath = mhtmlPath.replace(/\\/g, '/');
+                    if (mhtmlPath.includes('Site/')) mhtmlPath = mhtmlPath.split('Site/')[1];
+                    if (mhtmlPath.includes('chapitres/') && !mhtmlPath.startsWith('chapitres/')) {
+                        mhtmlPath = mhtmlPath.substring(mhtmlPath.indexOf('chapitres/'));
+                    }
+                    if (!mhtmlPath.startsWith('./') && !mhtmlPath.startsWith('/') && !mhtmlPath.startsWith('http')) mhtmlPath = './' + mhtmlPath;
+                    chapterPages = mhtmlPath;
                 }
-            } catch (error) {
-                showNotification(`Fichier MHTML non trouvé: ${mhtmlPath}`, 'error');
+            }
+
+            if (!chapterPages) {
+                showNotification('Veuillez sélectionner un dossier de chapitre ou coller un fichier MHTML', 'error');
                 submitText.classList.remove('hidden');
                 loading.classList.add('hidden');
                 submitBtn.disabled = false;
                 return;
             }
-            
-            // Stocker seulement le chemin du fichier MHTML (pas les images)
+
+            // Stocker le chemin (dossier ou fichier) dans la base
             const result = await window.dataSdk.create({
                 manhwa_id: currentManhwaId,
                 chapter_number: chapterNumber,
                 chapter_title: chapterTitle,
                 chapter_description: chapterDescription,
                 chapter_season: chapterSeason || null,
-                chapter_pages: mhtmlPath, // Stocker le chemin au lieu des images
-                chapter_cover: chapterCover, // null = utiliser l'image de couverture du manhwa par défaut
+                chapter_pages: chapterPages,
+                chapter_cover: chapterCover,
                 date_added: new Date().toISOString()
             });
 
@@ -3673,13 +3702,15 @@ window.restoreFromTrash = async function(trashId) {
         }
 
         // Ouvrir le modal d'ajout de chapitre
-        function openAddChapterModal() {
+        async function openAddChapterModal() {
             // Vérifier le mode développeur
             if (!isDeveloperMode()) {
                 showDeveloperModeRequired();
                 return;
             }
             
+            // Charger les dossiers disponibles avant d'afficher
+            await loadChapterFolders();
             addChapterModal.classList.remove('hidden');
         }
 
@@ -3724,8 +3755,8 @@ window.restoreFromTrash = async function(trashId) {
             // Charger les commentaires
             loadComments(manhwaId, chapterNumber);
 
-            // Le chapter_pages contient maintenant le chemin du fichier MHTML
-            const mhtmlPath = chapter.chapter_pages.trim();
+            // Le chapter_pages contient maintenant le chemin du fichier (MHTML ou dossier dans /chapitres)
+            const mhtmlPath = (chapter.chapter_pages || '').trim();
             
             // Nettoyer le chemin
             let cleanPath = mhtmlPath.replace(/\\/g, '/');
@@ -3739,17 +3770,49 @@ window.restoreFromTrash = async function(trashId) {
                 cleanPath = './' + cleanPath;
             }
             
-            // Charger le fichier MHTML et extraire le contenu HTML pour l'afficher
+            // Si le chemin pointe vers un dossier dans chapitres/, appeler l'API qui listera les images
+            if (cleanPath.includes('chapitres/') && !cleanPath.toLowerCase().endsWith('.mhtml')) {
+                try {
+                    const resp = await fetch('api-chapter-images.php?path=' + encodeURIComponent(cleanPath));
+                    if (resp.ok) {
+                        const j = await resp.json();
+                        if (j.success && Array.isArray(j.images) && j.images.length > 0) {
+                            readerContent.innerHTML = '';
+                            // Insérer chaque image en ordre (top -> bottom)
+                            for (const img of j.images) {
+                                const el = document.createElement('img');
+                                el.src = img.url;
+                                el.alt = img.name || '';
+                                el.loading = 'lazy';
+                                el.style.width = '100%';
+                                el.style.display = 'block';
+                                el.style.marginBottom = '12px';
+                                el.style.objectFit = 'contain';
+                                // Préserver ratio en largeur pleine
+                                readerContent.appendChild(el);
+                            }
+                            // Mettre à jour la progression après un court délai
+                            setTimeout(updateProgress, 200);
+                            return;
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Erreur chargement dossier de chapitres via API', e);
+                }
+                // Si échec, on retombera sur le comportement MHTML ci-dessous
+            }
+
+            // Charger le fichier MHTML et extraire le contenu HTML pour l'afficher (fallback)
             try {
                 const response = await fetch(cleanPath);
                 if (!response.ok) {
                     throw new Error(`Fichier non trouvé: ${cleanPath}`);
                 }
-                
+
                 const text = await response.text();
                 
                 // Trouver le boundary
-                const boundaryMatch = text.match(/boundary="?([^"\r\n]+)"?/i);
+                const boundaryMatch = text.match(/boundary=?([^\"\r\n]+)/i);
                 let boundary = '------MultipartBoundary';
                 if (boundaryMatch) {
                     boundary = boundaryMatch[1].trim();
@@ -3757,28 +3820,24 @@ window.restoreFromTrash = async function(trashId) {
                         boundary = '----' + boundary;
                     }
                 }
-                
+
                 // Parser le MHTML pour trouver la partie HTML principale
-                const parts = text.split(new RegExp(boundary.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+                const parts = text.split(new RegExp(boundary.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')));
                 let htmlContent = '';
-                
+
                 for (const part of parts) {
-                    // Chercher la partie avec Content-Type: text/html
                     if (part.includes('Content-Type: text/html') || part.includes('content-type: text/html')) {
-                        // Trouver la fin des headers (double saut de ligne)
                         const headerEndMatch = part.match(/\r?\n\r?\n/);
                         if (headerEndMatch) {
                             const headerEndIndex = headerEndMatch.index + headerEndMatch[0].length;
                             htmlContent = part.substring(headerEndIndex);
-                            // Nettoyer le HTML (enlever les boundaries restants)
                             htmlContent = htmlContent.split(boundary)[0].trim();
                             break;
                         }
                     }
                 }
-                
+
                 if (htmlContent) {
-                    // Créer un iframe sandbox pour afficher le HTML
                     const iframe = document.createElement('iframe');
                     iframe.style.cssText = 'width: 100%; min-height: 100vh; border: none; background: white;';
                     iframe.sandbox = 'allow-same-origin allow-scripts';
@@ -3786,11 +3845,10 @@ window.restoreFromTrash = async function(trashId) {
                         updateProgress();
                         console.log('MHTML HTML chargé avec succès');
                     };
-                    
-                    // Écrire le HTML dans l'iframe
+
                     readerContent.innerHTML = '';
                     readerContent.appendChild(iframe);
-                    
+
                     const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
                     iframeDoc.open();
                     iframeDoc.write(htmlContent);
@@ -3798,7 +3856,7 @@ window.restoreFromTrash = async function(trashId) {
                 } else {
                     throw new Error('Aucun contenu HTML trouvé dans le fichier MHTML');
                 }
-                
+
             } catch (error) {
                 console.error('Erreur lors du chargement du MHTML:', error);
                 readerContent.innerHTML = `

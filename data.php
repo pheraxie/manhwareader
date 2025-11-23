@@ -5,12 +5,12 @@ echo '[
         "type": "tracking",
         "id": "tracking_1763899760918_0.20491773173439431",
         "title": "eee",
-        "chapter": 554,
+        "chapter": 552,
         "status": "en-cours",
         "notes": "",
         "season": "8",
         "date_added": "2025-11-23 15:09:21",
-        "date_updated": "2025-11-23 15:12:11"
+        "date_updated": "2025-11-23T14:15:18.927Z"
     },
     {
         "type": "tracking",
@@ -51,5 +51,23 @@ echo '[
             "updated_at": "2025-11-23 10:15:41"
         },
         "deleted_at": "2025-11-23 11:28:10"
+    },
+    {
+        "type": "trash",
+        "trash_type": "manhwa",
+        "original_data": {
+            "manhwa_id": "manhwa_1763889340683",
+            "manhwa_title": "passionol",
+            "manhwa_cover": ".\\/Image\\/passion.jpg",
+            "manhwa_description": "ll",
+            "manhwa_season": "2",
+            "read_count": 0,
+            "order_index": 2,
+            "last_read_at": null,
+            "date_added": "2025-11-23 10:15:40",
+            "__backendId": "local_1763889340_1900519909"
+        },
+        "deleted_at": "2025-11-23T15:39:17.855Z",
+        "id": "trash_1763912357856_0.2081229921264921"
     }
 ]';
