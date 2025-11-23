@@ -54,15 +54,38 @@ if ($method === 'POST') {
 
 // DELETE
 if ($method === 'DELETE') {
-    parse_str(file_get_contents('php://input'), $input);
-    $id = isset($input['id']) ? $conn->real_escape_string($input['id']) : null;
-    if (!$id) {
-        echo json_encode(['success'=>false,'message'=>'id manquant']);
+    // Support id via query string or request body; also support bulk delete by manhwa_id and optional chapter_number
+    $id = null;
+    if (isset($_GET['id'])) {
+        $id = $conn->real_escape_string($_GET['id']);
+    } else {
+        // Try parsing body (some clients send query-like body)
+        parse_str(file_get_contents('php://input'), $input);
+        if (isset($input['id'])) $id = $conn->real_escape_string($input['id']);
+    }
+
+    // Bulk delete by manhwa_id (+ chapter_number)
+    if (!$id && isset($_GET['manhwa_id'])) {
+        $manhwa_id = $conn->real_escape_string($_GET['manhwa_id']);
+        if (isset($_GET['chapter_number']) && $_GET['chapter_number'] !== '') {
+            $chapter = (int)$_GET['chapter_number'];
+            $res = $conn->query("DELETE FROM comments WHERE manhwa_id='".$manhwa_id."' AND chapter_number=".$chapter);
+        } else {
+            $res = $conn->query("DELETE FROM comments WHERE manhwa_id='".$manhwa_id."'");
+        }
+        if ($res) echo json_encode(['success'=>true]);
+        else echo json_encode(['success'=>false,'message'=>'Erreur suppression commentaires']);
         exit;
     }
-    $res = $conn->query("DELETE FROM comments WHERE id='".$id."'");
-    if ($res) echo json_encode(['success'=>true]);
-    else echo json_encode(['success'=>false,'message'=>'Erreur suppression']);
+
+    if ($id) {
+        $res = $conn->query("DELETE FROM comments WHERE id='".$id."'");
+        if ($res) echo json_encode(['success'=>true]);
+        else echo json_encode(['success'=>false,'message'=>'Erreur suppression']);
+        exit;
+    }
+
+    echo json_encode(['success'=>false,'message'=>'id ou manhwa_id requis']);
     exit;
 }
 
