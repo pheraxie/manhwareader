@@ -2,42 +2,6 @@
 header('Content-Type: application/json');
 echo '[
     {
-        "manhwa_id": "manhwa_1763894842685",
-        "manhwa_title": "passion",
-        "manhwa_cover": ".\\/Image\\/passion.jpg",
-        "manhwa_description": "aa",
-        "manhwa_season": "2",
-        "read_count": 0,
-        "order_index": 0,
-        "last_read_at": null,
-        "date_added": "2025-11-23 11:47:22",
-        "__backendId": "local_1763894842_689129371"
-    },
-    {
-        "manhwa_id": "manhwa_1763889340683",
-        "manhwa_title": "passion",
-        "manhwa_cover": ".\\/Image\\/passion.jpg",
-        "manhwa_description": "ll",
-        "manhwa_season": "2",
-        "read_count": 0,
-        "order_index": 0,
-        "last_read_at": null,
-        "date_added": "2025-11-23 10:15:40",
-        "__backendId": "local_1763889340_1900519909"
-    },
-    {
-        "manhwa_id": "manhwa_1763837978756",
-        "manhwa_title": "depp in love",
-        "manhwa_cover": ".\\/Image\\/deep.jpg",
-        "manhwa_description": "ee",
-        "manhwa_season": "",
-        "read_count": 0,
-        "order_index": 0,
-        "last_read_at": null,
-        "date_added": "2025-11-22 19:59:38",
-        "__backendId": "local_1763837978_312613870"
-    },
-    {
         "manhwa_id": "manhwa_1763889340683",
         "chapter_number": 2,
         "chapter_title": "ff",
@@ -91,6 +55,17 @@ echo '[
     },
     {
         "type": "tracking",
+        "id": "tracking_1763820022752_0.9138906397103436",
+        "title": "éé",
+        "chapter": 2,
+        "status": "en-cours",
+        "notes": "é",
+        "season": "2",
+        "date_added": "2025-11-23 00:49:02",
+        "date_updated": "2025-11-22 14:00:22"
+    },
+    {
+        "type": "tracking",
         "id": "tracking_1763820140548_0.455812163293721",
         "title": "eee",
         "chapter": 555,
@@ -99,26 +74,6 @@ echo '[
         "season": "8",
         "date_added": "2025-11-22 14:02:20",
         "date_updated": "2025-11-23 13:52:07"
-    },
-    {
-        "type": "trash",
-        "id": "trash_1763895100_1431743878",
-        "trash_type": "tracking",
-        "original_data": {
-            "id": "tracking_1763848039579_0.8509093854406115",
-            "title": "qkj",
-            "chapter": "4",
-            "status": "en-cours",
-            "notes": "",
-            "season": "5",
-            "date_added": "2025-11-23 10:15:41",
-            "date_updated": "2025-11-23 13:50:38",
-            "created_at": "2025-11-23 13:23:42",
-            "updated_at": "2025-11-23 13:50:38",
-            "order_index": "0",
-            "user_id": null
-        },
-        "deleted_at": "2025-11-23 13:51:40"
     },
     {
         "type": "trash",
