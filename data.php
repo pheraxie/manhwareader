@@ -2,6 +2,19 @@
 header('Content-Type: application/json');
 echo '[
     {
+        "manhwa_id": "manhwa_1763837978756",
+        "chapter_number": 9,
+        "chapter_title": "ff",
+        "chapter_description": "llll",
+        "chapter_season": "2",
+        "last_read_at": null,
+        "chapter_pages": ".\\/chapitres\\/qqq\\/6.mhtml",
+        "chapter_cover": ".\\/image\\/passion.jpg",
+        "is_favorite": false,
+        "date_added": "2025-11-23 12:05:17",
+        "__backendId": "local_1763895917_732495940"
+    },
+    {
         "manhwa_id": "manhwa_1763889340683",
         "chapter_number": 2,
         "chapter_title": "ff",
@@ -10,7 +23,7 @@ echo '[
         "last_read_at": null,
         "chapter_pages": ".\\/chapitres\\/qqq\\/6.mhtml",
         "chapter_cover": "",
-        "is_favorite": false,
+        "is_favorite": true,
         "date_added": "2025-11-23 11:47:42",
         "__backendId": "local_1763894862_35570923"
     },
@@ -30,13 +43,13 @@ echo '[
     {
         "manhwa_id": "manhwa_1763837978756",
         "chapter_number": 2,
-        "chapter_title": "ff",
+        "chapter_title": "mmm",
         "chapter_description": "",
         "chapter_season": "2",
         "last_read_at": null,
         "chapter_pages": ".\\/chapitres\\/qqq\\/6.mhtml",
         "chapter_cover": "",
-        "is_favorite": false,
+        "is_favorite": true,
         "date_added": "2025-11-23 10:20:05",
         "__backendId": "local_1763889605_1105997994"
     },
@@ -55,25 +68,36 @@ echo '[
     },
     {
         "type": "tracking",
+        "id": "tracking_1763899760918_0.20491773173439431",
+        "title": "eee",
+        "chapter": 554,
+        "status": "en-cours",
+        "notes": "",
+        "season": "8",
+        "date_added": "2025-11-23 15:09:21",
+        "date_updated": "2025-11-23 15:12:11"
+    },
+    {
+        "type": "tracking",
         "id": "tracking_1763820022752_0.9138906397103436",
         "title": "éé",
-        "chapter": 2,
+        "chapter": 3,
         "status": "en-cours",
         "notes": "é",
         "season": "2",
         "date_added": "2025-11-23 00:49:02",
-        "date_updated": "2025-11-22 14:00:22"
+        "date_updated": "2025-11-23 15:12:11"
     },
     {
         "type": "tracking",
         "id": "tracking_1763820140548_0.455812163293721",
         "title": "eee",
-        "chapter": 555,
+        "chapter": 556,
         "status": "en-pause",
         "notes": "eee",
         "season": "8",
         "date_added": "2025-11-22 14:02:20",
-        "date_updated": "2025-11-23 13:52:07"
+        "date_updated": "2025-11-23 15:12:11"
     },
     {
         "type": "trash",
