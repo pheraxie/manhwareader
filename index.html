@@ -367,7 +367,7 @@
    </div>
   </aside><!-- Main Content -->
   <main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><!-- Home Page -->
-   <div id="home-page" class="page-content fade-in">
+   <div id="home-page" class="page-content hidden fade-in">
     <h2 class="text-3xl font-bold mb-8">Continuer la lecture</h2>
     <div id="continue-reading" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-12"><!-- Les manhwas en cours seront ajoutés ici -->
     </div>
@@ -826,7 +826,7 @@
         let globalData = [];
         let saveTimeout = null; // Timeout pour debounce de la sauvegarde
         
-        // Fonction pour sauvegarder automatiquement dans data.json (avec debounce)
+        // Fonction pour sauvegarder automatiquement dans data.php (avec debounce)
         function scheduleAutoSave(data) {
             if (!isDeveloperMode()) {
                 return;
@@ -843,7 +843,7 @@
             }, 300);
         }
         
-        // Fonction pour sauvegarder automatiquement dans data.json via PHP
+        // Fonction pour sauvegarder automatiquement dans data.php via PHP
         async function saveDataToFileAuto(data) {
             if (!isDeveloperMode()) {
                 return;
@@ -860,7 +860,7 @@
                 
                 const result = await response.json();
                 if (result.success) {
-                    console.log('✅ data.json sauvegardé automatiquement');
+                    console.log('✅ data.php sauvegardé automatiquement');
                 } else {
                     console.error('Erreur lors de la sauvegarde:', result.message);
                 }
@@ -869,8 +869,8 @@
             }
         }
 
-        // Simulateur SDK pour test en local et production
-        function createLocalSDK() {
+        // SDK MySQL - Utilise la base de données MySQL via PHP
+        function createMySQLSDK() {
             let localData = [];
             let dataHandler = null;
 
@@ -878,10 +878,9 @@
                 init: async (handler) => {
                     dataHandler = handler;
                     
-                    // TOUJOURS recharger depuis data.json au démarrage (localhost ET production)
+                    // Charger TOUTES les données depuis MySQL
                     try {
-                        // Essayer de charger depuis data.json avec cache-busting
-                        const response = await fetch('./data.json?t=' + Date.now(), {
+                        const response = await fetch('./api-all-data.php?t=' + Date.now(), {
                             cache: 'no-cache',
                             headers: {
                                 'Cache-Control': 'no-cache'
@@ -889,28 +888,42 @@
                         });
                         
                         if (response.ok) {
-                            const loadedData = await response.json();
-                            if (Array.isArray(loadedData) && loadedData.length > 0) {
-                                localData = loadedData;
-                                console.log('✅ Données chargées depuis data.json:', localData.length, 'éléments');
-                            } else if (Array.isArray(loadedData)) {
-                                localData = [];
-                                console.log('ℹ️ data.json est vide');
+                            const result = await response.json();
+                            if (result.success && Array.isArray(result.data)) {
+                                localData = result.data;
+                                console.log('✅ Données chargées depuis MySQL:', localData.length, 'éléments');
                             } else {
-                                console.warn('⚠️ data.json n\'est pas un tableau valide');
+                                console.warn('⚠️ Réponse MySQL invalide');
                                 localData = [];
                             }
-                        } else if (response.status === 404) {
-                            console.log('ℹ️ Fichier data.json non trouvé, utilisation d\'un tableau vide');
-                            localData = [];
                         } else {
-                            console.warn('⚠️ Erreur HTTP lors du chargement:', response.status);
-                            localData = [];
+                            console.error('⚠️ Erreur HTTP lors du chargement MySQL:', response.status);
+                            // En cas d'erreur, essayer de charger depuis data.php comme fallback
+                            try {
+                                const jsonResponse = await fetch('./data.php?t=' + Date.now());
+                                if (jsonResponse.ok) {
+                                    const jsonData = await jsonResponse.json();
+                                    localData = Array.isArray(jsonData) ? jsonData : [];
+                                    console.log('⚠️ Fallback: données chargées depuis data.php:', localData.length, 'éléments');
+                                }
+                            } catch (e) {
+                                console.error('⚠️ Erreur fallback data.php:', e);
+                                localData = [];
+                            }
                         }
                     } catch (error) {
-                        console.error('⚠️ Erreur lors du chargement de data.json:', error);
-                        // En cas d'erreur, continuer avec un tableau vide plutôt que de bloquer
-                        localData = [];
+                        console.error('⚠️ Erreur lors du chargement MySQL:', error);
+                        // Fallback vers data.php
+                        try {
+                            const jsonResponse = await fetch('./data.php?t=' + Date.now());
+                            if (jsonResponse.ok) {
+                                const jsonData = await jsonResponse.json();
+                                localData = Array.isArray(jsonData) ? jsonData : [];
+                                console.log('⚠️ Fallback: données chargées depuis data.php');
+                            }
+                        } catch (e) {
+                            localData = [];
+                        }
                     }
                     
                     // Toujours synchroniser globalData avec localData
@@ -918,12 +931,11 @@
                     console.log('✅ Données chargées et synchronisées:', globalData.length, 'éléments');
                     
                     // Notifier le handler avec les données chargées IMMÉDIATEMENT
-                    if (dataHandler) {
-                        // Utiliser requestAnimationFrame pour s'assurer que le DOM est prêt
+                        if (dataHandler) {
                         requestAnimationFrame(() => {
                             dataHandler.onDataChanged(localData);
                         });
-                    }
+                        }
                     
                     return { isOk: true };
                 },
@@ -933,20 +945,65 @@
                     }
                     
                     data.__backendId = 'local_' + Date.now() + '_' + Math.random();
+                    
+                    // Déterminer le type et sauvegarder dans MySQL
+                    let apiUrl = '';
+                    if (data.manhwa_title && !data.chapter_number) {
+                        // C'est un manhwa
+                        apiUrl = './api-manhwas.php';
+                    } else if (data.chapter_number !== undefined) {
+                        // C'est un chapitre
+                        apiUrl = './api-chapters.php';
+                    } else {
+                        // Autre type (tracking, trash) - utiliser l'ancien système pour l'instant
                     localData.push(data);
-                    globalData = JSON.parse(JSON.stringify(localData));
-                    
-                    console.log('➕ Élément créé:', data);
-                    
-                    // Mettre à jour immédiatement AVANT la sauvegarde
-                    if (dataHandler) {
-                        dataHandler.onDataChanged(localData);
+                        globalData = JSON.parse(JSON.stringify(localData));
+                        if (dataHandler) {
+                            dataHandler.onDataChanged(localData);
+                        }
+                        saveDataToFileAuto(globalData).catch(err => {
+                            console.error('Erreur sauvegarde:', err);
+                        });
+                        return { isOk: true };
                     }
                     
-                    // Sauvegarder en arrière-plan (ne pas attendre)
-                    saveDataToFileAuto(globalData).catch(err => {
-                        console.error('Erreur sauvegarde:', err);
-                    });
+                    try {
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(data)
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (result.success) {
+                            // Recharger toutes les données depuis MySQL
+                            const allDataResponse = await fetch('./api-all-data.php?t=' + Date.now());
+                            if (allDataResponse.ok) {
+                                const allDataResult = await allDataResponse.json();
+                                if (allDataResult.success) {
+                                    localData = allDataResult.data;
+                                    globalData = JSON.parse(JSON.stringify(localData));
+                                    
+                                    // Mettre à jour immédiatement
+                    if (dataHandler) {
+                                        dataHandler.onDataChanged(localData);
+                                    }
+                                    
+                                    console.log('✅ Élément créé et synchronisé avec MySQL');
+                                    return { isOk: true };
+                                }
+                            }
+                        } else {
+                            console.error('❌ Erreur création MySQL:', result.error);
+                            return { isOk: false, error: result.error };
+                        }
+                    } catch (error) {
+                        console.error('❌ Erreur lors de la création:', error);
+                        return { isOk: false, error: error.message };
+                    }
                     
                     return { isOk: true };
                 },
@@ -956,23 +1013,68 @@
                         return { isOk: false, error: 'Mode développeur requis pour les modifications' };
                     }
                     
+                    // Déterminer le type et mettre à jour dans MySQL
+                    let apiUrl = '';
+                    if (record.manhwa_title && !record.chapter_number) {
+                        // C'est un manhwa
+                        apiUrl = './api-manhwas.php';
+                    } else if (record.chapter_number !== undefined) {
+                        // C'est un chapitre
+                        apiUrl = './api-chapters.php';
+                    } else {
+                        // Autre type - utiliser l'ancien système
                     const index = localData.findIndex(item => item.__backendId === record.__backendId);
                     if (index !== -1) {
                         localData[index] = record;
-                        globalData = JSON.parse(JSON.stringify(localData));
-                        
-                        console.log('✏️ Élément mis à jour:', record);
-                        
-                        // Mettre à jour immédiatement AVANT la sauvegarde
+                            globalData = JSON.parse(JSON.stringify(localData));
                         if (dataHandler) {
-                            dataHandler.onDataChanged(localData);
+                                dataHandler.onDataChanged(localData);
+                            }
+                            saveDataToFileAuto(globalData).catch(err => {
+                                console.error('Erreur sauvegarde:', err);
+                            });
                         }
-                        
-                        // Sauvegarder en arrière-plan (ne pas attendre)
-                        saveDataToFileAuto(globalData).catch(err => {
-                            console.error('Erreur sauvegarde:', err);
-                        });
+                        return { isOk: true };
                     }
+                    
+                    try {
+                        const response = await fetch(apiUrl, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(record)
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (result.success) {
+                            // Recharger toutes les données depuis MySQL
+                            const allDataResponse = await fetch('./api-all-data.php?t=' + Date.now());
+                            if (allDataResponse.ok) {
+                                const allDataResult = await allDataResponse.json();
+                                if (allDataResult.success) {
+                                    localData = allDataResult.data;
+                                    globalData = JSON.parse(JSON.stringify(localData));
+                                    
+                                    // Mettre à jour immédiatement
+                                    if (dataHandler) {
+                                        dataHandler.onDataChanged(localData);
+                                    }
+                                    
+                                    console.log('✅ Élément mis à jour dans MySQL');
+                                    return { isOk: true };
+                                }
+                            }
+                        } else {
+                            console.error('❌ Erreur mise à jour MySQL:', result.error);
+                            return { isOk: false, error: result.error };
+                        }
+                    } catch (error) {
+                        console.error('❌ Erreur lors de la mise à jour:', error);
+                        return { isOk: false, error: error.message };
+                    }
+                    
                     return { isOk: true };
                 },
                 delete: async (record) => {
@@ -980,20 +1082,64 @@
                         return { isOk: false, error: 'Mode développeur requis' };
                     }
                     
+                    // Déterminer le type et supprimer dans MySQL
+                    let apiUrl = '';
+                    if (record.manhwa_title && !record.chapter_number) {
+                        // C'est un manhwa
+                        apiUrl = './api-manhwas.php';
+                    } else if (record.chapter_number !== undefined) {
+                        // C'est un chapitre
+                        apiUrl = './api-chapters.php';
+                    } else {
+                        // Autre type - utiliser l'ancien système
                     localData = localData.filter(item => item.__backendId !== record.__backendId);
-                    globalData = JSON.parse(JSON.stringify(localData));
-                    
-                    console.log('🗑️ Élément supprimé:', record.__backendId);
-                    
-                    // Mettre à jour immédiatement AVANT la sauvegarde
+                        globalData = JSON.parse(JSON.stringify(localData));
                     if (dataHandler) {
-                        dataHandler.onDataChanged(localData);
+                            dataHandler.onDataChanged(localData);
+                        }
+                        saveDataToFileAuto(globalData).catch(err => {
+                            console.error('Erreur sauvegarde:', err);
+                        });
+                        return { isOk: true };
                     }
                     
-                    // Sauvegarder en arrière-plan (ne pas attendre)
-                    saveDataToFileAuto(globalData).catch(err => {
-                        console.error('Erreur sauvegarde:', err);
-                    });
+                    try {
+                        const response = await fetch(apiUrl, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(record)
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (result.success) {
+                            // Recharger toutes les données depuis MySQL
+                            const allDataResponse = await fetch('./api-all-data.php?t=' + Date.now());
+                            if (allDataResponse.ok) {
+                                const allDataResult = await allDataResponse.json();
+                                if (allDataResult.success) {
+                                    localData = allDataResult.data;
+                                    globalData = JSON.parse(JSON.stringify(localData));
+                                    
+                                    // Mettre à jour immédiatement
+                                    if (dataHandler) {
+                                        dataHandler.onDataChanged(localData);
+                                    }
+                                    
+                                    console.log('✅ Élément supprimé de MySQL');
+                                    return { isOk: true };
+                                }
+                            }
+                        } else {
+                            console.error('❌ Erreur suppression MySQL:', result.error);
+                            return { isOk: false, error: result.error };
+                        }
+                    } catch (error) {
+                        console.error('❌ Erreur lors de la suppression:', error);
+                        return { isOk: false, error: error.message };
+                    }
                     
                     return { isOk: true };
                 }
@@ -1030,7 +1176,7 @@
                 allManhwas = manhwas;
                 allChapters = chapters;
                 
-                // Charger les suivis depuis data.json
+                // Charger les suivis depuis data.php
                 loadTrackingList();
                 
                 // Mettre à jour TOUTES les pages IMMÉDIATEMENT
@@ -1168,6 +1314,11 @@
         }
 
         async function initializeApp() {
+            // CACHER TOUTES LES PAGES IMMÉDIATEMENT pour éviter de voir l'accueil
+            document.querySelectorAll('.page-content').forEach(page => {
+                page.classList.add('hidden');
+            });
+            
             // Masquer les boutons d'ajout si on n'est pas en mode développeur
             if (!isDeveloperMode()) {
                 const addManhwaContainer = document.getElementById('add-manhwa-settings-container');
@@ -1176,13 +1327,13 @@
                 }
             }
             
-            // Détection automatique: local ou Canva
+            // Détection automatique: MySQL (recommandé) ou fallback JSON
             if (!window.dataSdk) {
-                console.log('🔧 Mode LOCAL détecté - Utilisation de data.json');
+                console.log('🔧 Mode LOCAL détecté - Utilisation de MySQL');
                 isLocalMode = true;
-                window.dataSdk = createLocalSDK();
+                window.dataSdk = createMySQLSDK();
                 if (isDeveloperMode()) {
-                    showNotification('Mode développeur activé 🔧', 'info');
+                    showNotification('Mode développeur activé 🔧 (MySQL)', 'info');
                 }
             } else {
                 console.log('☁️ Mode CANVA détecté - Utilisation du Data SDK');
@@ -1194,10 +1345,25 @@
             // Charger la galerie
             loadGalleryImages();
             
-            // Restaurer la page après chargement (attendre que tout soit prêt)
-            setTimeout(() => {
-                restoreCurrentPage();
-            }, 800);
+            // Restaurer la page IMMÉDIATEMENT après chargement
+            const savedPage = localStorage.getItem('currentPage');
+            if (savedPage && savedPage !== 'home' && savedPage !== '' && savedPage !== null) {
+                const pageElement = document.getElementById(`${savedPage}-page`);
+                if (pageElement) {
+                    // Restaurer immédiatement sans délai
+                    document.querySelectorAll('.page-content').forEach(page => {
+                        page.classList.add('hidden');
+                    });
+                    pageElement.classList.remove('hidden');
+                    console.log('✅ Page restaurée immédiatement:', savedPage);
+                } else {
+                    // Si la page n'existe pas, montrer home
+                    document.getElementById('home-page')?.classList.remove('hidden');
+                }
+            } else {
+                // Pas de page sauvegardée, montrer home
+                document.getElementById('home-page')?.classList.remove('hidden');
+            }
             if (!result.isOk) {
                 showNotification('Erreur lors de l\'initialisation', 'error');
                 console.error('Erreur SDK:', result.error);
@@ -1985,7 +2151,7 @@
         // ========== SYSTÈME DE SUIVI ==========
         let trackingList = [];
         
-        // Charger les suivis depuis data.json (via globalData)
+        // Charger les suivis depuis data.php (via globalData)
         function loadTrackingList() {
             try {
                 trackingList = globalData.filter(item => item.type === 'tracking');
@@ -1995,46 +2161,49 @@
             }
         }
         
-        // Sauvegarder les suivis dans data.json
-        async function saveTrackingList() {
-            try {
-                // Retirer tous les anciens suivis de globalData
-                globalData = globalData.filter(item => item.type !== 'tracking');
-                
-                // Ajouter les nouveaux suivis
-                trackingList.forEach(tracking => {
-                    globalData.push(tracking);
-                });
-                
-                // Sauvegarder automatiquement
-                if (isDeveloperMode()) {
-                    scheduleAutoSave(globalData);
-                } else {
-                    // En production, sauvegarder aussi (pour synchronisation)
-                    await saveDataToFileAuto(globalData);
-                }
-            } catch (error) {
-                console.error('Erreur lors de la sauvegarde des suivis:', error);
-            }
-        }
+      // Sauvegarder les suivis via PHP
+async function saveTrackingList() {
+    for(const t of trackingList){
+        await fetch(`save-tracking.php?action=save&id=${t.id}`, { // <-- changer update -> save
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify(t)
+        });
+    }
+}
+
         
-        // Ajouter un suivi
-        async function addTracking(title, chapter, status, notes, season) {
-            const tracking = {
-                type: 'tracking',
-                id: 'tracking_' + Date.now() + '_' + Math.random(),
-                title: title,
-                chapter: parseInt(chapter) || 0,
-                status: status || 'en-cours',
-                notes: notes || '',
-                season: season || null,
-                date_added: new Date().toISOString(),
-                date_updated: new Date().toISOString()
-            };
-            trackingList.push(tracking);
-            await saveTrackingList();
-            return tracking;
-        }
+       async function addTracking(title, chapter, status, notes, season) {
+    const id = 'tracking_' + Date.now() + '_' + Math.random(); // <-- générer un id unique
+    const response = await fetch('save-tracking.php?action=save', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({id, title, chapter, status, notes, season})
+    });
+    const result = await response.json();
+
+    if (result.success) {
+        // Ajouter localement pour mise à jour visuelle
+        const tracking = {
+            type: 'tracking',
+            id,
+            title,
+            chapter: parseInt(chapter) || 0,
+            status: status || 'en-cours',
+            notes: notes || '',
+            season: season || null,
+            date_added: new Date().toISOString(),
+            date_updated: new Date().toISOString()
+        };
+        trackingList.push(tracking);
+        updateTrackingPage();
+        return tracking;
+    } else {
+        showNotification(`Erreur : ${result.message}`, 'error');
+        return null;
+    }
+}
+
         
         // Modifier un suivi
         async function updateTracking(id, title, chapter, status, notes, season) {
@@ -2055,12 +2224,38 @@
             return false;
         }
         
-        // Supprimer un suivi
-        async function deleteTracking(id) {
+     // Fonction qui supprime un suivi via PHP/MySQL
+async function deleteTracking(id) {
+    try {
+        const response = await fetch(`save-tracking.php?action=delete&id=${id}`);
+        const result = await response.json();
+
+        if (result.success) {
+            // Retirer localement pour mise à jour visuelle
             trackingList = trackingList.filter(t => t.id !== id);
-            await saveTrackingList();
-            return true;
+            updateTrackingPage(); // rafraîchir la page suivi
+            showNotification('Suivi déplacé dans la corbeille', 'success');
+        } else {
+            showNotification(`Erreur : ${result.message}`, 'error');
         }
+    } catch (error) {
+        console.error('Erreur lors de la suppression du suivi :', error);
+        showNotification('Erreur réseau ou serveur', 'error');
+    }
+}
+
+// Fonction appelée par le bouton
+window.deleteTrackingItem = async function(id) {
+    const tracking = trackingList.find(t => t.id === id);
+    if (!tracking) return;
+        
+    await deleteTracking(id);
+    updateTrackingPage();
+    showNotification('Suivi déplacé dans la corbeille', 'success');
+};
+
+
+
         
         // Augmenter le chapitre
         async function incrementChapter(id) {
@@ -2292,6 +2487,7 @@
             trackingModal.classList.remove('hidden');
         };
         
+        
         // Gestionnaires pour le modal de suivi
         const trackingModal = document.getElementById('tracking-modal');
         const closeTrackingModal = document.getElementById('close-tracking-modal');
@@ -2520,7 +2716,7 @@
             });
         }
         
-        // Fonction pour ajouter/retirer un chapitre des favoris
+        // Fonction pour ajouter/retirer un chapitre des favoris (FONCTIONNE EN LIGNE ET LOCAL)
         async function toggleFavorite(chapterId) {
             console.log('❤️ Toggle favorite pour chapitre:', chapterId);
             const chapter = allChapters.find(ch => ch.__backendId === chapterId);
@@ -2529,21 +2725,47 @@
                 return;
             }
             
-            const updatedChapter = {
-                ...chapter,
-                is_favorite: !chapter.is_favorite
-            };
+            // Mettre à jour immédiatement dans la liste locale
+            const newFavoriteStatus = !chapter.is_favorite;
+            chapter.is_favorite = newFavoriteStatus;
             
-            console.log('💾 Mise à jour du favori:', updatedChapter.is_favorite);
+            // Mettre à jour aussi dans allChapters
+            const chapterIndex = allChapters.findIndex(ch => ch.__backendId === chapterId);
+            if (chapterIndex !== -1) {
+                allChapters[chapterIndex].is_favorite = newFavoriteStatus;
+            }
             
-            // Mettre à jour via le SDK pour que ça soit sauvegardé
-            const result = await window.dataSdk.update(updatedChapter);
+            // Mettre à jour l'UI immédiatement
+            updateAllPages();
             
-            if (result.isOk) {
-                showNotification(updatedChapter.is_favorite ? 'Ajouté aux favoris ❤️' : 'Retiré des favoris', 'success');
+            // Sauvegarder (en ligne: localStorage, en local: data.php)
+            if (isDeveloperMode()) {
+                // En mode développeur, sauvegarder dans data.php
+                const updatedChapter = {
+                    ...chapter,
+                    is_favorite: newFavoriteStatus
+                };
+                const result = await window.dataSdk.update(updatedChapter);
+                if (result.isOk) {
+                    showNotification(newFavoriteStatus ? 'Ajouté aux favoris ❤️' : 'Retiré des favoris', 'success');
+                } else {
+                    console.error('❌ Erreur lors de la mise à jour:', result.error);
+                }
             } else {
-                console.error('❌ Erreur lors de la mise à jour:', result.error);
-                showNotification('Erreur lors de la mise à jour', 'error');
+                // En ligne, sauvegarder dans localStorage pour la synchronisation
+                const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+                if (newFavoriteStatus) {
+                    if (!favorites.includes(chapterId)) {
+                        favorites.push(chapterId);
+                    }
+                } else {
+                    const index = favorites.indexOf(chapterId);
+                    if (index > -1) {
+                        favorites.splice(index, 1);
+                    }
+                }
+                localStorage.setItem('favorites', JSON.stringify(favorites));
+                showNotification(newFavoriteStatus ? 'Ajouté aux favoris ❤️' : 'Retiré des favoris', 'success');
             }
         }
         
@@ -2669,8 +2891,11 @@
             
             if (!confirmed) return;
             
-            // Retirer de la corbeille
+            // Retirer de la corbeille IMMÉDIATEMENT
             globalData = globalData.filter(item => item.id !== trashId);
+            
+            // Mettre à jour l'UI immédiatement
+            updateAllPages();
             
             // Restaurer l'élément original
             const originalData = trashItem.original_data;
@@ -2712,18 +2937,22 @@
             
             if (!confirmed) return;
             
-            // Retirer définitivement
+            // Retirer définitivement IMMÉDIATEMENT
             globalData = globalData.filter(item => item.id !== trashId);
             
-            // Sauvegarder
+            // Mettre à jour l'UI immédiatement
+            updateAllPages();
+            
+            // Sauvegarder en arrière-plan
             if (isDeveloperMode()) {
                 scheduleAutoSave(globalData);
             } else {
-                await saveDataToFileAuto(globalData);
+                saveDataToFileAuto(globalData).catch(err => {
+                    console.error('Erreur sauvegarde:', err);
+                });
             }
             
             showNotification('Élément supprimé définitivement', 'success');
-            updateTrashPage();
         };
         
         // Tout supprimer définitivement de la corbeille
@@ -2787,20 +3016,42 @@
         
         async function loadGalleryImages() {
             try {
-                // Scanner le dossier gallery via PHP
-                const response = await fetch('./scan-gallery.php?t=' + Date.now());
-                if (response.ok) {
-                    const data = await response.json();
-                    galleryImages = data.images || [];
-                    // Shuffle automatique à chaque chargement
-                    if (galleryImages.length > 0) {
-                        for (let i = galleryImages.length - 1; i > 0; i--) {
-                            const j = Math.floor(Math.random() * (i + 1));
-                            [galleryImages[i], galleryImages[j]] = [galleryImages[j], galleryImages[i]];
-                        }
+                if (isDeveloperMode()) {
+                    // En mode développeur, scanner le dossier gallery via PHP
+                    const response = await fetch('./scan-gallery.php?t=' + Date.now());
+                    if (response.ok) {
+                        const data = await response.json();
+                        galleryImages = data.images || [];
+                    } else {
+                        console.error('Erreur scan gallery:', response.status);
+                        galleryImages = [];
                     }
                 } else {
-                    galleryImages = [];
+                    // En ligne, charger depuis un fichier JSON statique (à créer manuellement ou via GitHub Actions)
+                    // Pour l'instant, essayer de charger gallery-list.json
+                    try {
+                        const response = await fetch('./gallery-list.json?t=' + Date.now());
+                        if (response.ok) {
+                            const data = await response.json();
+                            galleryImages = data.images || [];
+                        } else {
+                            // Si le fichier n'existe pas, essayer de scanner via une API alternative
+                            // Pour l'instant, on laisse vide
+                            galleryImages = [];
+                            console.warn('⚠️ gallery-list.json non trouvé. Créez ce fichier avec la liste des images.');
+                        }
+                    } catch (err) {
+                        console.error('Erreur chargement gallery:', err);
+                        galleryImages = [];
+                    }
+                }
+                
+                // Shuffle automatique à chaque chargement
+                if (galleryImages.length > 0) {
+                    for (let i = galleryImages.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [galleryImages[i], galleryImages[j]] = [galleryImages[j], galleryImages[i]];
+                    }
                 }
             } catch (error) {
                 console.error('Erreur lors du chargement de la galerie:', error);
@@ -4086,18 +4337,20 @@
 
             if (!confirmed) return;
 
-            // Ajouter à la corbeille
+            // Ajouter à la corbeille AVANT de supprimer
             await addToTrash(chapter, 'chapter');
 
             // Supprimer immédiatement de la liste locale pour mise à jour instantanée
             allChapters = allChapters.filter(ch => ch.__backendId !== chapterId);
             
+            // Mettre à jour IMMÉDIATEMENT toutes les pages AVANT la sauvegarde
+            updateAllPages();
+            
+            // Supprimer via SDK (sauvegarde en arrière-plan)
             const result = await window.dataSdk.delete(chapter);
             
             if (result.isOk) {
                 showNotification('Chapitre déplacé dans la corbeille', 'success');
-                // Mettre à jour IMMÉDIATEMENT toutes les pages
-                updateAllPages();
             } else {
                 // Restaurer si erreur
                 allChapters.push(chapter);
