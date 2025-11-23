@@ -1,6 +1,20 @@
 <?php
 require_once 'config.php';
 
+// Ensure we always return JSON and capture fatal errors
+ini_set('display_errors', 0);
+error_reporting(E_ALL);
+header('Content-Type: application/json; charset=utf-8');
+ob_start();
+register_shutdown_function(function() {
+    $err = error_get_last();
+    if ($err) {
+        while (ob_get_level()) ob_end_clean();
+        http_response_code(500);
+        echo json_encode(['success' => false, 'error' => $err['message']]);
+    }
+});
+
 $method = $_SERVER['REQUEST_METHOD'];
 $conn = getDBConnection();
 
@@ -30,7 +44,12 @@ switch ($method) {
         
     case 'POST':
         // Créer un nouveau manhwa
-        $data = json_decode(file_get_contents('php://input'), true);
+        $raw = file_get_contents('php://input');
+        $data = json_decode($raw, true);
+        if ($raw && json_last_error() !== JSON_ERROR_NONE) {
+            echo json_encode(['success' => false, 'error' => 'Payload JSON invalide']);
+            break;
+        }
         
         $id = 'local_' . time() . '_' . mt_rand();
         $manhwa_id = $data['manhwa_id'] ?? 'manhwa_' . time();
@@ -52,7 +71,12 @@ switch ($method) {
         
     case 'PUT':
         // Mettre à jour un manhwa
-        $data = json_decode(file_get_contents('php://input'), true);
+        $raw = file_get_contents('php://input');
+        $data = json_decode($raw, true);
+        if ($raw && json_last_error() !== JSON_ERROR_NONE) {
+            echo json_encode(['success' => false, 'error' => 'Payload JSON invalide']);
+            break;
+        }
         $id = $conn->real_escape_string($data['__backendId'] ?? '');
         
         $title = $conn->real_escape_string($data['manhwa_title'] ?? '');

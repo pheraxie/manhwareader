@@ -15,21 +15,21 @@ echo '[
         "manhwa_title": "passion",
         "manhwa_cover": ".\\/Image\\/passion.jpg",
         "manhwa_description": "dd",
-        "manhwa_season": "5",
+        "manhwa_season": "7",
         "date_added": "2025-11-22 17:41:45",
         "__backendId": "local_1763833305669_0.8673112648118178"
     },
     {
-        "manhwa_id": "manhwa_1763833305668",
-        "chapter_number": 1,
+        "manhwa_id": "manhwa_1763837978756",
+        "chapter_number": 8,
         "chapter_title": "ff",
-        "chapter_description": "ff",
+        "chapter_description": "",
         "chapter_season": "2",
         "chapter_pages": ".\\/chapitres\\/qqq\\/6.mhtml",
         "chapter_cover": "",
-        "is_favorite": true,
-        "date_added": "2025-11-22 20:38:53",
-        "__backendId": "local_1763840333_887644334"
+        "is_favorite": false,
+        "date_added": "2025-11-23 09:51:17",
+        "__backendId": "local_1763887877_1694634339"
     },
     {
         "type": "tracking",
@@ -55,17 +55,6 @@ echo '[
     },
     {
         "type": "tracking",
-        "id": "tracking_1763848015475_0.5775571423840902",
-        "title": "qkj",
-        "chapter": 0,
-        "status": "en-cours",
-        "notes": "dctfvygbuhnjk",
-        "season": "5",
-        "date_added": "2025-11-23 00:46:55",
-        "date_updated": "2025-11-23 10:15:41"
-    },
-    {
-        "type": "tracking",
         "id": "tracking_1763820140548_0.455812163293721",
         "title": "t",
         "chapter": 6,
@@ -77,19 +66,35 @@ echo '[
     },
     {
         "type": "trash",
+        "id": "trash_1763886490_1994069314",
         "trash_type": "tracking",
         "original_data": {
-            "type": "tracking",
             "id": "tracking_1763848015475_0.5775571423840902",
             "title": "qkj",
-            "chapter": 0,
+            "chapter": "0",
             "status": "en-cours",
             "notes": "dctfvygbuhnjk",
             "season": "5",
             "date_added": "2025-11-23 00:46:55",
-            "date_updated": "2025-11-23 10:15:41"
+            "date_updated": "2025-11-23 10:15:41",
+            "created_at": "2025-11-23 00:46:55",
+            "updated_at": "2025-11-23 10:15:41"
         },
-        "deleted_at": "2025-11-23T08:28:10.267Z",
-        "id": "trash_1763886490268_0.007471480274676479"
+        "deleted_at": "2025-11-23 11:28:10"
+    },
+    {
+        "type": "trash",
+        "trash_type": "manhwa",
+        "original_data": {
+            "manhwa_id": "manhwa_1763833305668",
+            "manhwa_title": "passion",
+            "manhwa_cover": ".\\/Image\\/passion.jpg",
+            "manhwa_description": "dd",
+            "manhwa_season": "7",
+            "date_added": "2025-11-22 17:41:45",
+            "__backendId": "local_1763833305669_0.8673112648118178"
+        },
+        "deleted_at": "2025-11-23T09:06:29.608Z",
+        "id": "trash_1763888789608_0.514286408738836"
     }
 ]';

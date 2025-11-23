@@ -1359,6 +1359,15 @@
                     });
                     pageElement.classList.remove('hidden');
                     console.log('✅ Page restaurée immédiatement:', savedPage);
+                    // Si on restaure la page de détail, tenter de restaurer l'ID du manhwa
+                    if (savedPage === 'manhwa-detail') {
+                        const savedManhwaId = localStorage.getItem('currentManhwaId');
+                        if (savedManhwaId) {
+                            currentManhwaId = savedManhwaId;
+                            // Afficher le détail si les données sont chargées
+                            try { showManhwaDetail(currentManhwaId); } catch (e) { console.warn('Impossible d\'afficher manhwa detail au chargement', e); }
+                        }
+                    }
                 } else {
                     // Si la page n'existe pas, montrer home
                     document.getElementById('home-page')?.classList.remove('hidden');
@@ -3010,18 +3019,23 @@ window.restoreFromTrash = async function(trashId) {
                         galleryImages = [];
                     }
                 } else {
-                    // En ligne, charger depuis un fichier JSON statique (à créer manuellement ou via GitHub Actions)
-                    // Pour l'instant, essayer de charger gallery-list.json
+                    // En ligne, essayer gallery-list.json, sinon retomber sur scan-gallery.php
                     try {
                         const response = await fetch('./gallery-list.json?t=' + Date.now());
                         if (response.ok) {
                             const data = await response.json();
                             galleryImages = data.images || [];
                         } else {
-                            // Si le fichier n'existe pas, essayer de scanner via une API alternative
-                            // Pour l'instant, on laisse vide
-                            galleryImages = [];
-                            console.warn('⚠️ gallery-list.json non trouvé. Créez ce fichier avec la liste des images.');
+                            // Si le fichier n'existe pas, essayer de scanner via scan-gallery.php
+                            console.warn('⚠️ gallery-list.json non trouvé. Tentative de fallback via scan-gallery.php');
+                            const scanResp = await fetch('./scan-gallery.php?t=' + Date.now());
+                            if (scanResp.ok) {
+                                const scanData = await scanResp.json();
+                                galleryImages = scanData.images || [];
+                            } else {
+                                galleryImages = [];
+                                console.warn('⚠️ scan-gallery.php indisponible ou a renvoyé une erreur');
+                            }
                         }
                     } catch (err) {
                         console.error('Erreur chargement gallery:', err);
@@ -3493,6 +3507,8 @@ window.restoreFromTrash = async function(trashId) {
         // Afficher le détail d'un manhwa
         function showManhwaDetail(manhwaId) {
             currentManhwaId = manhwaId;
+            // Sauvegarder l'ID du manhwa affiché pour restauration après reload
+            try { localStorage.setItem('currentManhwaId', manhwaId); } catch (e) { /* ignore */ }
             const manhwa = allManhwas.find(m => m.manhwa_id === manhwaId);
             if (!manhwa) return;
 

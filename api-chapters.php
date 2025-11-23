@@ -1,6 +1,20 @@
 <?php
 require_once 'config.php';
 
+// Ensure we always return JSON and capture fatal errors
+ini_set('display_errors', 0);
+error_reporting(E_ALL);
+header('Content-Type: application/json; charset=utf-8');
+ob_start();
+register_shutdown_function(function() {
+    $err = error_get_last();
+    if ($err) {
+        while (ob_get_level()) ob_end_clean();
+        http_response_code(500);
+        echo json_encode(['success' => false, 'error' => $err['message']]);
+    }
+});
+
 $method = $_SERVER['REQUEST_METHOD'];
 $conn = getDBConnection();
 
@@ -41,11 +55,16 @@ switch ($method) {
         
     case 'POST':
         // Créer un nouveau chapitre
-        $data = json_decode(file_get_contents('php://input'), true);
+        $raw = file_get_contents('php://input');
+        $data = json_decode($raw, true);
+        if ($raw && json_last_error() !== JSON_ERROR_NONE) {
+            echo json_encode(['success' => false, 'error' => 'Payload JSON invalide']);
+            break;
+        }
         
         $id = 'local_' . time() . '_' . mt_rand();
         $manhwa_id = $conn->real_escape_string($data['manhwa_id'] ?? '');
-        $chapter_number = (int)($data['chapter_number'] ?? 0);
+            $chapter_number = (int)($data['chapter_number'] ?? 0);
         $title = $conn->real_escape_string($data['chapter_title'] ?? '');
         $description = $conn->real_escape_string($data['chapter_description'] ?? '');
         $season = $conn->real_escape_string($data['chapter_season'] ?? '');
@@ -66,9 +85,15 @@ switch ($method) {
         
     case 'PUT':
         // Mettre à jour un chapitre
-        $data = json_decode(file_get_contents('php://input'), true);
+        $raw = file_get_contents('php://input');
+        $data = json_decode($raw, true);
+        if ($raw && json_last_error() !== JSON_ERROR_NONE) {
+            echo json_encode(['success' => false, 'error' => 'Payload JSON invalide']);
+            break;
+        }
         $id = $conn->real_escape_string($data['__backendId'] ?? '');
         
+            $chapter_number = (int)($data['chapter_number'] ?? 0);
         $title = $conn->real_escape_string($data['chapter_title'] ?? '');
         $description = $conn->real_escape_string($data['chapter_description'] ?? '');
         $season = $conn->real_escape_string($data['chapter_season'] ?? '');
@@ -77,13 +102,14 @@ switch ($method) {
         $is_favorite = isset($data['is_favorite']) && $data['is_favorite'] ? 1 : 0;
         
         $sql = "UPDATE chapters SET 
-                chapter_title = '$title',
-                chapter_description = '$description',
-                chapter_season = '$season',
-                chapter_pages = '$pages',
-                chapter_cover = '$cover',
-                is_favorite = $is_favorite
-                WHERE id = '$id'";
+            chapter_number = $chapter_number,
+            chapter_title = '$title',
+            chapter_description = '$description',
+            chapter_season = '$season',
+            chapter_pages = '$pages',
+            chapter_cover = '$cover',
+            is_favorite = $is_favorite
+            WHERE id = '$id'";
         
         if ($conn->query($sql)) {
             echo json_encode(['success' => true]);
