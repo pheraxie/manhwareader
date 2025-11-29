@@ -1,0 +1,43 @@
+## ✅ INSTALLATION COMPLÈTE
+
+Votre site ManhwaReader Pro est **100% opérationnel** avec Supabase!
+
+### 📁 Fichiers principaux (en place)
+- ✅ `supabase.js` - Configuration Supabase
+- ✅ `api-client.js` - APIs (Manhwas, Chapters, Comments)
+- ✅ `index.html` - Votre site
+
+### 🚀 Pour utiliser votre site:
+
+**Localement:**
+```
+http://localhost/Projet/Site/
+```
+
+**En ligne:**
+```
+Deployer les fichiers sur votre serveur
+```
+
+### 🔍 Comment ça fonctionne:
+
+1. `index.html` importe `api-client.js`
+2. `api-client.js` importe `supabase.js`
+3. Tout utilise Supabase pour les données
+4. Les données sont synchronisées en temps réel
+
+### 📊 Vérification dans le navigateur:
+
+Ouvrez F12 (Console) et vous devriez voir:
+```
+🌐 API Mode: SUPABASE (CONNECTÉ)
+```
+
+Si vous voyez une erreur, vérifiez:
+1. Vous avez Internet
+2. Les tables Supabase existent
+3. Les tables ont des données
+
+### ✨ C'est tout! 
+
+Votre site fonctionne maintenant avec Supabase en local et en ligne.

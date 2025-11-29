@@ -1,8 +1,18 @@
 <?php
 error_reporting(0);
 header('Content-Type: application/json');
-require_once 'config.php';
-$conn = getDBConnection();
+require_once 'config-env.php';
+
+// Si on est en production (Supabase), retourner erreur car les requêtes doivent passer par JS
+if (!USE_LOCALHOST) {
+    jsonResponse(false, null, 'API comments doit être appelée côté client (Supabase via JS)');
+}
+
+// Mode localhost : utiliser MySQL
+$conn = getConnection();
+if (!$conn) {
+    jsonResponse(false, null, 'Connexion base de données échouée');
+}
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -24,16 +34,14 @@ if ($method === 'GET') {
             $out[] = $row;
         }
     }
-    echo json_encode(['success'=>true,'data'=>$out]);
-    exit;
+    jsonResponse(true, $out);
 }
 
 // POST = create
 if ($method === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
     if (!$data || !isset($data['manhwa_id']) || !isset($data['text'])) {
-        echo json_encode(['success'=>false,'message'=>'Données invalides']);
-        exit;
+        jsonResponse(false, null, 'Données invalides');
     }
     $id = isset($data['id']) ? $conn->real_escape_string($data['id']) : 'comment_'.time().'_'.mt_rand();
     $manhwa_id = $conn->real_escape_string($data['manhwa_id']);
@@ -47,9 +55,8 @@ if ($method === 'POST') {
     $stmt->bind_param('ssissss', $id, $manhwa_id, $chapter_number, $author, $text, $images, $date);
     $ok = $stmt->execute();
     $stmt->close();
-    if ($ok) echo json_encode(['success'=>true,'id'=>$id]);
-    else echo json_encode(['success'=>false,'message'=>'Erreur insertion']);
-    exit;
+    if ($ok) jsonResponse(true, ['id' => $id]);
+    else jsonResponse(false, null, 'Erreur insertion');
 }
 
 // DELETE
@@ -73,28 +80,24 @@ if ($method === 'DELETE') {
         } else {
             $res = $conn->query("DELETE FROM comments WHERE manhwa_id='".$manhwa_id."'");
         }
-        if ($res) echo json_encode(['success'=>true]);
-        else echo json_encode(['success'=>false,'message'=>'Erreur suppression commentaires']);
-        exit;
+        if ($res) jsonResponse(true);
+        else jsonResponse(false, null, 'Erreur suppression commentaires');
     }
 
     if ($id) {
         $res = $conn->query("DELETE FROM comments WHERE id='".$id."'");
-        if ($res) echo json_encode(['success'=>true]);
-        else echo json_encode(['success'=>false,'message'=>'Erreur suppression']);
-        exit;
+        if ($res) jsonResponse(true);
+        else jsonResponse(false, null, 'Erreur suppression');
     }
 
-    echo json_encode(['success'=>false,'message'=>'id ou manhwa_id requis']);
-    exit;
+    jsonResponse(false, null, 'id ou manhwa_id requis');
 }
 
 // PUT (update)
 if ($method === 'PUT') {
     $data = json_decode(file_get_contents('php://input'), true);
     if (!$data || !isset($data['id'])) {
-        echo json_encode(['success'=>false,'message'=>'Données invalides']);
-        exit;
+        jsonResponse(false, null, 'Données invalides');
     }
     $id = $conn->real_escape_string($data['id']);
     $text = isset($data['text']) ? $conn->real_escape_string($data['text']) : null;
@@ -104,16 +107,14 @@ if ($method === 'PUT') {
     if ($text !== null) $fields[] = "text='".$text."'";
     if ($images !== null) $fields[] = "images='".$images."'";
     if (count($fields) === 0) {
-        echo json_encode(['success'=>false,'message'=>'Rien à mettre à jour']);
-        exit;
+        jsonResponse(false, null, 'Rien à mettre à jour');
     }
     $sql = "UPDATE comments SET ".implode(',', $fields)." WHERE id='".$id."'";
     $res = $conn->query($sql);
-    if ($res) echo json_encode(['success'=>true]);
-    else echo json_encode(['success'=>false,'message'=>'Erreur update']);
-    exit;
+    if ($res) jsonResponse(true);
+    else jsonResponse(false, null, 'Erreur update');
 }
 
-echo json_encode(['success'=>false,'message'=>'Méthode non supportée']);
+jsonResponse(false, null, 'Méthode non supportée');
 
 ?>

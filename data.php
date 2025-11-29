@@ -2,22 +2,22 @@
 header('Content-Type: application/json');
 echo '[
     {
-        "manhwa_id": "manhwa_1763923450402",
+        "manhwa_id": "manhwa_1764437878563",
         "manhwa_title": "passion",
         "manhwa_cover": ".\\/Image\\/passion.jpg",
-        "manhwa_description": "kk",
+        "manhwa_description": "lll",
         "manhwa_season": "2",
         "read_count": 0,
         "order_index": 0,
         "last_read_at": null,
-        "date_added": "2025-11-23 19:44:12",
-        "__backendId": "local_1763923452_1203302767"
+        "date_added": "2025-11-29 18:37:58",
+        "__backendId": "local_1764437878_711970424"
     },
     {
         "manhwa_id": "manhwa_1763894842685",
         "manhwa_title": "Passion",
         "manhwa_cover": ".\\/Image\\/passion.jpg",
-        "manhwa_description": "Jeong Taeui has always lived in the shadow of his genius twin brother, but he’s never been unhappy with his ordinary life. When his uncle shows up at his doorstep with a dangerous job offer disguised as a once-in-a-lifetime opportunity, Taeui is skeptical, but he reluctantly agrees to work as an agent for half a year. Despite his initial qualms, he quickly adjusts to his new environment using his outgoing, positive personality. But from the moment Taeui meets Ilay Riegrow, an agent from another branch, his peaceful life slowly starts to change. Everyone says Ilay is a sadistic psychopath who should be avoided at all costs, but Taeui knows there’s more to him than meets the eye. But getting to know Ilay is like playing with fire, and Taeui isn’t sure if he’s ready to get burned.",
+        "manhwa_description": "Jeong Taeui a toujours vécu dans l’ombre de son frère jumeau génial, mais sa vie ordinaire ne l’a jamais rendu malheureux. Jusqu’au jour où son oncle frappe à sa porte avec une offre d’emploi dangereuse, présentée comme une opportunité unique. Sceptique mais curieux, Taeui accepte à contrecœur de devenir agent pendant six mois.\\n\\nRapidement, sa personnalité ouverte et positive lui permet de s’adapter à ce nouveau monde. Mais tout change lorsqu’il rencontre Ilay Riegrow, un agent d’une autre branche. Tout le monde le décrit comme un psychopathe sadique à éviter à tout prix, mais Taeui pressent qu’il cache quelque chose. S’approcher d’Ilay, c’est jouer avec le feu… et Taeui n’est pas sûr d’être prêt à se brûler.",
         "manhwa_season": "6",
         "read_count": 0,
         "order_index": 2,
@@ -38,6 +38,214 @@ echo '[
         "__backendId": "local_1763837978_312613870"
     },
     {
+        "manhwa_id": "manhwa_1764437878563",
+        "chapter_number": 100,
+        "chapter_title": "",
+        "chapter_description": "",
+        "chapter_season": "",
+        "last_read_at": null,
+        "chapter_pages": "",
+        "chapter_cover": "",
+        "is_favorite": false,
+        "date_added": "2025-11-29 18:37:58",
+        "__backendId": "local_1764437878_546327093"
+    },
+    {
+        "manhwa_id": "manhwa_1764437878563",
+        "chapter_number": 35,
+        "chapter_title": "",
+        "chapter_description": "",
+        "chapter_season": "",
+        "last_read_at": null,
+        "chapter_pages": "",
+        "chapter_cover": "",
+        "is_favorite": false,
+        "date_added": "2025-11-29 18:37:58",
+        "__backendId": "local_1764437878_610894361"
+    },
+    {
+        "manhwa_id": "manhwa_1764437878563",
+        "chapter_number": 46,
+        "chapter_title": "",
+        "chapter_description": "",
+        "chapter_season": "",
+        "last_read_at": null,
+        "chapter_pages": "",
+        "chapter_cover": "",
+        "is_favorite": false,
+        "date_added": "2025-11-29 18:37:58",
+        "__backendId": "local_1764437878_757893143"
+    },
+    {
+        "manhwa_id": "manhwa_1764437878563",
+        "chapter_number": 48,
+        "chapter_title": "",
+        "chapter_description": "",
+        "chapter_season": "",
+        "last_read_at": null,
+        "chapter_pages": "",
+        "chapter_cover": "",
+        "is_favorite": false,
+        "date_added": "2025-11-29 18:37:58",
+        "__backendId": "local_1764437878_865988370"
+    },
+    {
+        "manhwa_id": "manhwa_1764437878563",
+        "chapter_number": 45,
+        "chapter_title": "",
+        "chapter_description": "",
+        "chapter_season": "",
+        "last_read_at": null,
+        "chapter_pages": "",
+        "chapter_cover": "",
+        "is_favorite": false,
+        "date_added": "2025-11-29 18:37:58",
+        "__backendId": "local_1764437878_1016711635"
+    },
+    {
+        "manhwa_id": "manhwa_1764437878563",
+        "chapter_number": 47,
+        "chapter_title": "",
+        "chapter_description": "",
+        "chapter_season": "",
+        "last_read_at": null,
+        "chapter_pages": "",
+        "chapter_cover": "",
+        "is_favorite": false,
+        "date_added": "2025-11-29 18:37:58",
+        "__backendId": "local_1764437878_1085611500"
+    },
+    {
+        "manhwa_id": "manhwa_1764437878563",
+        "chapter_number": 32,
+        "chapter_title": "",
+        "chapter_description": "",
+        "chapter_season": "",
+        "last_read_at": null,
+        "chapter_pages": "",
+        "chapter_cover": "",
+        "is_favorite": false,
+        "date_added": "2025-11-29 18:37:58",
+        "__backendId": "local_1764437878_1246297750"
+    },
+    {
+        "manhwa_id": "manhwa_1764437878563",
+        "chapter_number": 33,
+        "chapter_title": "",
+        "chapter_description": "",
+        "chapter_season": "",
+        "last_read_at": null,
+        "chapter_pages": "",
+        "chapter_cover": "",
+        "is_favorite": false,
+        "date_added": "2025-11-29 18:37:58",
+        "__backendId": "local_1764437878_1361988210"
+    },
+    {
+        "manhwa_id": "manhwa_1763894842685",
+        "chapter_number": 7,
+        "chapter_title": "mm",
+        "chapter_description": "",
+        "chapter_season": "",
+        "last_read_at": null,
+        "chapter_pages": ".\\/chapitres\\/passion\\/46",
+        "chapter_cover": "",
+        "is_favorite": false,
+        "date_added": "2025-11-29 18:16:41",
+        "__backendId": "local_1764436601_1409025939"
+    },
+    {
+        "manhwa_id": "manhwa_1763894842685",
+        "chapter_number": 48,
+        "chapter_title": "hkkk",
+        "chapter_description": "",
+        "chapter_season": "",
+        "last_read_at": null,
+        "chapter_pages": ".\\/chapitres\\/passion\\/48",
+        "chapter_cover": "",
+        "is_favorite": false,
+        "date_added": "2025-11-29 16:54:39",
+        "__backendId": "local_1764431679_206712870"
+    },
+    {
+        "manhwa_id": "manhwa_1763894842685",
+        "chapter_number": 47,
+        "chapter_title": "On a fait notre tour de hopscoth puisqu\'il a dit qu\'il a aime la premiere fois, don c la deuxieme fois maintenant",
+        "chapter_description": "",
+        "chapter_season": "",
+        "last_read_at": null,
+        "chapter_pages": ".\\/chapitres\\/passion\\/47",
+        "chapter_cover": "",
+        "is_favorite": false,
+        "date_added": "2025-11-29 16:53:08",
+        "__backendId": "local_1764431588_1203268522"
+    },
+    {
+        "manhwa_id": "manhwa_1763894842685",
+        "chapter_number": 46,
+        "chapter_title": "Ilay a totu entendu entre moi et xinlu, et il a dit qu\'il a aime ce qu\'on a fait",
+        "chapter_description": "",
+        "chapter_season": "",
+        "last_read_at": null,
+        "chapter_pages": ".\\/chapitres\\/passion\\/46",
+        "chapter_cover": "",
+        "is_favorite": false,
+        "date_added": "2025-11-29 16:49:02",
+        "__backendId": "local_1764431342_1317585871"
+    },
+    {
+        "manhwa_id": "manhwa_1763894842685",
+        "chapter_number": 45,
+        "chapter_title": "Xinlu est parti en cournat car je lui ai dit que j\'etais pas pret",
+        "chapter_description": "",
+        "chapter_season": "",
+        "last_read_at": null,
+        "chapter_pages": ".\\/chapitres\\/passion\\/45",
+        "chapter_cover": "",
+        "is_favorite": false,
+        "date_added": "2025-11-29 16:47:30",
+        "__backendId": "local_1764431250_565414718"
+    },
+    {
+        "manhwa_id": "manhwa_1763894842685",
+        "chapter_number": 35,
+        "chapter_title": "Xinlu m\'a rendu visite",
+        "chapter_description": "",
+        "chapter_season": "",
+        "last_read_at": null,
+        "chapter_pages": ".\\/chapitres\\/passion\\/35",
+        "chapter_cover": "",
+        "is_favorite": false,
+        "date_added": "2025-11-29 16:45:13",
+        "__backendId": "local_1764431113_1440010594"
+    },
+    {
+        "manhwa_id": "manhwa_1763894842685",
+        "chapter_number": 33,
+        "chapter_title": "on se soulage chacun avec nos mains",
+        "chapter_description": "",
+        "chapter_season": "",
+        "last_read_at": null,
+        "chapter_pages": ".\\/chapitres\\/passion\\/33",
+        "chapter_cover": "",
+        "is_favorite": false,
+        "date_added": "2025-11-23 20:08:00",
+        "__backendId": "local_1763924880_1681766261"
+    },
+    {
+        "manhwa_id": "manhwa_1763894842685",
+        "chapter_number": 32,
+        "chapter_title": "mon frere a toujrous ete kidnappe",
+        "chapter_description": "",
+        "chapter_season": "",
+        "last_read_at": null,
+        "chapter_pages": ".\\/chapitres\\/passion\\/32",
+        "chapter_cover": "",
+        "is_favorite": true,
+        "date_added": "2025-11-23 20:03:55",
+        "__backendId": "local_1763924635_1486926864"
+    },
+    {
         "manhwa_id": "manhwa_1763894842685",
         "chapter_number": 100,
         "chapter_title": "Il aurait du prevenir avant de frapper",
@@ -54,12 +262,12 @@ echo '[
         "type": "tracking",
         "id": "tracking_1763899760918_0.20491773173439431",
         "title": "eee",
-        "chapter": 550,
+        "chapter": 554,
         "status": "en-cours",
         "notes": "",
         "season": "8",
         "date_added": "2025-11-23 15:09:21",
-        "date_updated": "2025-11-23 19:44:29"
+        "date_updated": "2025-11-29 20:42:53"
     },
     {
         "type": "tracking",
@@ -70,7 +278,7 @@ echo '[
         "notes": "é",
         "season": "2",
         "date_added": "2025-11-23 00:49:02",
-        "date_updated": "2025-11-23 21:34:55"
+        "date_updated": "2025-11-29T17:43:49.523Z"
     },
     {
         "type": "tracking",
@@ -81,24 +289,23 @@ echo '[
         "notes": "eee",
         "season": "8",
         "date_added": "2025-11-22 14:02:20",
-        "date_updated": "2025-11-23 21:34:55"
+        "date_updated": "2025-11-29 20:42:53"
     },
     {
         "type": "trash",
-        "trash_type": "manhwa",
+        "trash_type": "tracking",
         "original_data": {
-            "manhwa_id": "manhwa_1763923450402",
-            "manhwa_title": "passion",
-            "manhwa_cover": ".\\/Image\\/passion.jpg",
-            "manhwa_description": "kk",
-            "manhwa_season": "2",
-            "read_count": 0,
-            "order_index": 0,
-            "last_read_at": null,
-            "date_added": "2025-11-23 19:44:12",
-            "__backendId": "local_1763923452_1203302767"
+            "type": "tracking",
+            "id": "tracking_1763899760918_0.20491773173439431",
+            "title": "eee",
+            "chapter": 554,
+            "status": "en-cours",
+            "notes": "",
+            "season": "8",
+            "date_added": "2025-11-23 15:09:21",
+            "date_updated": "2025-11-29 20:42:53"
         },
-        "deleted_at": "2025-11-23T19:02:04.478Z",
-        "id": "trash_1763924524478_0.4057383545855421"
+        "deleted_at": "2025-11-29T17:43:54.106Z",
+        "id": "trash_1764438234106_0.16662027096905074"
     }
 ]';

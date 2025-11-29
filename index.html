@@ -578,6 +578,12 @@
      </div>
      <div class="mb-6"><label for="manhwa-description" class="block text-sm font-medium mb-2">Description</label> <textarea id="manhwa-description" rows="3" class="input-field w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600" placeholder="Description du manhwa..." required></textarea>
      </div>
+         <div class="mb-4"><label for="manhwa-folder-select" class="block text-sm font-medium mb-2">Dossier de chapitres (optionnel)</label>
+             <select id="manhwa-folder-select" class="input-field w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600">
+                     <option value="">-- Aucun --</option>
+             </select>
+             <p class="text-xs text-gray-500 mt-1">Si vous choisissez un dossier, le site créera automatiquement les chapitres présents.</p>
+         </div>
      <div class="flex justify-end space-x-3"><button type="button" id="cancel-manhwa" class="px-4 py-2 border rounded-lg hover:bg-gray-100">Annuler</button> <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700"> <span id="manhwa-submit-text">Ajouter</span> <span id="manhwa-loading" class="hidden"> <span class="inline-block loading-spinner w-5 h-5"></span> </span> </button>
      </div>
     </form>
@@ -676,7 +682,7 @@
     <form id="edit-chapter-form" class="p-6">
      <div class="mb-4"><label for="edit-chapter-number" class="block text-sm font-medium mb-2">Numéro du Chapitre</label> <input type="number" id="edit-chapter-number" class="input-field w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600" required>
      </div>
-     <div class="mb-4"><label for="edit-chapter-title" class="block text-sm font-medium mb-2">Titre du Chapitre</label> <input type="text" id="edit-chapter-title" class="input-field w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600" required>
+    <div class="mb-4"><label for="edit-chapter-title" class="block text-sm font-medium mb-2">Titre du Chapitre (optionnel)</label> <input type="text" id="edit-chapter-title" class="input-field w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600">
      </div>
      <div class="mb-4"><label for="edit-chapter-description" class="block text-sm font-medium mb-2">Description (optionnel)</label> <textarea id="edit-chapter-description" rows="2" class="input-field w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600"></textarea>
      </div>
@@ -687,14 +693,30 @@
       <div id="edit-chapter-cover-preview" class="mt-2 hidden"><img id="edit-chapter-preview-img" class="w-32 h-40 object-cover rounded-lg shadow-md" alt="Aperçu">
       </div>
      </div>
-     <div id="edit-chapter-mhtml-container" class="mb-4 hidden"><label for="edit-chapter-mhtml" class="block text-sm font-medium mb-2">📄 Chemin du fichier MHTML</label> <input type="text" id="edit-chapter-mhtml" class="input-field w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600" placeholder="chapitres/qqq/6.mhtml">
-      <p class="text-xs text-gray-500 mt-1">💡 Modifier le chemin du fichier MHTML (mode développeur uniquement)</p>
-     </div>
+    <!-- Removed option to choose MHTML / chapter selection to simplify editing -->
      <div class="flex justify-end space-x-3"><button type="button" id="cancel-edit-chapter" class="px-4 py-2 border rounded-lg hover:bg-gray-100">Annuler</button> <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700"> <span id="edit-chapter-submit-text">Modifier</span> <span id="edit-chapter-loading" class="hidden"> <span class="inline-block loading-spinner w-5 h-5"></span> </span> </button>
      </div>
     </form>
    </div>
   </div><!-- Modal: Ajouter/Modifier un Suivi -->
+    <!-- Modal: Chapitres manquants -->
+    <div id="missing-chapters-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+     <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full mx-4 p-6">
+        <div class="flex justify-between items-center mb-4">
+         <h2 class="text-2xl font-bold">Chapitres manquants</h2>
+         <button id="close-missing-chapters" class="text-gray-400 hover:text-gray-600">✕</button>
+        </div>
+        <div class="mb-4">
+         <label class="block text-sm font-medium mb-2">Dernier chapitre connu (max)</label>
+         <input id="missing-max-input" type="number" min="1" class="input-field w-full px-4 py-2 border rounded-lg" placeholder="Entrez le numéro du dernier chapitre (ex: 20)">
+        </div>
+        <div class="mb-4">
+         <button id="missing-check-btn" class="bg-indigo-600 text-white px-4 py-2 rounded-lg">Vérifier</button>
+         <button id="missing-create-btn" class="bg-emerald-500 text-white px-4 py-2 rounded-lg ml-2">Créer les chapitres manquants</button>
+        </div>
+        <div id="missing-results" class="mt-4 text-sm text-gray-700"></div>
+     </div>
+    </div>
   <div id="tracking-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
    <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90%] overflow-y-auto">
     <div class="p-6 border-b">
@@ -768,6 +790,7 @@
       </div>
      </div>
     </div>
+    <!-- place where registerSyncInSettings will add the sync button -->
     <div class="mt-8 p-4 bg-gray-50 rounded-lg">
      <h3 class="font-semibold mb-3 text-sm text-gray-500 uppercase">Statistiques</h3>
      <div class="space-y-2">
@@ -788,6 +811,10 @@
  
 
   <script type="module">
+        // Importer l'abstraction API (supporte MySQL local et Supabase en ligne)
+        import { CommentsAPI, ManhwasAPI, ChaptersAPI, supabase } from './api-client.js';
+        import { registerSyncInSettings, autoCreateChaptersFromFolder, registerHeaderSyncButton } from './local-sync.js';
+        
         // Configuration et état global
         let galleryImages = [];
         let currentManhwaId = null;
@@ -797,6 +824,12 @@
         let isDarkMode = false;
         let isLocalMode = false;
         let currentUserId = null; // Identifiant utilisateur pour données propres (mode en ligne)
+        
+        // Exposer CommentsAPI au scope global pour les autres modules
+        window.CommentsAPI = CommentsAPI;
+        // Initialiser le bouton de synchronisation dans Paramètres (si local)
+        try { if (typeof registerSyncInSettings === 'function') registerSyncInSettings(); } catch(e) { console.warn('registerSyncInSettings call failed', e); }
+        try { if (typeof registerHeaderSyncButton === 'function') registerHeaderSyncButton(); } catch(e) { console.warn('registerHeaderSyncButton call failed', e); }
 
         function getCurrentUserId() {
             if (currentUserId) return currentUserId;
@@ -1649,7 +1682,7 @@
         });
 
         // Bouton ajouter manhwa depuis paramètres
-        addManhwaSettings.addEventListener('click', (e) => {
+        addManhwaSettings.addEventListener('click', async (e) => {
             e.preventDefault();
             e.stopPropagation();
             
@@ -1659,6 +1692,24 @@
                 return;
             }
             
+            // Populate folder select before showing
+            try {
+                const resp = await fetch('./api-list-folders.php');
+                if (resp.ok) {
+                    const json = await resp.json();
+                    const sel = document.getElementById('manhwa-folder-select');
+                    if (sel && json.success && Array.isArray(json.folders)) {
+                        // clear + default
+                        sel.innerHTML = '<option value="">-- Aucun --</option>';
+                        json.folders.forEach(f => {
+                            const o = document.createElement('option'); o.value = f; o.textContent = f; sel.appendChild(o);
+                        });
+                    }
+                }
+            } catch (err) {
+                console.warn('Impossible de charger la liste des dossiers:', err);
+            }
+
             addManhwaModal.classList.remove('hidden');
             settingsPanel.classList.add('translate-x-full');
         });
@@ -1784,6 +1835,15 @@
 
             const manhwaId = 'manhwa_' + Date.now();
 
+            const chosenFolder = document.getElementById('manhwa-folder-select') ? document.getElementById('manhwa-folder-select').value : '';
+            if (!chosenFolder) {
+                showNotification('Veuillez choisir un dossier dans `chapitres/` (obligatoire).', 'error');
+                submitText.classList.remove('hidden');
+                loading.classList.add('hidden');
+                submitBtn.disabled = false;
+                return;
+            }
+
             const result = await window.dataSdk.create({
                 manhwa_id: manhwaId,
                 manhwa_title: title,
@@ -1792,6 +1852,24 @@
                 manhwa_season: season || null,
                 date_added: new Date().toISOString()
             });
+
+            // Si l'utilisateur a choisi un dossier local, enregistrer la mapping et créer les chapitres existants
+            if (result.isOk && chosenFolder) {
+                try {
+                    // Enregistrer la mapping manhwa_id -> folder
+                    await fetch('./api-manhwa-folders.php', {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ manhwa_id: manhwaId, folder: chosenFolder })
+                    });
+                    // Demander au serveur de scanner et créer les chapitres
+                    const auto = await autoCreateChaptersFromFolder(manhwaId, chosenFolder);
+                    if (auto && auto.success) {
+                        showNotification(`${auto.created} chapitres créés automatiquement à partir du dossier`, 'success');
+                    }
+                } catch (err) {
+                    console.warn('Erreur en enregistrant le dossier du manhwa', err);
+                }
+            }
 
             if (result.isOk) {
                 showNotification('Manhwa ajouté avec succès!', 'success');
@@ -3815,7 +3893,7 @@ window.restoreFromTrash = async function(trashId) {
                                 Modifier
                             </button>
                             ` : ''}
-                            ${isDeveloperMode() ? `
+                            ${isDeveloperMode() && !isLocalMode ? `
                             <button type="button" onclick="event.stopPropagation(); openAddChapterModal()" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 flex items-center">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -3827,6 +3905,12 @@ window.restoreFromTrash = async function(trashId) {
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                 </svg>
                                 Supprimer ce Manhwa
+                            </button>
+                            ` : ''}
+                            ${isLocalMode ? `
+                            <button type="button" onclick="event.stopPropagation(); openMissingChaptersModal('${manhwa.manhwa_id}')" class="bg-yellow-500 text-white px-6 py-3 rounded-lg hover:bg-yellow-600 flex items-center ml-3">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6M12 9v6"></path></svg>
+                                Chapitres manquants
                             </button>
                             ` : ''}
                         </div>
@@ -3895,8 +3979,68 @@ window.restoreFromTrash = async function(trashId) {
             
             // Charger les dossiers disponibles avant d'afficher
             await loadChapterFolders();
+            // Si on est en mode local, masquer la sélection manuelle du dossier
+            try {
+                const sel = document.getElementById('chapter-folder-select');
+                if (sel) {
+                    if (isLocalMode) sel.style.display = 'none'; else sel.style.display = '';
+                }
+            } catch (e) {}
             addChapterModal.classList.remove('hidden');
         }
+
+        // Modal: Chapitres manquants logic
+        let _missing_currentManhwa = null;
+        document.getElementById('close-missing-chapters').addEventListener('click', () => {
+            document.getElementById('missing-chapters-modal').classList.add('hidden');
+            document.getElementById('missing-results').innerHTML = '';
+        });
+
+        async function openMissingChaptersModal(manhwaId) {
+            _missing_currentManhwa = manhwaId;
+            document.getElementById('missing-chapters-modal').classList.remove('hidden');
+            document.getElementById('missing-results').innerHTML = '';
+            document.getElementById('missing-max-input').value = '';
+        }
+
+        async function checkMissingChapters() {
+            const max = parseInt(document.getElementById('missing-max-input').value);
+            if (!max || max < 1) { showNotification('Entrez un numéro max valide', 'error'); return; }
+            try {
+                // Get folder mapping
+                const mapResp = await fetch('./api-manhwa-folders.php');
+                const mapJson = await mapResp.json();
+                const folder = mapJson.map && mapJson.map[_missing_currentManhwa] ? mapJson.map[_missing_currentManhwa] : null;
+                if (!folder) { document.getElementById('missing-results').innerText = 'Aucun dossier associé à ce manhwa.'; return; }
+                const scanResp = await fetch(`./api-scan-chapters.php?folder=${encodeURIComponent(folder)}`);
+                const scanJson = await scanResp.json();
+                const present = (scanJson.chapters || []).map(n => Number(n));
+                const missing = [];
+                for (let i = 1; i <= max; i++) if (!present.includes(i)) missing.push(i);
+                document.getElementById('missing-results').innerHTML = missing.length ? `Chapitres manquants: ${missing.join(', ')}` : 'Aucun chapitre manquant détecté';
+                // store missing list for create
+                document.getElementById('missing-results').dataset.missing = JSON.stringify(missing);
+            } catch (err) {
+                console.error('checkMissingChapters error', err);
+                showNotification('Erreur lors de la vérification', 'error');
+            }
+        }
+
+        async function createMissingChapters() {
+            const raw = document.getElementById('missing-results').dataset.missing || '[]';
+            const missing = JSON.parse(raw);
+            if (!Array.isArray(missing) || missing.length === 0) { showNotification('Aucun chapitre à créer', 'info'); return; }
+            for (const num of missing) {
+                await fetch('./api-chapters.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ manhwa_id: _missing_currentManhwa, chapter_number: num }) });
+            }
+            showNotification(`${missing.length} chapitres créés localement`, 'success');
+            document.getElementById('missing-chapters-modal').classList.add('hidden');
+        }
+
+        document.getElementById('missing-check-btn').addEventListener('click', checkMissingChapters);
+        document.getElementById('missing-create-btn').addEventListener('click', createMissingChapters);
+        // Expose for templates and onclick handlers
+        window.openMissingChaptersModal = openMissingChaptersModal;
 
         // Retour à la bibliothèque
         document.getElementById('back-to-library').addEventListener('click', () => {
@@ -4380,26 +4524,23 @@ window.restoreFromTrash = async function(trashId) {
         let commentImagesSelected = [];
         
         function loadComments(manhwaId, chapterNumber) {
-            // Charger depuis l'API si disponible, sinon fallback local
+            // Charger depuis l'API (MySQL local ou Supabase en ligne)
             (async () => {
                 try {
-                    const resp = await fetch(`api-comments.php?manhwa_id=${encodeURIComponent(manhwaId)}&chapter_number=${encodeURIComponent(chapterNumber)}`);
-                    if (resp.ok) {
-                        const json = await resp.json();
-                        if (json.success) {
-                                // Normaliser les images (stockées en DB en tant que JSON string)
-                                currentChapterComments = Array.isArray(json.data) ? json.data.map(c => {
-                                    try {
-                                        if (c.images && typeof c.images === 'string') c.images = JSON.parse(c.images);
-                                    } catch (e) { c.images = []; }
-                                    if (!c.images) c.images = [];
-                                    return c;
-                                }) : [];
-                                // Persist locally as a backup so refresh won't lose content if API later fails
-                                try { localStorage.setItem(`comments_${manhwaId}_${chapterNumber}`, JSON.stringify(currentChapterComments)); } catch (e) {}
-                                updateCommentsDisplay();
-                                return;
-                            }
+                    const result = await CommentsAPI.getComments(manhwaId, chapterNumber);
+                    if (result.success) {
+                        // Normaliser les images (stockées en DB en tant que JSON string)
+                        currentChapterComments = Array.isArray(result.data) ? result.data.map(c => {
+                            try {
+                                if (c.images && typeof c.images === 'string') c.images = JSON.parse(c.images);
+                            } catch (e) { c.images = []; }
+                            if (!c.images) c.images = [];
+                            return c;
+                        }) : [];
+                        // Persist locally as a backup so refresh won't lose content if API later fails
+                        try { localStorage.setItem(`comments_${manhwaId}_${chapterNumber}`, JSON.stringify(currentChapterComments)); } catch (e) {}
+                        updateCommentsDisplay();
+                        return;
                     }
                 } catch (e) {
                     console.warn('Erreur chargement commentaires API', e);
@@ -4573,24 +4714,20 @@ window.restoreFromTrash = async function(trashId) {
                 date: new Date().toISOString()
             };
 
-            // Envoyer au serveur si possible
+            // Envoyer au serveur (MySQL local ou Supabase)
             (async () => {
                 try {
-                    const resp = await fetch('api-comments.php', {
-                        method: 'POST',
-                        headers: {'Content-Type':'application/json'},
-                        body: JSON.stringify({
-                            id: comment.id,
-                            manhwa_id: currentManhwaId,
-                            chapter_number: currentChapterNumber,
-                            author: comment.author,
-                            text: comment.text,
-                            images: comment.images,
-                            date: comment.date
-                        })
+                    const resp = await CommentsAPI.addComment({
+                        id: comment.id,
+                        manhwa_id: currentManhwaId,
+                        chapter_number: currentChapterNumber,
+                        author: comment.author,
+                        text: comment.text,
+                        images: comment.images,
+                        date: comment.date
                     });
-                    const j = await resp.json();
-                    if (j.success) {
+                    
+                    if (resp.success) {
                         // recharger
                         await loadComments(currentManhwaId, currentChapterNumber);
                         showNotification('Commentaire ajouté!', 'success');
@@ -4618,9 +4755,8 @@ window.restoreFromTrash = async function(trashId) {
         window.deleteComment = function(commentId) {
             (async () => {
                 try {
-                    const resp = await fetch('api-comments.php?id=' + encodeURIComponent(commentId), { method: 'DELETE' });
-                    const j = await resp.json();
-                    if (j.success) {
+                    const resp = await CommentsAPI.deleteComment(commentId);
+                    if (resp.success) {
                         await loadComments(currentManhwaId, currentChapterNumber);
                         showNotification('Commentaire supprimé', 'success');
                         return;
@@ -4843,7 +4979,7 @@ window.restoreFromTrash = async function(trashId) {
             if (result.isOk) {
                 // Supprimer aussi les commentaires associés côté serveur
                 try {
-                    await fetch(`api-comments.php?manhwa_id=${encodeURIComponent(chapter.manhwa_id)}&chapter_number=${encodeURIComponent(chapter.chapter_number)}`, { method: 'DELETE' });
+                    await CommentsAPI.deleteComment(null, chapter.manhwa_id, chapter.chapter_number);
                 } catch (e) {
                     console.warn('Erreur suppression commentaires associés (chapter)', e);
                 }
@@ -4894,7 +5030,7 @@ window.restoreFromTrash = async function(trashId) {
             if (result.isOk) {
                 // Supprimer aussi tous les commentaires liés à ce manhwa
                 try {
-                    await fetch(`api-comments.php?manhwa_id=${encodeURIComponent(manhwa.manhwa_id)}`, { method: 'DELETE' });
+                    await CommentsAPI.deleteComment(null, manhwa.manhwa_id);
                 } catch (e) {
                     console.warn('Erreur suppression commentaires associés (manhwa)', e);
                 }
