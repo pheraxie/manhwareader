@@ -83,12 +83,24 @@ foreach ($mappings as $mid => $folder) {
         $exists = $res && $res->num_rows > 0;
         $stmt->close();
         if (!$exists) {
-            // Insert minimal row locally
+            // Get the manhwa cover to use as chapter cover
+            $stmtCover = $conn->prepare("SELECT manhwa_cover FROM manhwas WHERE manhwa_id = ? LIMIT 1");
+            $stmtCover->bind_param('s', $mid);
+            $stmtCover->execute();
+            $resCover = $stmtCover->get_result();
+            $cover = '';
+            if ($resCover && $resCover->num_rows > 0) {
+                $rowCover = $resCover->fetch_assoc();
+                $cover = $rowCover['manhwa_cover'] ?? '';
+            }
+            $stmtCover->close();
+            // Insert row locally with cover
             $id = 'local_' . time() . '_' . mt_rand();
             $manhwa_id = $conn->real_escape_string($mid);
             $chapter_number = (int)$num;
+            $chapter_cover = $conn->real_escape_string($cover);
             $date_added = date('Y-m-d H:i:s');
-            $sql = "INSERT INTO chapters (id, manhwa_id, chapter_number, date_added) VALUES ('{$id}', '{$manhwa_id}', {$chapter_number}, '{$date_added}')";
+            $sql = "INSERT INTO chapters (id, manhwa_id, chapter_number, chapter_cover, date_added) VALUES ('{$id}', '{$manhwa_id}', {$chapter_number}, '{$chapter_cover}', '{$date_added}')";
             @$conn->query($sql);
         }
     }
@@ -115,6 +127,20 @@ if ($res) {
     while ($row = $res->fetch_assoc()) $localComments[] = $row;
 }
 
+// Load local tracking
+$res = $conn->query("SELECT * FROM tracking ORDER BY date_added DESC");
+$localTracking = [];
+if ($res) {
+    while ($row = $res->fetch_assoc()) $localTracking[] = $row;
+}
+
+// Load local trash
+$res = $conn->query("SELECT * FROM trash ORDER BY deleted_at DESC");
+$localTrash = [];
+if ($res) {
+    while ($row = $res->fetch_assoc()) $localTrash[] = $row;
+}
+
 // Get existing keys from Supabase
 $m = supa_request('GET', 'manhwas?select=manhwa_id');
 $existingManhwas = [];
@@ -139,6 +165,20 @@ $existingComments = [];
 if ($co['status'] === 200 && $co['body']) {
     $arr = json_decode($co['body'], true);
     foreach ($arr as $r) if (isset($r['id'])) $existingComments[$r['id']] = true;
+}
+
+$tr = supa_request('GET', 'tracking?select=id');
+$existingTracking = [];
+if ($tr['status'] === 200 && $tr['body']) {
+    $arr = json_decode($tr['body'], true);
+    foreach ($arr as $r) if (isset($r['id'])) $existingTracking[$r['id']] = true;
+}
+
+$tra = supa_request('GET', 'trash?select=id');
+$existingTrash = [];
+if ($tra['status'] === 200 && $tra['body']) {
+    $arr = json_decode($tra['body'], true);
+    foreach ($arr as $r) if (isset($r['id'])) $existingTrash[$r['id']] = true;
 }
 
 // Prepare local id sets for deletion checks
@@ -311,6 +351,75 @@ foreach ($localComments as $cm) {
         ];
         $r = supa_request('PATCH', "comments?id=eq.{$cm['id']}", $payload);
         if (!($r['status'] >= 200 && $r['status'] < 300)) $report['errors'][] = ['comments_update' => $r];
+    }
+}
+
+// Insert tracking (new)
+$toInsertTracking = [];
+foreach ($localTracking as $t) {
+    if (!isset($existingTracking[$t['id']])) {
+        $toInsertTracking[] = [
+            'id' => $t['id'],
+            'title' => $t['title'] ?? null,
+            'chapter' => (int)($t['chapter'] ?? 0),
+            'status' => $t['status'] ?? 'en-cours',
+            'notes' => $t['notes'] ?? null,
+            'season' => $t['season'] ?? null,
+            'date_added' => $t['date_added'] ?? null,
+            'date_updated' => $t['date_updated'] ?? null
+        ];
+    }
+}
+if (count($toInsertTracking) > 0) {
+    $r = supa_request('POST', 'tracking', $toInsertTracking);
+    if ($r['status'] >= 200 && $r['status'] < 300) $report['tracking_inserted'] = count($toInsertTracking);
+    else $report['errors'][] = ['tracking' => $r];
+}
+
+// Update tracking
+foreach ($localTracking as $t) {
+    if (isset($existingTracking[$t['id']])) {
+        $payload = [
+            'title' => $t['title'] ?? null,
+            'chapter' => (int)($t['chapter'] ?? 0),
+            'status' => $t['status'] ?? 'en-cours',
+            'notes' => $t['notes'] ?? null,
+            'season' => $t['season'] ?? null,
+            'date_updated' => $t['date_updated'] ?? null
+        ];
+        $r = supa_request('PATCH', "tracking?id=eq.{$t['id']}", $payload);
+        if (!($r['status'] >= 200 && $r['status'] < 300)) $report['errors'][] = ['tracking_update' => $r];
+    }
+}
+
+// Insert trash (new)
+$toInsertTrash = [];
+foreach ($localTrash as $tr) {
+    if (!isset($existingTrash[$tr['id']])) {
+        $toInsertTrash[] = [
+            'id' => $tr['id'],
+            'trash_type' => $tr['trash_type'] ?? 'manhwa',
+            'original_data' => $tr['original_data'] ?? null,
+            'deleted_at' => $tr['deleted_at'] ?? null
+        ];
+    }
+}
+if (count($toInsertTrash) > 0) {
+    $r = supa_request('POST', 'trash', $toInsertTrash);
+    if ($r['status'] >= 200 && $r['status'] < 300) $report['trash_inserted'] = count($toInsertTrash);
+    else $report['errors'][] = ['trash' => $r];
+}
+
+// Update trash
+foreach ($localTrash as $tr) {
+    if (isset($existingTrash[$tr['id']])) {
+        $payload = [
+            'trash_type' => $tr['trash_type'] ?? 'manhwa',
+            'original_data' => $tr['original_data'] ?? null,
+            'deleted_at' => $tr['deleted_at'] ?? null
+        ];
+        $r = supa_request('PATCH', "trash?id=eq.{$tr['id']}", $payload);
+        if (!($r['status'] >= 200 && $r['status'] < 300)) $report['errors'][] = ['trash_update' => $r];
     }
 }
 

@@ -712,7 +712,6 @@
         </div>
         <div class="mb-4">
          <button id="missing-check-btn" class="bg-indigo-600 text-white px-4 py-2 rounded-lg">Vérifier</button>
-         <button id="missing-create-btn" class="bg-emerald-500 text-white px-4 py-2 rounded-lg ml-2">Créer les chapitres manquants</button>
         </div>
         <div id="missing-results" class="mt-4 text-sm text-gray-700"></div>
      </div>
@@ -822,8 +821,13 @@
         let allManhwas = [];
         let allChapters = [];
         let isDarkMode = false;
-        let isLocalMode = false;
+        let isLocalMode = window.location.hostname === 'localhost' || 
+                          window.location.hostname === '127.0.0.1' ||
+                          window.location.hostname === '';
         let currentUserId = null; // Identifiant utilisateur pour données propres (mode en ligne)
+        
+        // Rendre accessible globalement
+        window.isLocalMode = isLocalMode;
         
         // Exposer CommentsAPI au scope global pour les autres modules
         window.CommentsAPI = CommentsAPI;
@@ -848,6 +852,7 @@
             }
         }
         
+        
         // Détection du mode développeur (localhost)
         function isDeveloperMode() {
             const hostname = window.location.hostname;
@@ -858,6 +863,9 @@
                    hostname.startsWith('10.') ||
                    hostname.startsWith('172.');
         }
+        
+        // Rendre globale pour que local-sync.js puisse l'utiliser
+        window.isDeveloperMode = isDeveloperMode;
         
         // Fonction pour afficher le popup "vous n'êtes pas en mode développeur"
         function showDeveloperModeRequired() {
@@ -1052,6 +1060,89 @@
             } catch (error) {
                 console.error('Erreur lors de la sauvegarde automatique:', error);
             }
+        }
+
+        // SDK Supabase - Utilise la base de données Supabase via API REST (pour production)
+        function createSupabaseSDK() {
+            let supabaseData = [];
+            let dataHandler = null;
+
+            return {
+                init: async (handler) => {
+                    dataHandler = handler;
+                    
+                    // Charger TOUTES les données depuis Supabase
+                    try {
+                        const allData = [];
+                        
+                        // Charger les manhwas
+                        const { data: manhwas, error: mErr } = await supabase
+                            .from('manhwas')
+                            .select('*');
+                        if (mErr) throw new Error('Erreur manhwas Supabase: ' + mErr.message);
+                        if (manhwas) allData.push(...manhwas);
+                        
+                        // Charger les chapitres
+                        const { data: chapters, error: cErr } = await supabase
+                            .from('chapters')
+                            .select('*');
+                        if (cErr) throw new Error('Erreur chapitres Supabase: ' + cErr.message);
+                        if (chapters) allData.push(...chapters);
+                        
+                        // Charger les commentaires
+                        const { data: comments, error: coErr } = await supabase
+                            .from('comments')
+                            .select('*');
+                        if (coErr) throw new Error('Erreur commentaires Supabase: ' + coErr.message);
+                        if (comments) allData.push(...comments);
+                        
+                        // Charger les trackings
+                        const { data: tracking, error: tErr } = await supabase
+                            .from('tracking')
+                            .select('*');
+                        if (tErr) console.warn('Supabase tracking erreur:', tErr.message);
+                        if (tracking) allData.push(...tracking.map(t => ({ ...t, type: 'tracking' })));
+                        
+                        // Charger les trash
+                        const { data: trash, error: trErr } = await supabase
+                            .from('trash')
+                            .select('*');
+                        if (trErr) console.warn('Supabase trash erreur:', trErr.message);
+                        if (trash) allData.push(...trash.map(t => ({ ...t, type: 'trash' })));
+                        
+                        supabaseData = allData;
+                        console.log('✅ Données chargées depuis Supabase:', supabaseData.length, 'éléments');
+                    } catch (error) {
+                        console.error('❌ Erreur lors du chargement Supabase:', error);
+                        supabaseData = [];
+                    }
+                    
+                    // Toujours synchroniser globalData avec supabaseData
+                    globalData = JSON.parse(JSON.stringify(supabaseData));
+                    console.log('✅ Données synchronisées depuis Supabase:', globalData.length, 'éléments');
+                    
+                    // Notifier le handler avec les données chargées IMMÉDIATEMENT
+                    if (dataHandler) {
+                        requestAnimationFrame(() => {
+                            dataHandler.onDataChanged(supabaseData);
+                        });
+                    }
+                    
+                    return { isOk: true };
+                },
+                create: async (data) => {
+                    console.log('❌ Mode production: création non autorisée via SDK');
+                    return { isOk: false, error: 'Mode production: utiliser les formulaires' };
+                },
+                update: async (data) => {
+                    console.log('❌ Mode production: mise à jour non autorisée via SDK');
+                    return { isOk: false, error: 'Mode production: utiliser les formulaires' };
+                },
+                delete: async (id) => {
+                    console.log('❌ Mode production: suppression non autorisée via SDK');
+                    return { isOk: false, error: 'Mode production: utiliser les formulaires' };
+                }
+            };
         }
 
         // SDK MySQL - Utilise la base de données MySQL via PHP
@@ -1512,13 +1603,19 @@
                 }
             }
             
-            // Détection automatique: MySQL (recommandé) ou fallback JSON
+            // Détection automatique: MySQL (dev) ou Supabase (production)
             if (!window.dataSdk) {
-                console.log('🔧 Mode LOCAL détecté - Utilisation de MySQL');
-                isLocalMode = true;
-                window.dataSdk = createMySQLSDK();
                 if (isDeveloperMode()) {
-                    showNotification('Mode développeur activé 🔧 (MySQL)', 'info');
+                    console.log('🔧 Mode LOCAL détecté - Utilisation de MySQL');
+                    isLocalMode = true;
+                    window.dataSdk = createMySQLSDK();
+                    if (isDeveloperMode()) {
+                        showNotification('Mode développeur activé 🔧 (MySQL)', 'info');
+                    }
+                } else {
+                    console.log('☁️ Mode PRODUCTION détecté - Utilisation de Supabase');
+                    isLocalMode = false;
+                    window.dataSdk = createSupabaseSDK();
                 }
             } else {
                 console.log('☁️ Mode CANVA détecté - Utilisation du Data SDK');
@@ -4026,19 +4123,7 @@ window.restoreFromTrash = async function(trashId) {
             }
         }
 
-        async function createMissingChapters() {
-            const raw = document.getElementById('missing-results').dataset.missing || '[]';
-            const missing = JSON.parse(raw);
-            if (!Array.isArray(missing) || missing.length === 0) { showNotification('Aucun chapitre à créer', 'info'); return; }
-            for (const num of missing) {
-                await fetch('./api-chapters.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ manhwa_id: _missing_currentManhwa, chapter_number: num }) });
-            }
-            showNotification(`${missing.length} chapitres créés localement`, 'success');
-            document.getElementById('missing-chapters-modal').classList.add('hidden');
-        }
-
         document.getElementById('missing-check-btn').addEventListener('click', checkMissingChapters);
-        document.getElementById('missing-create-btn').addEventListener('click', createMissingChapters);
         // Expose for templates and onclick handlers
         window.openMissingChaptersModal = openMissingChaptersModal;
 
@@ -4176,17 +4261,19 @@ window.restoreFromTrash = async function(trashId) {
                 const text = await response.text();
                 
                 // Trouver le boundary
-                const boundaryMatch = text.match(/boundary=?([^\"\r\n]+)/i);
+                const boundaryMatch = text.match(/boundary=?([^\"\r\n;]+)/i);
                 let boundary = '------MultipartBoundary';
                 if (boundaryMatch) {
-                    boundary = boundaryMatch[1].trim();
-                    if (!boundary.startsWith('----')) {
-                        boundary = '----' + boundary;
+                    boundary = '--' + boundaryMatch[1].trim();
+                    if (boundary.match(/^--[^-]/)) {
+                        // Déjà préfixé correctement
+                    } else if (!boundary.startsWith('----')) {
+                        boundary = '----' + boundary.substring(2);
                     }
                 }
 
                 // Parser le MHTML pour trouver la partie HTML principale
-                const parts = text.split(new RegExp(boundary.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')));
+                const parts = text.split(new RegExp('\\r?\\n?' + boundary.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
                 let htmlContent = '';
 
                 for (const part of parts) {
@@ -4264,17 +4351,19 @@ window.restoreFromTrash = async function(trashId) {
             const text = decoder.decode(arrayBuffer);
 
             // Trouver le boundary dans l'en-tête
-            const boundaryMatch = text.match(/boundary="?([^"\r\n]+)"?/i);
+            const boundaryMatch = text.match(/boundary=?([^\"\r\n;]+)/i);
             let boundary = '------MultipartBoundary';
             if (boundaryMatch) {
-                boundary = boundaryMatch[1].trim();
-                if (!boundary.startsWith('----')) {
-                    boundary = '----' + boundary;
+                boundary = '--' + boundaryMatch[1].trim();
+                if (boundary.match(/^--[^-]/)) {
+                    // Déjà préfixé correctement
+                } else if (!boundary.startsWith('----')) {
+                    boundary = '----' + boundary.substring(2);
                 }
             }
 
             // Parser le texte pour trouver les sections d'images
-            const parts = text.split(new RegExp(boundary.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+            const parts = text.split(new RegExp('\\r?\\n?' + boundary.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
             const images = [];
             
             // Calculer les offsets de texte pour chaque partie

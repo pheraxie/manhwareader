@@ -168,32 +168,74 @@ export function registerSyncInSettings() {
     }
 }
 
-// Also create a small header sync button so it's easy to find
+// Add sync button to the header area as a proper icon button
 export function registerHeaderSyncButton() {
     try {
-        // only show in local / developer mode
         if (!(window.isLocalMode === true || (typeof isDeveloperMode === 'function' && isDeveloperMode()))) return;
         if (document.getElementById('header-sync-button')) return;
-        const header = document.querySelector('header') || document.body;
+        
         const btn = document.createElement('button');
         btn.id = 'header-sync-button';
-        btn.textContent = 'Synchroniser';
-        btn.style.position = 'fixed';
-        btn.style.top = '12px';
-        btn.style.right = '12px';
-        btn.style.zIndex = 99999;
-        btn.style.padding = '8px 10px';
-        btn.style.background = '#059669';
-        btn.style.color = 'white';
-        btn.style.border = 'none';
-        btn.style.borderRadius = '6px';
-        btn.style.cursor = 'pointer';
+        btn.title = 'Synchroniser avec Supabase';
+        btn.innerHTML = '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>';
+        btn.style.cssText = `
+            position: fixed;
+            top: 12px;
+            right: 12px;
+            z-index: 50;
+            padding: 8px 10px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: 2px solid #047857;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        `;
+        
+        btn.addEventListener('mouseenter', () => {
+            btn.style.background = 'linear-gradient(135deg, #059669 0%, #047857 100%)';
+            btn.style.boxShadow = '0 6px 16px rgba(16, 185, 129, 0.4)';
+            btn.style.transform = 'scale(1.05)';
+        });
+        
+        btn.addEventListener('mouseleave', () => {
+            btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+            btn.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.3)';
+            btn.style.transform = 'scale(1)';
+        });
+        
         document.body.appendChild(btn);
         btn.addEventListener('click', async () => {
-            btn.disabled = true; btn.textContent = 'Sync...';
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+            const svg = btn.querySelector('svg');
+            if (svg) svg.style.animation = 'spin 1s linear infinite';
             await syncLocalToSupabase();
-            btn.disabled = false; btn.textContent = 'Synchroniser';
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            if (svg) svg.style.animation = '';
         });
+        
+        // Ajouter animation CSS si elle n'existe pas
+        if (!document.getElementById('sync-button-styles')) {
+            const style = document.createElement('style');
+            style.id = 'sync-button-styles';
+            style.textContent = `
+                @keyframes spin {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+                #header-sync-button svg {
+                    width: 20px;
+                    height: 20px;
+                }
+            `;
+            document.head.appendChild(style);
+        }
     } catch (err) {
         console.error('registerHeaderSyncButton error:', err);
     }
